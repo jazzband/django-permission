@@ -8,7 +8,7 @@ README = open(os.path.join(here, 'README.txt')).read()
 
 setup(name='django-permissions',
       version=version,
-      description='Generic object permissions framework for django',
+      description='Generic per-object permissions for Django',
       long_description=README,
       classifiers=[
           'Development Status :: 3 - Alpha',
