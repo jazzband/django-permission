@@ -25,8 +25,8 @@ Create a new group
     
 This will create a default Django group.
 
-Create a FlatPage
------------------
+Create a content object
+-----------------------
 
 .. code-block:: python
 
@@ -42,7 +42,11 @@ Grant permission
     grant_permission("view", brights, content)
 
 Now all users which are member of the group "Brights" have the permission to
-view object "content". You can also grant permission to single users.
+view object "content". 
+
+.. note::
+
+    You can also grant permission to single users.
 
 Check permission
 ----------------
