@@ -72,7 +72,7 @@ def remove_permission(permission, user_group, obj):
             return False
 
     ct = ContentType.objects.get_for_model(obj)
-    
+
     if isinstance(user_group, Group):
         try:
             op = ObjectPermission.objects.get(group=user_group, content_type = ct, content_id=obj.id, permission = permission)
@@ -82,11 +82,11 @@ def remove_permission(permission, user_group, obj):
         try:
             op = ObjectPermission.objects.get(user=user_group, content_type = ct, content_id=obj.id, permission = permission)
         except ObjectPermission.DoesNotExist:
-            return False                
+            return False
     op.delete()
     return True
 
-def has_permission(codename, user, obj=None):
+def has_permission(codename, user, obj=None, groups=[]):
     """Checks whether the passed user has passed permission for passed object.
 
     **Parameters:**
@@ -97,17 +97,22 @@ def has_permission(codename, user, obj=None):
         The user for which the permission should be checked.
     obj
         The object for which the permission should be checked.
+    groups
+        If given these groups will be assigned to the user temporarily before 
+        the permissions are checked.
     """
+    if obj is None:
+        return False
+
     if user.is_superuser:
         return True
 
     if not user.is_authenticated():
         user = User.objects.get(username="anonymous")
 
-    if obj is None:
-        return False
+    user_groups = list(Group.objects.filter(user=user))
+    user_groups.extend(groups)
 
-    groups = Group.objects.filter(user=user)
     ct = ContentType.objects.get_for_model(obj)
 
     while obj is not None:
@@ -118,7 +123,7 @@ def has_permission(codename, user, obj=None):
             return True
 
         p = ObjectPermission.objects.filter(
-            content_type=ct, content_id=obj.id, group__in=groups, permission__codename = codename)
+            content_type=ct, content_id=obj.id, group__in=user_groups, permission__codename = codename)
 
         if p.exists():
             return True

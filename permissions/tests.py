@@ -19,7 +19,7 @@ class PermissionTestCase(TestCase):
         self.group_1 = permissions.utils.register_group("Group 1")
         self.group_2 = permissions.utils.register_group("Group 2")
 
-        self.user = User.objects.create(username="doe")
+        self.user = User.objects.create(username="john")
         self.user.groups.add(self.group_1)
         self.user.groups.add(self.group_2)
         self.user.save()
@@ -47,6 +47,20 @@ class PermissionTestCase(TestCase):
         result = permissions.utils.has_permission("view", self.user, self.page_1)
         self.assertEqual(result, False)
 
+    def test_has_permission_owner(self):
+        """
+        """
+        creator = User.objects.create(username="jane")
+
+        result = permissions.utils.has_permission("view", creator, self.page_1)
+        self.assertEqual(result, False)
+
+        owner = permissions.utils.register_group("Owner")
+        permissions.utils.grant_permission("view", owner, self.page_1)
+
+        result = permissions.utils.has_permission("view", creator, self.page_1, [owner])
+        self.assertEqual(result, True)
+
     def test_has_permission_user(self):
         """
         """
@@ -64,7 +78,7 @@ class PermissionTestCase(TestCase):
 
         result = permissions.utils.has_permission("view", self.user, self.page_1)
         self.assertEqual(result, False)
-        
+
     def test_ineritance(self):
         """
         """
