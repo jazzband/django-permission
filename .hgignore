@@ -10,3 +10,4 @@ syntax: glob
 *bin/
 *downloads/
 *docs/_build
+*dist

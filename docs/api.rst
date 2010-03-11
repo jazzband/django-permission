@@ -42,10 +42,21 @@ Register groups
   .. autofunction:: register_group
   .. autofunction:: unregister_group
 
+Template tags
+=============
+
+**ifhasperm**
+
+Checks whether the current user has passed permission::
+
+    {% ifhasperm view %}
+        <span>Has permission</span>
+    {% else %}
+        <span>Doesn't have permission</span>
+    {% endifhasperm %}    
+
 Models
 ======
-
-This models can be found in ``permissions.models``.
 
 .. autoclass:: permissions.models.Permission
 .. autoclass:: permissions.models.ObjectPermission

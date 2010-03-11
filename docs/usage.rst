@@ -1,19 +1,11 @@
-========
-Overview
-========
+=====
+Usage
+=====
 
 .. warning::
 
     django-permissions is in alpha state. Please consider the API as supposed 
     to be changed until it reaches beta state.
-
-What is it?
-===========
-
-django-permissions provides generic per-object permissions for Django.
-
-How does it work?
-=================
 
 Create a new permission
 -----------------------
@@ -64,4 +56,4 @@ Check permission
         print "Alert!"
 
 This will check whether the current user has the permission "View" for the 
-FlatPage "content"
+FlatPage "content".
