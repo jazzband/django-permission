@@ -12,45 +12,56 @@ from permissions.models import Permission
 
 # Permission #################################################################
 
-def grant_permission(permission, group, obj):
+def grant_permission(permission, user_group, obj):
     """Adds passed permission to passed group and object. Returns True if the
     permission was able to be added, otherwise False.
 
     **Parameters:**
 
         permission
-            The permission for which should be removed. Either a permission 
+            The permission which should be granted. Either a permission
             object or the codename of a permission.
+        user_group
+            The user or group for which the permission should be granted.
         obj
-            The content object for which an inheritance should be added.
+            The content object for which the permission should be granted.
     """
     if not isinstance(permission, Permission):
         try:
             permission = Permission.objects.get(codename = permission)
         except Permission.DoesNotExist:
             return False
-    
+
     ct = ContentType.objects.get_for_model(obj)
-    try:
-        ObjectPermission.objects.get(group=group, content_type = ct, content_id=obj.id, permission=permission)
-    except ObjectPermission.DoesNotExist:
+    if isinstance(user_group, Group):
         try:
-            result = ObjectPermission.objects.create(group=group, content=obj, permission=permission)
-        except IntegrityError:
-            return False
+            ObjectPermission.objects.get(group=user_group, content_type = ct, content_id=obj.id, permission=permission)
+        except ObjectPermission.DoesNotExist:
+            try:
+                result = ObjectPermission.objects.create(group=user_group, content=obj, permission=permission)
+            except IntegrityError:
+                return False
+    else:
+        try:
+            ObjectPermission.objects.get(user=user_group, content_type = ct, content_id=obj.id, permission=permission)
+        except ObjectPermission.DoesNotExist:
+            try:
+                result = ObjectPermission.objects.create(user=user_group, content=obj, permission=permission)
+            except IntegrityError:
+                return False
     return True
 
-def remove_permission(permission, group, obj):
+def remove_permission(permission, user_group, obj):
     """Removes passed permission from passed group and object. Returns True if
     the permission has been removed.
 
     **Parameters:**
 
         permission
-            The permission for which should be removed. Either a permission 
-            object or the codename of a permission.
-        group
-            The group for which a permission should be removed.
+            The permission which should be removed. Either a permission object
+            or the codename of a permission.
+        user_group
+            The user or group for which a permission should be removed.
         obj
             The content object for which a permission should be removed.
     """
@@ -61,11 +72,17 @@ def remove_permission(permission, group, obj):
             return False
 
     ct = ContentType.objects.get_for_model(obj)
-    try:
-        op = ObjectPermission.objects.get(group=group, content_type = ct, content_id=obj.id, permission = permission)
-    except ObjectPermission.DoesNotExist:
-        return False
-
+    
+    if isinstance(user_group, Group):
+        try:
+            op = ObjectPermission.objects.get(group=user_group, content_type = ct, content_id=obj.id, permission = permission)
+        except ObjectPermission.DoesNotExist:
+            return False
+    else:
+        try:
+            op = ObjectPermission.objects.get(user=user_group, content_type = ct, content_id=obj.id, permission = permission)
+        except ObjectPermission.DoesNotExist:
+            return False                
     op.delete()
     return True
 
@@ -95,6 +112,12 @@ def has_permission(codename, user, obj=None):
 
     while obj is not None:
         p = ObjectPermission.objects.filter(
+            content_type=ct, content_id=obj.id, user=user, permission__codename = codename)
+
+        if p.exists():
+            return True
+
+        p = ObjectPermission.objects.filter(
             content_type=ct, content_id=obj.id, group__in=groups, permission__codename = codename)
 
         if p.exists():
@@ -119,7 +142,7 @@ def add_inheritance_block(permission, obj):
     **Parameters:**
 
         permission
-            The permission for which an inheritance block should be added. 
+            The permission for which an inheritance block should be added.
             Either a permission object or the codename of a permission.
         obj
             The content object for which an inheritance block should be added.
@@ -141,7 +164,7 @@ def add_inheritance_block(permission, obj):
     return True
 
 def remove_inheritance_block(permission, obj):
-    """Removes a inheritance block for the passed permission from the passed 
+    """Removes a inheritance block for the passed permission from the passed
     object.
 
     **Parameters:**
@@ -225,8 +248,8 @@ def unregister_permission(codename):
     return True
 
 def register_group(name):
-    """Registers a group with passed name to the framework. Creates a Django 
-    default group. Returns the new group if the registration was successfully, 
+    """Registers a group with passed name to the framework. Creates a Django
+    default group. Returns the new group if the registration was successfully,
     otherwise False.
 
     **Parameters:**

@@ -29,13 +29,31 @@ class PermissionTestCase(TestCase):
 
         self.permission = permissions.utils.register_permission("View", "view")
 
-    def test_has_permission(self):
+    def test_has_permission_group(self):
         """
         """
         result = permissions.utils.has_permission("view", self.user, self.page_1)
         self.assertEqual(result, False)
 
         result = permissions.utils.grant_permission(self.permission, self.group_1, self.page_1)
+        self.assertEqual(result, True)
+
+        result = permissions.utils.has_permission("view", self.user, self.page_1)
+        self.assertEqual(result, True)
+
+        result = permissions.utils.remove_permission("view", self.group_1, self.page_1)
+        self.assertEqual(result, True)
+
+        result = permissions.utils.has_permission("view", self.user, self.page_1)
+        self.assertEqual(result, False)
+
+    def test_has_permission_user(self):
+        """
+        """
+        result = permissions.utils.has_permission("view", self.user, self.page_1)
+        self.assertEqual(result, False)
+
+        result = permissions.utils.grant_permission(self.permission, self.user, self.page_1)
         self.assertEqual(result, True)
 
         result = permissions.utils.has_permission("view", self.user, self.page_1)
