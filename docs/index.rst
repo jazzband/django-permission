@@ -7,7 +7,7 @@ Contents:
    :maxdepth: 1
    
    installation.rst
-   usage.rst
+   usage/index.rst
    api.rst
 
 Indices and tables
