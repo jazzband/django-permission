@@ -99,16 +99,15 @@ def has_permission(codename, user, obj=None, groups=[]):
         The object for which the permission should be checked.
     groups
         If given these groups will be assigned to the user temporarily before 
-        the permissions are checked.
+        the permissions are checked. If you don't know why this is need you
+        can safely ignore it.
     """
+
     if obj is None:
         return False
 
     if user.is_superuser:
         return True
-
-    if not user.is_authenticated():
-        user = User.objects.get(username="anonymous")
 
     user_groups = list(Group.objects.filter(user=user))
     user_groups.extend(groups)
@@ -119,16 +118,22 @@ def has_permission(codename, user, obj=None, groups=[]):
         p = ObjectPermission.objects.filter(
             content_type=ct, content_id=obj.id, user=user, permission__codename = codename)
 
-        if p.exists():
+        # if p.exists():
+        #     return True
+
+        if p.count() > 0:
             return True
 
         p = ObjectPermission.objects.filter(
             content_type=ct, content_id=obj.id, group__in=user_groups, permission__codename = codename)
 
-        if p.exists():
-            return True
+        # if p.exists():
+        #     return True
 
-        if is_inherited(codename, obj):
+        if p.count() > 0:
+            return True
+        
+        if is_inherited(codename, obj) == False:
             return False
 
         try:
@@ -215,6 +220,14 @@ def is_inherited(codename, obj):
     else:
         return False
 
+def get_group(name):
+    """Returns the group with given or None if it doesn't exit.
+    """
+    try:
+        return Group.objects.get(name=name)
+    except Group.DoesNotExist:
+        return None
+    
 # Registering ################################################################
 
 def register_permission(name, codename):
