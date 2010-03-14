@@ -42,23 +42,7 @@ class PermissionComparisonNode(template.Node):
 
 @register.tag
 def ifhasperm(parser, token):
-    """
-    This function provides functionality for the 'ifhasperm' template tag
-
-    Syntax::
-
-        {% ifhasperm PERMISSION_LABEL.CHECK_NAME USER *OBJS %}
-            lalala
-        {% else %}
-            meh
-        {% endifhasperm %}
-
-        {% if hasperm "poll_permission.change_poll" request.user %}
-            lalala
-        {% else %}
-            meh
-        {% endifhasperm %}
-
+    """This function provides functionality for the 'ifhasperm' template tag.
     """
     return PermissionComparisonNode.handle_token(parser, token)
 
