@@ -8,6 +8,8 @@ from django.test.client import Client
 
 # permissions imports
 from permissions.models import Permission
+from permissions.models import ObjectPermission
+from permissions.models import ObjectPermissionInheritanceBlock
 import permissions.utils
 
 class PermissionTestCase(TestCase):
@@ -90,6 +92,27 @@ class PermissionTestCase(TestCase):
         result = permissions.utils.is_inherited(self.page_1, "view")
         self.assertEqual(result, False)
 
+    def test_unicode(self):
+        """
+        """
+        # Permission
+        self.assertEqual(self.permission.__unicode__(), "View (view)")
+
+        # ObjectPermission
+        permissions.utils.grant_permission(self.page_1, self.permission, self.group_1)
+        opr = ObjectPermission.objects.get(permission=self.permission, group=self.group_1)
+        self.assertEqual(opr.__unicode__(), "View / Group 1 / flat page - 1")
+
+        permissions.utils.grant_permission(self.page_1, self.permission, self.user)
+        opr = ObjectPermission.objects.get(permission=self.permission, user=self.user)
+        self.assertEqual(opr.__unicode__(), "View / john / flat page - 1")
+
+        # ObjectPermissionInheritanceBlock
+        permissions.utils.add_inheritance_block(self.page_1, self.permission)
+        opb = ObjectPermissionInheritanceBlock.objects.get(permission=self.permission)
+
+        self.assertEqual(opb.__unicode__(), "View (view) / flat page - 1")
+
 class RegistrationTestCase(TestCase):
     """Tests the registration of different components.
     """
@@ -159,7 +182,6 @@ class RegistrationTestCase(TestCase):
         # Unregister the permission again
         result = permissions.utils.unregister_permission("change")
         self.assertEqual(result, False)
-
 
 # django imports
 from django.core.handlers.wsgi import WSGIRequest
