@@ -16,9 +16,13 @@ class Permission(models.Model):
         codename
             The unique codename of the permission. This is used internal to
             identify a permission.
+        content_types
+            The content types for which the permission is active. This can be
+            used to display only reasonable permissions for an object.
     """
     name = models.CharField(_(u"Name"), max_length=100, unique=True)
     codename = models.CharField(_(u"Codename"), max_length=100, unique=True)
+    content_types = models.ManyToManyField(ContentType, verbose_name=_(u"Content Types"), blank=True, null=True, related_name="content_types")
 
     def __unicode__(self):
         return "%s (%s)" % (self.name, self.codename)

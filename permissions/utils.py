@@ -12,19 +12,21 @@ from permissions.models import Permission
 
 # Permission #################################################################
 
-def grant_permission(permission, user_group, obj):
+def grant_permission(obj, permission, user_group):
     """Adds passed permission to passed group and object. Returns True if the
     permission was able to be added, otherwise False.
 
     **Parameters:**
 
+        obj
+            The content object for which the permission should be granted.
+
         permission
             The permission which should be granted. Either a permission
             object or the codename of a permission.
+
         user_group
             The user or group for which the permission should be granted.
-        obj
-            The content object for which the permission should be granted.
     """
     if not isinstance(permission, Permission):
         try:
@@ -51,19 +53,21 @@ def grant_permission(permission, user_group, obj):
                 return False
     return True
 
-def remove_permission(permission, user_group, obj):
+def remove_permission(obj, permission, user_group):
     """Removes passed permission from passed group and object. Returns True if
     the permission has been removed.
 
     **Parameters:**
 
+        obj
+            The content object for which a permission should be removed.
+
         permission
             The permission which should be removed. Either a permission object
             or the codename of a permission.
+
         user_group
             The user or group for which a permission should be removed.
-        obj
-            The content object for which a permission should be removed.
     """
     if not isinstance(permission, Permission):
         try:
@@ -86,28 +90,30 @@ def remove_permission(permission, user_group, obj):
     op.delete()
     return True
 
-def has_permission(codename, user, obj=None, groups=[]):
+def has_permission(obj, codename, user, groups=[]):
     """Checks whether the passed user has passed permission for passed object.
 
     **Parameters:**
 
-    codename
-        The permission's codename which should be checked.
-    user
-        The user for which the permission should be checked.
     obj
         The object for which the permission should be checked.
+
+    codename
+        The permission's codename which should be checked.
+
+    user
+        The user for which the permission should be checked.
+
     groups
-        If given these groups will be assigned to the user temporarily before 
+        If given these groups will be assigned to the user temporarily before
         the permissions are checked. If you don't know why this is need you
         can safely ignore it.
     """
-
-    if obj is None:
-        return False
-
     if user.is_superuser:
         return True
+
+    if user.is_anonymous():
+        user = User.objects.get(username="anonymous")
 
     user_groups = list(Group.objects.filter(user=user))
     user_groups.extend(groups)
@@ -132,8 +138,8 @@ def has_permission(codename, user, obj=None, groups=[]):
 
         if p.count() > 0:
             return True
-        
-        if is_inherited(codename, obj) == False:
+
+        if is_inherited(obj, codename) == False:
             return False
 
         try:
@@ -146,7 +152,7 @@ def has_permission(codename, user, obj=None, groups=[]):
 
 # Inheritance ################################################################
 
-def add_inheritance_block(permission, obj):
+def add_inheritance_block(obj, permission):
     """Adds an inheritance for the passed permission on the passed obj.
 
     **Parameters:**
@@ -173,17 +179,18 @@ def add_inheritance_block(permission, obj):
             return False
     return True
 
-def remove_inheritance_block(permission, obj):
+def remove_inheritance_block(obj, permission):
     """Removes a inheritance block for the passed permission from the passed
     object.
 
     **Parameters:**
 
+        obj
+            The content object for which an inheritance block should be added.
+
         permission
             The permission for which an inheritance block should be removed.
             Either a permission object or the codename of a permission.
-        obj
-            The content object for which an inheritance block should be added.
     """
     if not isinstance(permission, Permission):
         try:
@@ -200,16 +207,17 @@ def remove_inheritance_block(permission, obj):
     opi.delete()
     return True
 
-def is_inherited(codename, obj):
+def is_inherited(obj, codename):
     """Returns True if the passed permission is inherited for passed object.
 
     **Parameters:**
 
+        obj
+            The content object for which the permission should be checked.
+
         codename
             The permission which should be checked. Must be the codename of
             the permission.
-        obj
-            The content object for which the permission should be checked.
     """
     ct = ContentType.objects.get_for_model(obj)
     try:
@@ -227,10 +235,10 @@ def get_group(name):
         return Group.objects.get(name=name)
     except Group.DoesNotExist:
         return None
-    
+
 # Registering ################################################################
 
-def register_permission(name, codename):
+def register_permission(name, codename, ctypes=[]):
     """Registers a permission to the framework. Returns the permission if the
     registration was successfully, otherwise False.
 
@@ -239,13 +247,17 @@ def register_permission(name, codename):
         name
             The unique name of the permission. This is displayed to the
             customer.
-
         codename
             The unique codename of the permission. This is used internally to
             identify the permission.
+        content_types
+            The content type for which the permission is active. This can be
+            used to display only reasonable permissions for an object.
     """
     try:
         p = Permission.objects.create(name=name, codename=codename)
+        p.content_types = ctypes
+        p.save()
     except IntegrityError:
         return False
     return p

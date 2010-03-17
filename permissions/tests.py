@@ -32,19 +32,19 @@ class PermissionTestCase(TestCase):
     def test_has_permission_group(self):
         """
         """
-        result = permissions.utils.has_permission("view", self.user, self.page_1)
+        result = permissions.utils.has_permission(self.page_1, "view", self.user)
         self.assertEqual(result, False)
 
-        result = permissions.utils.grant_permission(self.permission, self.group_1, self.page_1)
+        result = permissions.utils.grant_permission(self.page_1, self.permission, self.group_1)
         self.assertEqual(result, True)
 
-        result = permissions.utils.has_permission("view", self.user, self.page_1)
+        result = permissions.utils.has_permission(self.page_1, "view", self.user)
         self.assertEqual(result, True)
 
-        result = permissions.utils.remove_permission("view", self.group_1, self.page_1)
+        result = permissions.utils.remove_permission(self.page_1, "view", self.group_1)
         self.assertEqual(result, True)
 
-        result = permissions.utils.has_permission("view", self.user, self.page_1)
+        result = permissions.utils.has_permission(self.page_1, "view", self.user)
         self.assertEqual(result, False)
 
     def test_has_permission_owner(self):
@@ -52,42 +52,42 @@ class PermissionTestCase(TestCase):
         """
         creator = User.objects.create(username="jane")
 
-        result = permissions.utils.has_permission("view", creator, self.page_1)
+        result = permissions.utils.has_permission(self.page_1, "view", creator)
         self.assertEqual(result, False)
 
         owner = permissions.utils.register_group("Owner")
-        permissions.utils.grant_permission("view", owner, self.page_1)
+        permissions.utils.grant_permission(self.page_1, "view", owner)
 
-        result = permissions.utils.has_permission("view", creator, self.page_1, [owner])
+        result = permissions.utils.has_permission(self.page_1, "view", creator, [owner])
         self.assertEqual(result, True)
 
     def test_has_permission_user(self):
         """
         """
-        result = permissions.utils.has_permission("view", self.user, self.page_1)
+        result = permissions.utils.has_permission(self.page_1, "view", self.user)
         self.assertEqual(result, False)
 
-        result = permissions.utils.grant_permission(self.permission, self.user, self.page_1)
+        result = permissions.utils.grant_permission(self.page_1, self.permission, self.user)
         self.assertEqual(result, True)
 
-        result = permissions.utils.has_permission("view", self.user, self.page_1)
+        result = permissions.utils.has_permission(self.page_1, "view", self.user)
         self.assertEqual(result, True)
 
-        result = permissions.utils.remove_permission("view", self.user, self.page_1)
+        result = permissions.utils.remove_permission(self.page_1, "view", self.user)
         self.assertEqual(result, True)
 
-        result = permissions.utils.has_permission("view", self.user, self.page_1)
+        result = permissions.utils.has_permission(self.page_1, "view", self.user)
         self.assertEqual(result, False)
 
     def test_ineritance(self):
         """
         """
-        result = permissions.utils.is_inherited("view", self.page_1)
+        result = permissions.utils.is_inherited(self.page_1, "view")
         self.assertEqual(result, True)
 
-        permissions.utils.add_inheritance_block(self.permission, self.page_1)
+        permissions.utils.add_inheritance_block(self.page_1, self.permission)
 
-        result = permissions.utils.is_inherited("view", self.page_1)
+        result = permissions.utils.is_inherited(self.page_1, "view")
         self.assertEqual(result, False)
 
 class RegistrationTestCase(TestCase):
