@@ -236,6 +236,13 @@ def get_group(name):
     except Group.DoesNotExist:
         return None
 
+def reset(obj):
+    """Resets all permissions and inheritance blocks of passed object.
+    """
+    ctype = ContentType.objects.get_for_model(obj)
+    ObjectPermissionInheritanceBlock.objects.filter(content_id=obj.id, content_type=ctype).delete()
+    ObjectPermission.objects.filter(content_id=obj.id, content_type=ctype).delete()
+
 # Registering ################################################################
 
 def register_permission(name, codename, ctypes=[]):
