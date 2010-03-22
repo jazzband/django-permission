@@ -120,14 +120,12 @@ def has_permission(obj, codename, user, groups=[]):
     ct = ContentType.objects.get_for_model(obj)
 
     while obj is not None:
-        p = ObjectPermission.objects.filter(
-            content_type=ct, content_id=obj.id, user=user, permission__codename = codename)
-
-        # if p.exists():
-        #     return True
-
-        if p.count() > 0:
-            return True
+        if user is not None:
+            p = ObjectPermission.objects.filter(
+                content_type=ct, content_id=obj.id, user=user, permission__codename = codename)
+        
+            if p.count() > 0:
+                return True
 
         p = ObjectPermission.objects.filter(
             content_type=ct, content_id=obj.id, group__in=groups, permission__codename = codename)
