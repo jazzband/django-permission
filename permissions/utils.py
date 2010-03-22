@@ -113,28 +113,23 @@ def has_permission(obj, codename, user, groups=[]):
         return True
 
     if user.is_anonymous():
-        user = User.objects.get(username="anonymous")
-
-    user_groups = list(Group.objects.filter(user=user))
-    user_groups.extend(groups)
+        user = None
+    else:
+        groups.extend(Group.objects.filter(user=user))
 
     ct = ContentType.objects.get_for_model(obj)
 
     while obj is not None:
+
+        if user:
+            p = ObjectPermission.objects.filter(
+                content_type=ct, content_id=obj.id, user=user, permission__codename = codename)
+
+            if p.count() > 0:
+                return True
+
         p = ObjectPermission.objects.filter(
-            content_type=ct, content_id=obj.id, user=user, permission__codename = codename)
-
-        # if p.exists():
-        #     return True
-
-        if p.count() > 0:
-            return True
-
-        p = ObjectPermission.objects.filter(
-            content_type=ct, content_id=obj.id, group__in=user_groups, permission__codename = codename)
-
-        # if p.exists():
-        #     return True
+            content_type=ct, content_id=obj.id, group__in=groups, permission__codename = codename)
 
         if p.count() > 0:
             return True
