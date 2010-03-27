@@ -6,6 +6,7 @@ Contents:
 .. toctree::
    :maxdepth: 1
    
+   overview.rst
    installation.rst
    usage/index.rst
    api.rst

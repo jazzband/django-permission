@@ -1,7 +1,6 @@
 # django imports
 from django.db import IntegrityError
 from django.contrib.auth.models import User
-from django.contrib.auth.models import Group
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -9,24 +8,250 @@ from django.core.exceptions import ObjectDoesNotExist
 from permissions.models import ObjectPermission
 from permissions.models import ObjectPermissionInheritanceBlock
 from permissions.models import Permission
+from permissions.models import PrincipalRoleRelation
+from permissions.models import Role
 
-# Permission #################################################################
+# Roles ######################################################################
 
-def grant_permission(obj, permission, user_group):
+def add_role(principal, role):
+    """Adds a global role to a principal.
+
+    **Parameters:**
+
+    principal
+        The principal (user or group) which gets the role added.
+
+    role
+        The role which is assigned.
+    """
+    if isinstance(principal, User):
+        try:
+            ppr = PrincipalRoleRelation.objects.get(user=principal, role=role, content_id=None, content_type=None)
+        except PrincipalRoleRelation.DoesNotExist:
+            PrincipalRoleRelation.objects.create(user=principal, role=role)
+            return True
+    else:
+        try:
+            ppr = PrincipalRoleRelation.objects.get(group=principal, role=role, content_id=None, content_type=None)
+        except PrincipalRoleRelation.DoesNotExist:
+            PrincipalRoleRelation.objects.create(group=principal, role=role)
+            return True
+
+    return False
+
+def add_local_role(obj, principal, role):
+    """Adds a local role to a principal.
+
+    **Parameters:**
+
+    obj
+        The object for which the principal gets the role.
+
+    principal
+        The principal (user or group) which gets the role.
+
+    role
+        The role which is assigned.
+    """
+    ctype = ContentType.objects.get_for_model(obj)
+    if isinstance(principal, User):
+        try:
+            ppr = PrincipalRoleRelation.objects.get(user=principal, role=role, content_id=obj.id, content_type=ctype)
+        except PrincipalRoleRelation.DoesNotExist:
+            PrincipalRoleRelation.objects.create(user=principal, role=role, content=obj)
+            return True
+    else:
+        try:
+            ppr = PrincipalRoleRelation.objects.get(group=principal, role=role, content_id=obj.id, content_type=ctype)
+        except PrincipalRoleRelation.DoesNotExist:
+            PrincipalRoleRelation.objects.create(group=principal, role=role, content=obj)
+            return True
+
+    return False
+
+def remove_role(principal, role):
+    """Removes role from passed principal.
+
+    **Parameters:**
+
+    principal
+        The principal (user or group) from which the role is removed.
+
+    role
+        The role which is removed.
+    """
+    try:
+        if isinstance(principal, User):
+            ppr = PrincipalRoleRelation.objects.get(
+                    user=principal, role=role, content_id=None, content_type=None)
+        else:
+            ppr = PrincipalRoleRelation.objects.get(
+                    group=principal, role=role, content_id=None, content_type=None)
+
+    except PrincipalRoleRelation.DoesNotExist:
+        return False
+    else:
+        ppr.delete()
+
+    return True
+
+def remove_local_role(obj, principal, role):
+    """Removes role from obj and principle.
+
+    **Parameters:**
+
+    obj
+        The object from which the role is removed.
+
+    principal
+        The principal (user or group) from which the role is removed.
+
+    role
+        The role which is assigned.
+    """
+    try:
+        ctype = ContentType.objects.get_for_model(obj)
+
+        if isinstance(principal, User):
+            ppr = PrincipalRoleRelation.objects.get(
+                user=principal, role=role, content_id=obj.id, content_type=ctype)
+        else:
+            ppr = PrincipalRoleRelation.objects.get(
+                group=principal, role=role, content_id=obj.id, content_type=ctype)
+
+    except PrincipalRoleRelation.DoesNotExist:
+        return False
+    else:
+        ppr.delete()
+
+    return True
+
+def remove_roles(principal):
+    """Removes all local roles from passed object and principal (user or
+    group).
+
+    **Parameters:**
+
+    principal
+        The principal (user or group) from which all roles are removed.
+    """
+    try:
+        if obj is None:
+            if isinstance(principal, User):
+                ppr = PrincipalRoleRelation.objects.filter(
+                    user=principal, content_id=None, content_type=None)
+            else:
+                ppr = PrincipalRoleRelation.objects.filter(
+                    group=principal, content_id=None, content_type=None)
+
+        else:
+            ctype = ContentType.objects.get_for_model(obj)
+
+            if isinstance(principal, User):
+                ppr = PrincipalRoleRelation.objects.filter(
+                    user=principal, content_id=obj.id, content_type=ctype)
+            else:
+                ppr = PrincipalRoleRelation.objects.filter(
+                    group=principal, content_id=obj.id, content_type=ctype)
+
+    except PrincipalRoleRelation.DoesNotExist:
+        return False
+    else:
+        ppr.delete()
+
+    return True
+
+def remove_local_roles(obj, principal):
+    """Removes all local roles from passed object and principal (user or
+    group).
+
+    **Parameters:**
+
+    obj
+        The object from which the roles are removed.
+
+    principal
+        The principal (user or group) from which the roles are removed.
+    """
+    try:
+        ctype = ContentType.objects.get_for_model(obj)
+
+        if isinstance(principal, User):
+            ppr = PrincipalRoleRelation.objects.filter(
+                user=principal, content_id=obj.id, content_type=ctype)
+        else:
+            ppr = PrincipalRoleRelation.objects.filter(
+                group=principal, content_id=obj.id, content_type=ctype)
+
+    except PrincipalRoleRelation.DoesNotExist:
+        return False
+    else:
+        ppr.delete()
+
+    return True
+
+def get_roles(principal, obj=None):
+    """Returns all roles of passed user for passed content object. This takes
+    global and local roles into account
+
+    **Parameters:**
+
+    obj
+        The object from which the roles are removed.
+
+    principal
+        The principal (user or group) from which the roles are removed.
+    """
+    roles = get_global_roles(principal)
+
+    if obj is not None:
+        roles.extend(get_local_roles(obj, principal))
+
+    if isinstance(principal, User):
+        for group in principal.groups.all():
+            roles.extend(get_local_roles(obj, group))
+
+    return roles
+
+def get_global_roles(principal):
+    """Returns global roles of passed principal (user or group).
+    """
+    if isinstance(principal, User):
+        return [prr.role for prr in PrincipalRoleRelation.objects.filter(
+            user=principal, content_id=None, content_type=None)]
+    else:
+        return [prr.role for prr in PrincipalRoleRelation.objects.filter(
+            group=principal, content_id=None, content_type=None)]
+
+def get_local_roles(obj, principal):
+    """Returns local for passed user and content object.
+    """
+    ctype = ContentType.objects.get_for_model(obj)
+
+    if isinstance(principal, User):
+        return [prr.role for prr in PrincipalRoleRelation.objects.filter(
+            user=principal, content_id=obj.id, content_type=ctype)]
+    else:
+        return [prr.role for prr in PrincipalRoleRelation.objects.filter(
+            group=principal, content_id=obj.id, content_type=ctype)]
+
+# Permissions ################################################################
+
+def grant_permission(obj, permission, role):
     """Adds passed permission to passed group and object. Returns True if the
     permission was able to be added, otherwise False.
 
     **Parameters:**
 
-        obj
-            The content object for which the permission should be granted.
+    obj
+        The content object for which the permission should be granted.
 
-        permission
-            The permission which should be granted. Either a permission
-            object or the codename of a permission.
+    permission
+        The permission which should be granted. Either a permission
+        object or the codename of a permission.
 
-        user_group
-            The user or group for which the permission should be granted.
+    role
+        The role for which the permission should be granted.
     """
     if not isinstance(permission, Permission):
         try:
@@ -35,39 +260,31 @@ def grant_permission(obj, permission, user_group):
             return False
 
     ct = ContentType.objects.get_for_model(obj)
-    if isinstance(user_group, Group):
+    try:
+        ObjectPermission.objects.get(role=role, content_type = ct, content_id=obj.id, permission=permission)
+    except ObjectPermission.DoesNotExist:
         try:
-            ObjectPermission.objects.get(group=user_group, content_type = ct, content_id=obj.id, permission=permission)
-        except ObjectPermission.DoesNotExist:
-            try:
-                result = ObjectPermission.objects.create(group=user_group, content=obj, permission=permission)
-            except IntegrityError:
-                return False
-    else:
-        try:
-            ObjectPermission.objects.get(user=user_group, content_type = ct, content_id=obj.id, permission=permission)
-        except ObjectPermission.DoesNotExist:
-            try:
-                result = ObjectPermission.objects.create(user=user_group, content=obj, permission=permission)
-            except IntegrityError:
-                return False
+            result = ObjectPermission.objects.create(role=role, content=obj, permission=permission)
+        except IntegrityError:
+            return False
+
     return True
 
-def remove_permission(obj, permission, user_group):
-    """Removes passed permission from passed group and object. Returns True if
+def remove_permission(obj, permission, role):
+    """Removes passed permission from passed role and object. Returns True if
     the permission has been removed.
 
     **Parameters:**
 
-        obj
-            The content object for which a permission should be removed.
+    obj
+        The content object for which a permission should be removed.
 
-        permission
-            The permission which should be removed. Either a permission object
-            or the codename of a permission.
+    permission
+        The permission which should be removed. Either a permission object
+        or the codename of a permission.
 
-        user_group
-            The user or group for which a permission should be removed.
+    role
+        The role for which a permission should be removed.
     """
     if not isinstance(permission, Permission):
         try:
@@ -77,20 +294,15 @@ def remove_permission(obj, permission, user_group):
 
     ct = ContentType.objects.get_for_model(obj)
 
-    if isinstance(user_group, Group):
-        try:
-            op = ObjectPermission.objects.get(group=user_group, content_type = ct, content_id=obj.id, permission = permission)
-        except ObjectPermission.DoesNotExist:
-            return False
-    else:
-        try:
-            op = ObjectPermission.objects.get(user=user_group, content_type = ct, content_id=obj.id, permission = permission)
-        except ObjectPermission.DoesNotExist:
-            return False
+    try:
+        op = ObjectPermission.objects.get(role=role, content_type = ct, content_id=obj.id, permission = permission)
+    except ObjectPermission.DoesNotExist:
+        return False
+
     op.delete()
     return True
 
-def has_permission(obj, codename, user, groups=[]):
+def has_permission(obj, codename, user, roles=[]):
     """Checks whether the passed user has passed permission for passed object.
 
     **Parameters:**
@@ -115,20 +327,13 @@ def has_permission(obj, codename, user, groups=[]):
     if user.is_anonymous():
         user = None
     else:
-        groups.extend(Group.objects.filter(user=user))
+        roles.extend(get_roles(user, obj))
 
     ct = ContentType.objects.get_for_model(obj)
 
     while obj is not None:
-        if user:
-            p = ObjectPermission.objects.filter(
-                content_type=ct, content_id=obj.id, user=user, permission__codename = codename)
-
-            if p.count() > 0:
-                return True
-
         p = ObjectPermission.objects.filter(
-            content_type=ct, content_id=obj.id, group__in=groups, permission__codename = codename)
+            content_type=ct, content_id=obj.id, role__in=roles, permission__codename = codename)
 
         if p.count() > 0:
             return True
@@ -222,12 +427,12 @@ def is_inherited(obj, codename):
     else:
         return False
 
-def get_group(name):
-    """Returns the group with given or None if it doesn't exit.
+def get_role(name):
+    """Returns the role with given name or None if it doesn't exit.
     """
     try:
-        return Group.objects.get(name=name)
-    except Group.DoesNotExist:
+        return Role.objects.get(name=name)
+    except Role.DoesNotExist:
         return None
 
 def reset(obj):
@@ -278,35 +483,33 @@ def unregister_permission(codename):
     permission.delete()
     return True
 
-def register_group(name):
-    """Registers a group with passed name to the framework. Creates a Django
-    default group. Returns the new group if the registration was successfully,
-    otherwise False.
+def register_role(name):
+    """Registers a group with passed name to the framework. Returns the new
+    role if the registration was successfully, otherwise False.
 
     **Parameters:**
 
-        name
-            The unique group name.
+    name
+        The unique group name.
     """
     try:
-        group = Group.objects.create(name=name)
+        role = Role.objects.create(name=name)
     except IntegrityError:
         return False
-    return group
+    return role
 
-def unregister_group(name):
-    """Unregisters the group with passed name. This will remove a Django
-    default group with passed name.
+def unregister_role(name):
+    """Unregisters the role with passed name.
 
     **Parameters:**
 
         name
-            The unique group name.
+            The unique role name.
     """
     try:
-        group = Group.objects.get(name=name)
-    except Group.DoesNotExist:
+        role = Role.objects.get(name=name)
+    except Role.DoesNotExist:
         return False
 
-    group.delete()
+    role.delete()
     return True
