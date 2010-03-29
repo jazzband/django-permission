@@ -6,6 +6,8 @@ from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext_lazy as _
 
+import permissions.utils
+
 class PermissionBase(object):
     """Mix-in class for permissions.
     """
@@ -89,7 +91,7 @@ class PermissionBase(object):
             The permission which should be checked. Must be the codename of
             the permission.
         """
-        return permission.utils.is_inherited(self, codename)
+        return permissions.utils.is_inherited(self, codename)
 
     def add_role(self, principal, role):
         """Adds a local role for the principal.
@@ -111,7 +113,7 @@ class PermissionBase(object):
 
     def remove_role(self, principal, role):
         """Adds a local role for the principal to the object.
-        
+
         **Parameters:**
 
         principal
@@ -128,10 +130,10 @@ class PermissionBase(object):
         **Parameters:**
 
         principal
-            The principal (user or group) from which all local roles are 
+            The principal (user or group) from which all local roles are
             removed.
         """
-        return permissions.utils.remove_local_roles(self, principal, role)
+        return permissions.utils.remove_local_roles(self, principal)
 
 class Permission(models.Model):
     """A permission which can be granted to users/groups and objects.
