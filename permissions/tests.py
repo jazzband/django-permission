@@ -24,14 +24,15 @@ class RoleTestCase(TestCase):
         self.role_2 = permissions.utils.register_role("Role 2")
 
         self.user = User.objects.create(username="john")
+        self.group = Group.objects.create(name="brights")
 
         self.page_1 = FlatPage.objects.create(url="/page-1/", title="Page 1")
         self.page_2 = FlatPage.objects.create(url="/page-1/", title="Page 2")
 
-    def test_global_roles(self):
+    def test_global_roles_user(self):
         """
         """
-        # Add role 1    
+        # Add role 1
         result = permissions.utils.add_role(self.user, self.role_1)
         self.assertEqual(result, True)
 
@@ -48,7 +49,7 @@ class RoleTestCase(TestCase):
 
         result = permissions.utils.get_roles(self.user)
         self.assertEqual(result, [self.role_1, self.role_2])
-        
+
         # Remove role 1
         result = permissions.utils.remove_role(self.user, self.role_1)
         self.assertEqual(result, True)
@@ -67,6 +68,198 @@ class RoleTestCase(TestCase):
         result = permissions.utils.get_roles(self.user)
         self.assertEqual(result, [])
 
+    def test_global_roles_group(self):
+        """
+        """
+        # Add role 1
+        result = permissions.utils.add_role(self.group, self.role_1)
+        self.assertEqual(result, True)
+
+        # Add role 1 again
+        result = permissions.utils.add_role(self.group, self.role_1)
+        self.assertEqual(result, False)
+
+        result = permissions.utils.get_roles(self.group)
+        self.assertEqual(result, [self.role_1])
+
+        # Add role 2
+        result = permissions.utils.add_role(self.group, self.role_2)
+        self.assertEqual(result, True)
+
+        result = permissions.utils.get_roles(self.group)
+        self.assertEqual(result, [self.role_1, self.role_2])
+
+        # Remove role 1
+        result = permissions.utils.remove_role(self.group, self.role_1)
+        self.assertEqual(result, True)
+
+        # Remove role 1 again
+        result = permissions.utils.remove_role(self.group, self.role_1)
+        self.assertEqual(result, False)
+
+        result = permissions.utils.get_roles(self.group)
+        self.assertEqual(result, [self.role_2])
+
+        # Remove role 2
+        result = permissions.utils.remove_role(self.group, self.role_2)
+        self.assertEqual(result, True)
+
+        result = permissions.utils.get_roles(self.group)
+        self.assertEqual(result, [])
+
+    def test_remove_roles_user(self):
+        """
+        """
+        # Add role 1
+        result = permissions.utils.add_role(self.user, self.role_1)
+        self.assertEqual(result, True)
+
+        # Add role 2
+        result = permissions.utils.add_role(self.user, self.role_2)
+        self.assertEqual(result, True)
+
+        result = permissions.utils.get_roles(self.user)
+        self.assertEqual(result, [self.role_1, self.role_2])
+
+        # Remove roles
+        result = permissions.utils.remove_roles(self.user)
+        self.assertEqual(result, True)
+        
+        result = permissions.utils.get_roles(self.user)
+        self.assertEqual(result, [])
+
+        # Remove roles
+        result = permissions.utils.remove_roles(self.user)
+        self.assertEqual(result, False)
+
+    def test_remove_roles_group(self):
+        """
+        """
+        # Add role 1
+        result = permissions.utils.add_role(self.group, self.role_1)
+        self.assertEqual(result, True)
+
+        # Add role 2
+        result = permissions.utils.add_role(self.group, self.role_2)
+        self.assertEqual(result, True)
+
+        result = permissions.utils.get_roles(self.group)
+        self.assertEqual(result, [self.role_1, self.role_2])
+
+        # Remove roles
+        result = permissions.utils.remove_roles(self.group)
+        self.assertEqual(result, True)
+
+        result = permissions.utils.get_roles(self.group)
+        self.assertEqual(result, [])
+        
+        # Remove roles
+        result = permissions.utils.remove_roles(self.group)
+        self.assertEqual(result, False)
+
+    def test_local_role_user(self):
+        """
+        """
+        # Add local role to page 1
+        result = permissions.utils.add_local_role(self.page_1, self.user, self.role_1)
+        self.assertEqual(result, True)
+
+        # Again
+        result = permissions.utils.add_local_role(self.page_1, self.user, self.role_1)
+        self.assertEqual(result, False)
+
+        result = permissions.utils.get_local_roles(self.page_1, self.user)
+        self.assertEqual(result, [self.role_1])
+
+        # Add local role 2
+        result = permissions.utils.add_local_role(self.page_1, self.user, self.role_2)
+        self.assertEqual(result, True)
+
+        result = permissions.utils.get_local_roles(self.page_1, self.user)
+        self.assertEqual(result, [self.role_1, self.role_2])
+
+        # Remove role 1
+        result = permissions.utils.remove_local_role(self.page_1, self.user, self.role_1)
+        self.assertEqual(result, True)
+
+        # Remove role 1 again
+        result = permissions.utils.remove_local_role(self.page_1, self.user, self.role_1)
+        self.assertEqual(result, False)
+
+        result = permissions.utils.get_local_roles(self.page_1, self.user)
+        self.assertEqual(result, [self.role_2])
+
+        # Remove role 2
+        result = permissions.utils.remove_local_role(self.page_1, self.user, self.role_2)
+        self.assertEqual(result, True)
+
+        result = permissions.utils.get_local_roles(self.page_1, self.user)
+        self.assertEqual(result, [])
+
+    def test_local_role_group(self):
+        """
+        """
+        # Add local role to page 1
+        result = permissions.utils.add_local_role(self.page_1, self.group, self.role_1)
+        self.assertEqual(result, True)
+
+        # Again
+        result = permissions.utils.add_local_role(self.page_1, self.group, self.role_1)
+        self.assertEqual(result, False)
+
+        result = permissions.utils.get_local_roles(self.page_1, self.group)
+        self.assertEqual(result, [self.role_1])
+
+        # Add local role 2
+        result = permissions.utils.add_local_role(self.page_1, self.group, self.role_2)
+        self.assertEqual(result, True)
+
+        result = permissions.utils.get_local_roles(self.page_1, self.group)
+        self.assertEqual(result, [self.role_1, self.role_2])
+
+        # Remove role 1
+        result = permissions.utils.remove_local_role(self.page_1, self.group, self.role_1)
+        self.assertEqual(result, True)
+
+        # Remove role 1 again
+        result = permissions.utils.remove_local_role(self.page_1, self.group, self.role_1)
+        self.assertEqual(result, False)
+
+        result = permissions.utils.get_local_roles(self.page_1, self.group)
+        self.assertEqual(result, [self.role_2])
+
+        # Remove role 2
+        result = permissions.utils.remove_local_role(self.page_1, self.group, self.role_2)
+        self.assertEqual(result, True)
+
+        result = permissions.utils.get_local_roles(self.page_1, self.group)
+        self.assertEqual(result, [])
+    
+    def test_remove_local_roles_user(self):
+        """
+        """
+        # Add local role to page 1
+        result = permissions.utils.add_local_role(self.page_1, self.user, self.role_1)
+        self.assertEqual(result, True)
+
+        # Add local role 2
+        result = permissions.utils.add_local_role(self.page_1, self.user, self.role_2)
+        self.assertEqual(result, True)
+
+        result = permissions.utils.get_local_roles(self.page_1, self.user)
+        self.assertEqual(result, [self.role_1, self.role_2])
+        
+        # Remove all local roles
+        result = permissions.utils.remove_local_roles(self.page_1, self.user)
+        self.assertEqual(result, True)
+        
+        result = permissions.utils.get_local_roles(self.page_1, self.user)
+        self.assertEqual(result, [])
+
+        # Remove all local roles again
+        result = permissions.utils.remove_local_roles(self.page_1, self.user)
+        self.assertEqual(result, False)
+        
 class PermissionTestCase(TestCase):
     """
     """
@@ -84,23 +277,53 @@ class PermissionTestCase(TestCase):
         self.page_2 = FlatPage.objects.create(url="/page-1/", title="Page 2")
 
         self.permission = permissions.utils.register_permission("View", "view")
+    
+    def test_add_permissions(self):
+        """
+        """
+        # Add per object
+        result = permissions.utils.grant_permission(self.page_1, self.role_1, self.permission)
+        self.assertEqual(result, True)
+        
+        # Add per codename
+        result = permissions.utils.grant_permission(self.page_1, self.role_1, "view")
+        self.assertEqual(result, True)
+        
+        # Add ermission which does not exist
+        result = permissions.utils.grant_permission(self.page_1, self.role_1, "hurz")
+        self.assertEqual(result, False)
+    
+    def test_remove_permission(self):
+        """
+        """
+        # Add
+        result = permissions.utils.grant_permission(self.page_1, self.role_1, "view")
+        self.assertEqual(result, True)
+        
+        # Remove
+        result = permissions.utils.remove_permission(self.page_1, self.role_1, "view")
+        self.assertEqual(result, True)
 
+        # Remove again
+        result = permissions.utils.remove_permission(self.page_1, self.role_1, "view")
+        self.assertEqual(result, False)
+        
     def test_has_permission_role(self):
         """
         """
-        result = permissions.utils.has_permission(self.page_1, "view", self.user)
+        result = permissions.utils.has_permission(self.page_1, self.user, "view")
         self.assertEqual(result, False)
 
-        result = permissions.utils.grant_permission(self.page_1, self.permission, self.role_1)
+        result = permissions.utils.grant_permission(self.page_1, self.role_1, self.permission)
         self.assertEqual(result, True)
 
-        result = permissions.utils.has_permission(self.page_1, "view", self.user)
+        result = permissions.utils.has_permission(self.page_1, self.user, "view")
         self.assertEqual(result, True)
 
-        result = permissions.utils.remove_permission(self.page_1, "view", self.role_1)
+        result = permissions.utils.remove_permission(self.page_1, self.role_1, "view")
         self.assertEqual(result, True)
 
-        result = permissions.utils.has_permission(self.page_1, "view", self.user)
+        result = permissions.utils.has_permission(self.page_1, self.user, "view")
         self.assertEqual(result, False)
 
     def test_has_permission_owner(self):
@@ -108,25 +331,25 @@ class PermissionTestCase(TestCase):
         """
         creator = User.objects.create(username="jane")
 
-        result = permissions.utils.has_permission(self.page_1, "view", creator)
+        result = permissions.utils.has_permission(self.page_1, creator, "view")
         self.assertEqual(result, False)
 
         owner = permissions.utils.register_role("Owner")
-        permissions.utils.grant_permission(self.page_1, "view", owner)
+        permissions.utils.grant_permission(self.page_1, owner, "view")
 
-        result = permissions.utils.has_permission(self.page_1, "view", creator, [owner])
+        result = permissions.utils.has_permission(self.page_1, creator, "view", [owner])
         self.assertEqual(result, True)
 
     def test_local_role(self):
         """
         """
-        result = permissions.utils.has_permission(self.page_1, "view", self.user)
+        result = permissions.utils.has_permission(self.page_1, self.user, "view")
         self.assertEqual(result, False)
 
-        permissions.utils.grant_permission(self.page_1, self.permission, self.role_2)
+        permissions.utils.grant_permission(self.page_1, self.role_2, self.permission)
         permissions.utils.add_local_role(self.page_1, self.user, self.role_2)
 
-        result = permissions.utils.has_permission(self.page_1, "view", self.user)
+        result = permissions.utils.has_permission(self.page_1, self.user, "view")
         self.assertEqual(result, True)
 
     def test_ineritance(self):
@@ -134,11 +357,28 @@ class PermissionTestCase(TestCase):
         """
         result = permissions.utils.is_inherited(self.page_1, "view")
         self.assertEqual(result, True)
-
+        
+        # per permission
         permissions.utils.add_inheritance_block(self.page_1, self.permission)
 
         result = permissions.utils.is_inherited(self.page_1, "view")
         self.assertEqual(result, False)
+
+        permissions.utils.remove_inheritance_block(self.page_1, self.permission)
+
+        result = permissions.utils.is_inherited(self.page_1, "view")
+        self.assertEqual(result, True)
+        
+        # per codename
+        permissions.utils.add_inheritance_block(self.page_1, "view")
+
+        result = permissions.utils.is_inherited(self.page_1, "view")
+        self.assertEqual(result, False)
+
+        permissions.utils.remove_inheritance_block(self.page_1, "view")
+
+        result = permissions.utils.is_inherited(self.page_1, "view")
+        self.assertEqual(result, True)
 
     def test_unicode(self):
         """
@@ -147,7 +387,7 @@ class PermissionTestCase(TestCase):
         self.assertEqual(self.permission.__unicode__(), "View (view)")
 
         # ObjectPermission
-        permissions.utils.grant_permission(self.page_1, self.permission, self.role_1)
+        permissions.utils.grant_permission(self.page_1, self.role_1, self.permission)
         opr = ObjectPermission.objects.get(permission=self.permission, role=self.role_1)
         self.assertEqual(opr.__unicode__(), "View / Role 1 / flat page - 1")
 

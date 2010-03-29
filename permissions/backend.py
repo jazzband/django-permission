@@ -37,4 +37,4 @@ class ObjectPermissionsBackend(object):
         obj
             The object for which the permission should be checked.
         """
-        return permissions.utils.has_permission(obj, permission_codename, user)
+        return permissions.utils.has_permission(obj, user, permission_codename)
