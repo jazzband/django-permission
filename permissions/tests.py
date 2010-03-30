@@ -28,7 +28,28 @@ class RoleTestCase(TestCase):
 
         self.page_1 = FlatPage.objects.create(url="/page-1/", title="Page 1")
         self.page_2 = FlatPage.objects.create(url="/page-1/", title="Page 2")
+    
+    def test_getter(self):
+        """
+        """
+        result = permissions.utils.get_group(self.group.id)
+        self.assertEqual(result, self.group)
 
+        result = permissions.utils.get_group(42)
+        self.assertEqual(result, None)
+
+        result = permissions.utils.get_role(self.role_1.id)
+        self.assertEqual(result, self.role_1)
+
+        result = permissions.utils.get_role(42)
+        self.assertEqual(result, None)
+
+        result = permissions.utils.get_user(self.user.id)
+        self.assertEqual(result, self.user)
+
+        result = permissions.utils.get_user(42)
+        self.assertEqual(result, None)
+        
     def test_global_roles_user(self):
         """
         """
@@ -396,7 +417,31 @@ class PermissionTestCase(TestCase):
         opb = ObjectPermissionInheritanceBlock.objects.get(permission=self.permission)
 
         self.assertEqual(opb.__unicode__(), "View (view) / flat page - 1")
+    
+    def test_reset(self):
+        """
+        """
+        result = permissions.utils.grant_permission(self.page_1, self.role_1, "view")
+        self.assertEqual(result, True)
 
+        result = permissions.utils.has_permission(self.page_1, self.user, "view")
+        self.assertEqual(result, True)
+
+        permissions.utils.add_inheritance_block(self.page_1, "view")
+
+        result = permissions.utils.is_inherited(self.page_1, "view")
+        self.assertEqual(result, False)
+        
+        permissions.utils.reset(self.page_1)
+
+        result = permissions.utils.has_permission(self.page_1, self.user, "view")
+        self.assertEqual(result, False)
+
+        result = permissions.utils.is_inherited(self.page_1, "view")
+        self.assertEqual(result, True)
+
+        permissions.utils.reset(self.page_1)
+        
 class RegistrationTestCase(TestCase):
     """Tests the registration of different components.
     """

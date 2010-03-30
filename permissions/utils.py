@@ -430,7 +430,7 @@ def get_user(id):
     """
     try:
         return User.objects.get(pk=id)
-    except Role.DoesNotExist:
+    except User.DoesNotExist:
         return None
 
 def reset(obj):
