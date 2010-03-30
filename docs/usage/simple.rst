@@ -4,7 +4,7 @@ Simple
 
 .. warning::
 
-    django-permissions is in alpha state. Please consider the API as supposed 
+    django-permissions is in alpha state. Please consider the API as supposed
     to be changed until it reaches beta state.
 
 Create a new permission
@@ -15,14 +15,14 @@ Create a new permission
     from permissions.utils import register_permission
     permission = register_permission("View", "view")
 
-Create a new group
-------------------
+Create a new role
+-----------------
 
 .. code-block:: python
 
     from permissions.utils import register_role
     editor = register_role("Editor")
-    
+
 Create a content object
 -----------------------
 
@@ -39,12 +39,8 @@ Grant permission
     from permissions.utils import grant_permission
     grant_permission(content, editor, "view")
 
-Now all users which are member of the group "Brights" have the permission to
-view object "content". 
-
-.. note::
-
-    You can also grant permission to single users.
+Now all users which are member of the role "Editor" have the permission to
+view object "content".
 
 Check permission
 ----------------
@@ -57,5 +53,12 @@ Check permission
     if result == False:
         print "Alert!"
 
-This will check whether the current user has the permission "View" for the 
+This will check whether the current user has the permission "View" for the
 FlatPage "content".
+
+More information
+----------------
+
+.. seealso::
+
+    This is just a simple use case. Look into the :doc:`API documentation <../api>` for more.

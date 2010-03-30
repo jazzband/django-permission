@@ -16,18 +16,18 @@ Create new permissions
 
 .. code-block:: python
 
-from permissions.utils import register_permission
-permission = register_permission("View", "view")
-permission = register_permission("Edit", "edit")
+    from permissions.utils import register_permission
+    permission = register_permission("View", "view")
+    permission = register_permission("Edit", "edit")
 
-Create new groups
-------------------
+Create new role
+---------------
 
 .. code-block:: python
 
-from permissions.utils import register_role
-anonymous = register_role("Anonymous")
-owner = register_role("Owner")
+    from permissions.utils import register_role
+    anonymous = register_role("Anonymous")
+    owner = register_role("Owner")
 
 This will create default Django groups.
 
@@ -36,17 +36,17 @@ Create a content object
 
 .. code-block:: python
 
-from django.contrib.flatpages.models import FlatPage
-content = FlatPage.objects.create(title="Example", url="example")
+    from django.contrib.flatpages.models import FlatPage
+    content = FlatPage.objects.create(title="Example", url="example")
 
 Grant permissions
 -----------------
 
 .. code-block:: python
 
-from permissions.utils import grant_permission
-grant_permission(content, anonymous, "view")
-grant_permission(content, owner, "edit")
+    from permissions.utils import grant_permission
+    grant_permission(content, anonymous, "view")
+    grant_permission(content, owner, "edit")
 
 Now all users which are member of the special group "Anonymous" have the
 permission to view the object "content". And all users which are member of the
@@ -72,3 +72,10 @@ Check permission
 
     if result == False:
         print "Alert!"
+
+More information
+----------------
+
+.. seealso::
+
+    This is just a simple use case. Look into the :doc:`API documentation <../api>` for more.
