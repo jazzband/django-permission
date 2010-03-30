@@ -482,13 +482,13 @@ def unregister_permission(codename):
     return True
 
 def register_role(name):
-    """Registers a group with passed name to the framework. Returns the new
+    """Registers a role with passed name to the framework. Returns the new
     role if the registration was successfully, otherwise False.
 
     **Parameters:**
 
     name
-        The unique group name.
+        The unique role name.
     """
     try:
         role = Role.objects.create(name=name)
@@ -501,8 +501,8 @@ def unregister_role(name):
 
     **Parameters:**
 
-        name
-            The unique role name.
+    name
+        The unique role name.
     """
     try:
         role = Role.objects.get(name=name)
@@ -511,3 +511,39 @@ def unregister_role(name):
 
     role.delete()
     return True
+    
+def register_group(name):
+    """Registers a group with passed name to the framework. Returns the new
+    group if the registration was successfully, otherwise False.
+    
+    Actually this creates just a default Django Group.
+
+    **Parameters:**
+
+    name
+        The unique group name.
+    """
+    try:
+        group = Group.objects.create(name=name)
+    except IntegrityError:
+        return False
+    return group
+
+def unregister_group(name):
+    """Unregisters the group with passed name. Returns True if the 
+    unregistration was succesfull otherwise False.
+
+    Actually this deletes just a default Django Group.
+
+    **Parameters:**
+
+    name
+        The unique role name.
+    """
+    try:
+        group = Group.objects.get(name=name)
+    except Group.DoesNotExist:
+        return False
+
+    group.delete()
+    return True    

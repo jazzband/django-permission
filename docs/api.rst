@@ -36,6 +36,12 @@ Register permissions
   .. autofunction:: register_permission
   .. autofunction:: unregister_permission
 
+Register roles
+^^^^^^^^^^^^^^
+
+  .. autofunction:: register_role
+  .. autofunction:: unregister_role
+
 Register groups
 ^^^^^^^^^^^^^^^
 

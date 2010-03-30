@@ -445,6 +445,35 @@ class PermissionTestCase(TestCase):
 class RegistrationTestCase(TestCase):
     """Tests the registration of different components.
     """
+    def test_group(self):
+        """Tests registering/unregistering of a group.
+        """
+        # Register a group
+        result = permissions.utils.register_group("Brights")
+        self.failUnless(isinstance(result, Group))
+
+        # It's there
+        group = Group.objects.get(name="Brights")
+        self.assertEqual(group.name, "Brights")
+
+        # Trying to register another group with same name
+        result = permissions.utils.register_group("Brights")
+        self.assertEqual(result, False)
+
+        group = Group.objects.get(name="Brights")
+        self.assertEqual(group.name, "Brights")
+
+        # Unregister the group
+        result = permissions.utils.unregister_group("Brights")
+        self.assertEqual(result, True)
+
+        # It's not there anymore
+        self.assertRaises(Group.DoesNotExist, Group.objects.get, name="Brights")
+
+        # Trying to unregister the group again
+        result = permissions.utils.unregister_group("Brights")
+        self.assertEqual(result, False)
+
     def test_role(self):
         """Tests registering/unregistering of a role.
         """
