@@ -223,8 +223,8 @@ class ObjectPermissionInheritanceBlock(models.Model):
         return "%s / %s - %s" % (self.permission, self.content_type, self.content_id)
 
 class Role(models.Model):
-    """A role getting permissions for content objects. A role is the only way
-    to grant permissions to user and groups.
+    """A role gets permissions to do something. Principals (users and groups)
+    can only get permissions via roles.
 
     **Attributes:**
 
@@ -258,9 +258,10 @@ class Role(models.Model):
         return PrincipalRoleRelation.objects.filter(role=self, content=content)
 
 class PrincipalRoleRelation(models.Model):
-    """A role given to a principal user or group. If a content object is passed
-    this is a local role only for the given content object. Otherwise it is
-    a global role.
+    """A role given to a principal (user or group). If a content object is
+    given this is a local role, i.e. the principal has this role only for this
+    content object. Otherwise it is a global role, i.e. the principal has
+    this role generally.
 
     user
         A user instance. Either a user xor a group needs to be given.
@@ -272,7 +273,7 @@ class PrincipalRoleRelation(models.Model):
         The role which is given to the principal for content.
 
     content
-        The content object which gets the local role.
+        The content object which gets the local role (optional).
     """
     user = models.ForeignKey(User, verbose_name=_(u"User"), blank=True, null=True)
     group = models.ForeignKey(Group, verbose_name=_(u"Group"), blank=True, null=True)

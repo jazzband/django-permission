@@ -4,7 +4,7 @@ API
 
 .. warning::
 
-    django-permissions is in alpha state. Please consider the API as supposed 
+    django-permissions is in alpha state. Please consider the API as supposed
     to be changed until it reaches beta state.
 
 .. automodule:: permissions.utils
@@ -59,11 +59,25 @@ Checks whether the current user has passed permission::
         <span>Has permission</span>
     {% else %}
         <span>Doesn't have permission</span>
-    {% endifhasperm %}    
+    {% endifhasperm %}
 
 Models
 ======
 
+.. autoclass:: permissions.models.PermissionBase
+    :members:
+
 .. autoclass:: permissions.models.Permission
+    :members:
+
 .. autoclass:: permissions.models.ObjectPermission
+    :members:
+
 .. autoclass:: permissions.models.ObjectPermissionInheritanceBlock
+    :members:
+
+.. autoclass:: permissions.models.Role
+    :members:
+
+.. autoclass:: permissions.models.PrincipalRoleRelation
+    :members:
