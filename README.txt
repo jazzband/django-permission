@@ -1,7 +1,7 @@
 What is it?
 ===========
 
-django-workflows provides per-object permissions for Django
+django-permissions provides per-object permissions for Django
 
 Documentation
 =============
@@ -16,15 +16,21 @@ The code can be found on bitbucket: http://bitbucket.org/diefenbach/django-permi
 Implementations
 ===============
 
-django-permissions is used within the CMS `LFC <http://pypi.python.org/pypi/django-lfc>`_
+If you want to see a comprehensive implementation of django-permissions take 
+a look at the CMS `LFC <http://pypi.python.org/pypi/django-lfc>`_
 
 Changes
 =======
 
+1.0 alpha 3 (2010-03-30)
+------------------------
+
+* Added roles
+
 1.0 alpha 2 (2010-03-22)
 ------------------------
 
-* A lot of improvements
+* Added a lot of improvements on several places
 
 1.0 alpha 1 (2010-03-11)
 ------------------------
