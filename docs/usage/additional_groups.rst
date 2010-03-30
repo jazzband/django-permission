@@ -16,18 +16,18 @@ Create new permissions
 
 .. code-block:: python
 
-    from permissions.utils import register_permission
-    permission = register_permission("View", "view")
-    permission = register_permission("Edit", "edit")
+from permissions.utils import register_permission
+permission = register_permission("View", "view")
+permission = register_permission("Edit", "edit")
 
 Create new groups
 ------------------
 
 .. code-block:: python
 
-    from permissions.utils import register_group
-    anonymous = register_group("Anonymous")
-    owner = register_group("Owner")
+from permissions.utils import register_role
+anonymous = register_role("Anonymous")
+owner = register_role("Owner")
 
 This will create default Django groups.
 
@@ -36,17 +36,17 @@ Create a content object
 
 .. code-block:: python
 
-    from django.contrib.flatpages.models import FlatPage
-    content = FlatPage.objects.create(title="Example", url="example")
+from django.contrib.flatpages.models import FlatPage
+content = FlatPage.objects.create(title="Example", url="example")
 
 Grant permissions
 -----------------
 
 .. code-block:: python
 
-    from permission.utils import grant_permission
-    grant_permission("view", anonymous, content)
-    grant_permission("edit", owner, content)
+from permissions.utils import grant_permission
+grant_permission(content, anonymous, "view")
+grant_permission(content, owner, "edit")
 
 Now all users which are member of the special group "Anonymous" have the
 permission to view the object "content". And all users which are member of the
@@ -57,19 +57,18 @@ Check permission
 
 .. code-block:: python
 
-    from permission.utils import has_permission
-    from permission.utils import get_group
-    
+    from permissions.utils import has_permission
+
     # Every user is automatically within the Anonymous group.
-    groups = [get_group("Anonymous")]
-    
+    roles = [anonymous]
+
     # The creator of the page is also within the Owner group.
     # Note: FlatPages actually don't have a creator attribute.
-    if request.user == content.creator:    
-        groups.append(get_group("Owner"))
-    
-    # Passing the additional groups to has_permission    
-    result = has_permission("edit", request.user, content, groups)
+    if request.user == content.creator:
+        roles.append(owner)
+
+    # Passing the additional groups to has_permission
+    result = has_permission(content, request.user, "edit", groups)
 
     if result == False:
         print "Alert!"

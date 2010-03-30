@@ -20,11 +20,9 @@ Create a new group
 
 .. code-block:: python
 
-    from permissions.utils import register_group
-    brights = register_group("Brights")
+    from permissions.utils import register_role
+    editor = register_role("Editor")
     
-This will create a default Django group.
-
 Create a content object
 -----------------------
 
@@ -38,8 +36,8 @@ Grant permission
 
 .. code-block:: python
 
-    from permission.utils import grant_permission
-    grant_permission("view", brights, content)
+    from permissions.utils import grant_permission
+    grant_permission(content, editor, "view")
 
 Now all users which are member of the group "Brights" have the permission to
 view object "content". 
@@ -53,8 +51,8 @@ Check permission
 
 .. code-block:: python
 
-    from permission.utils import has_permission
-    result = has_permission("view", request.user, content)
+    from permissions.utils import has_permission
+    result = has_permission(content, request.user, "view")
 
     if result == False:
         print "Alert!"
