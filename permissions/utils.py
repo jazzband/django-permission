@@ -128,7 +128,7 @@ def remove_local_role(obj, principal, role):
     return True
 
 def remove_roles(principal):
-    """Removes all local roles passed principal (user or group).
+    """Removes all roles passed principal (user or group).
 
     **Parameters:**
 
@@ -177,7 +177,8 @@ def remove_local_roles(obj, principal):
 
 def get_roles(principal, obj=None):
     """Returns all roles of passed user for passed content object. This takes
-    global and local roles into account
+    direct and roles via a group into account. If an object is passed local
+    roles will also added.
 
     **Parameters:**
 
@@ -299,10 +300,9 @@ def has_permission(obj, user, codename, roles=[]):
     user
         The user for which the permission should be checked.
 
-    groups
-        If given these groups will be assigned to the user temporarily before
-        the permissions are checked. If you don't know why this is need you
-        can safely ignore it.
+    roles
+        If given these roles will be assigned to the user temporarily before
+        the permissions are checked.
     """
     if user.is_superuser:
         return True
