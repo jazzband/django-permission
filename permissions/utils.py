@@ -195,6 +195,7 @@ def get_roles(principal, obj=None):
     if isinstance(principal, User):
         for group in principal.groups.all():
             roles.extend(get_local_roles(obj, group))
+            roles.extend(get_roles(group))
 
     return roles
 
@@ -511,11 +512,11 @@ def unregister_role(name):
 
     role.delete()
     return True
-    
+
 def register_group(name):
     """Registers a group with passed name to the framework. Returns the new
     group if the registration was successfully, otherwise False.
-    
+
     Actually this creates just a default Django Group.
 
     **Parameters:**
@@ -530,7 +531,7 @@ def register_group(name):
     return group
 
 def unregister_group(name):
-    """Unregisters the group with passed name. Returns True if the 
+    """Unregisters the group with passed name. Returns True if the
     unregistration was succesfull otherwise False.
 
     Actually this deletes just a default Django Group.
@@ -546,4 +547,4 @@ def unregister_group(name):
         return False
 
     group.delete()
-    return True    
+    return True
