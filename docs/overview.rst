@@ -7,21 +7,25 @@ Overview
 
 Permissions
 ===========
+
 * Permissions are granted to roles (and only to roles) in order to allow 
   something to users or groups which have these roles.
 
 Roles
 =====
+
 * Roles are used to grant permissions. Typical roles are *Reader*, *Manager*  
   or *Editor*.
 
 Local Roles
 ===========
+
 * Local roles are roles which are assigned to users and groups for a specific 
   content objects.
 
 Users
 =====
+
 * Users are actors which may need a permission to do something within the 
   system.
 * Users can be member of several groups.
@@ -34,6 +38,7 @@ Users
 
 Groups
 ======
+
 * Groups combines users together.
 * Groups can have roles (these are considered as global).
 * Groups can have local roles, that is roles for a specific object.
