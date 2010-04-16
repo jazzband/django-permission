@@ -22,6 +22,11 @@ a look at the CMS `LFC <http://pypi.python.org/pypi/django-lfc>`_
 Changes
 =======
 
+1.0 alpha 4 (2010-04-16)
+------------------------
+
+* Moved PermissionBase to __init__.py
+
 1.0 alpha 3 (2010-03-30)
 ------------------------
 
