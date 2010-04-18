@@ -1,2 +1,3 @@
 include README.txt
 recursive-include permissions/locale *
+recursive-include permissions/fixtures *
