@@ -22,6 +22,11 @@ a look at the CMS `LFC <http://pypi.python.org/pypi/django-lfc>`_
 Changes
 =======
 
+1.0 beta 1 (2010-05-17)
+------------------------
+
+* Bugfix has_permission. Using roles=None instead of roles=[].
+
 1.0 alpha 4 (2010-04-16)
 ------------------------
 

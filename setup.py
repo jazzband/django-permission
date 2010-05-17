@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.0a4'
+version = '1.0b1'
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.txt')).read()
@@ -11,7 +11,7 @@ setup(name='django-permissions',
       description='Generic per-object permissions for Django',
       long_description=README,
       classifiers=[
-          'Development Status :: 3 - Alpha',
+          'Development Status :: 4 - Beta',
           'Environment :: Web Environment',
           'Framework :: Django',
           'License :: OSI Approved :: BSD License',
