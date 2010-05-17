@@ -2,11 +2,6 @@
 Additional groups
 =================
 
-.. warning::
-
-    django-permissions is in alpha state. Please consider the API as supposed
-    to be changed until it reaches beta state.
-
 This will demonstrate how one can create special groups (per convention) and
 check permissions against them even if the user has not been assigned to these
 groups explicitly.
