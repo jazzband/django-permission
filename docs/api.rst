@@ -82,7 +82,7 @@ Checks whether the current user has passed permission::
 Models
 ======
 
-.. autoclass:: permissions.models.PermissionBase
+.. autoclass:: permissions.PermissionBase
     :members:
 
 .. autoclass:: permissions.models.Permission
