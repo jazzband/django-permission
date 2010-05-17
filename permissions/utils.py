@@ -286,7 +286,7 @@ def remove_permission(obj, role, permission):
     op.delete()
     return True
 
-def has_permission(obj, user, codename, roles=[]):
+def has_permission(obj, user, codename, roles=None):
     """Checks whether the passed user has passed permission for passed object.
 
     **Parameters:**
@@ -304,6 +304,9 @@ def has_permission(obj, user, codename, roles=[]):
         If given these roles will be assigned to the user temporarily before
         the permissions are checked.
     """
+    if roles is None:
+        roles = []
+
     if user.is_superuser:
         return True
 
