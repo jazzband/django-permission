@@ -1,3 +1,6 @@
+# python imports
+import sets
+
 # django imports
 from django.db import models
 from django.contrib.auth.models import User
@@ -111,7 +114,7 @@ class Role(models.Model):
         return self.name
 
     def add_principal(self, principal, content=None):
-        """
+        """Addes the given principal (user or group) ot the Role.
         """
         if isinstance(principal, User):
             PrincipalRoleRelation.objects.create(user=principal, role=self)
@@ -119,14 +122,34 @@ class Role(models.Model):
             PrincipalRoleRelation.objects.create(group=principal, role=self)
 
     def get_groups(self, content=None):
-        """Returns all groups which has this role assigned.
+        """Returns all groups which has this role assigned. If content is given
+        it returns also the local roles.
         """
-        return PrincipalRoleRelation.objects.filter(role=self, content=content)
+        if content:
+            ctype = ContentType.objects.get_for_model(content)
+            prrs = PrincipalRoleRelation.objects.filter(role=self,
+                content_id__in = (None, content.id),
+                content_type__in = (None, ctype)).exclude(group=None)
+        else:
+            prrs = PrincipalRoleRelation.objects.filter(role=self,
+            content_id=None, content_type=None).exclude(group=None)
+
+        return [prr.group for prr in prrs]
 
     def get_users(self, content=None):
-        """Returns all users which has this role assigned.
+        """Returns all users which has this role assigned. If content is given
+        it returns also the local roles.
         """
-        return PrincipalRoleRelation.objects.filter(role=self, content=content)
+        if content:
+            ctype = ContentType.objects.get_for_model(content)
+            prrs = PrincipalRoleRelation.objects.filter(role=self,
+                content_id__in = (None, content.id),
+                content_type__in = (None, ctype)).exclude(user=None)
+        else:
+            prrs = PrincipalRoleRelation.objects.filter(role=self,
+                content_id=None, content_type=None).exclude(user=None)
+
+        return [prr.user for prr in prrs]
 
 class PrincipalRoleRelation(models.Model):
     """A role given to a principal (user or group). If a content object is

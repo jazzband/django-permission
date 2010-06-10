@@ -283,6 +283,156 @@ class RoleTestCase(TestCase):
         result = permissions.utils.remove_local_roles(self.page_1, self.user)
         self.assertEqual(result, False)
 
+    def test_get_groups_1(self):
+        """Tests global roles for groups.
+        """
+        result = self.role_1.get_groups()
+        self.assertEqual(len(result), 0)
+
+        result = permissions.utils.add_role(self.group, self.role_1)
+        self.assertEqual(result, True)
+
+        result = self.role_1.get_groups()
+        self.assertEqual(result[0].name, "brights")
+
+        # Add another group
+        self.group_2 = Group.objects.create(name="atheists")
+        result = permissions.utils.add_role(self.group_2, self.role_1)
+
+        result = self.role_1.get_groups()
+        self.assertEqual(result[0].name, "brights")
+        self.assertEqual(result[1].name, "atheists")
+        self.assertEqual(len(result), 2)
+
+        # Add the role to an user
+        result = permissions.utils.add_role(self.user, self.role_1)
+        self.assertEqual(result, True)
+
+        # This shouldn't have an effect on the result
+        result = self.role_1.get_groups()
+        self.assertEqual(result[0].name, "brights")
+        self.assertEqual(result[1].name, "atheists")
+        self.assertEqual(len(result), 2)
+
+    def test_get_groups_2(self):
+        """Tests local roles for groups.
+        """
+        result = self.role_1.get_groups(self.page_1)
+        self.assertEqual(len(result), 0)
+
+        result = permissions.utils.add_local_role(self.page_1, self.group, self.role_1)
+        self.assertEqual(result, True)
+
+        result = self.role_1.get_groups(self.page_1)
+        self.assertEqual(result[0].name, "brights")
+
+        # Add another local group
+        self.group_2 = Group.objects.create(name="atheists")
+        result = permissions.utils.add_local_role(self.page_1, self.group_2, self.role_1)
+
+        result = self.role_1.get_groups(self.page_1)
+        self.assertEqual(result[0].name, "brights")
+        self.assertEqual(result[1].name, "atheists")
+
+        # A the global role to group
+        result = permissions.utils.add_role(self.group, self.role_1)
+        self.assertEqual(result, True)
+
+        # Nontheless there are just two groups returned (and no duplicate)
+        result = self.role_1.get_groups(self.page_1)
+        self.assertEqual(result[0].name, "brights")
+        self.assertEqual(result[1].name, "atheists")
+        self.assertEqual(len(result), 2)
+
+        # Andere there should one global role
+        result = self.role_1.get_groups()
+        self.assertEqual(result[0].name, "brights")
+
+        # Add the role to an user
+        result = permissions.utils.add_local_role(self.page_1, self.user, self.role_1)
+        self.assertEqual(result, True)
+
+        # This shouldn't have an effect on the result
+        result = self.role_1.get_groups(self.page_1)
+        self.assertEqual(result[0].name, "brights")
+        self.assertEqual(result[1].name, "atheists")
+        self.assertEqual(len(result), 2)
+
+    def test_get_users_1(self):
+        """Tests global roles for users.
+        """
+        result = self.role_1.get_users()
+        self.assertEqual(len(result), 0)
+
+        result = permissions.utils.add_role(self.user, self.role_1)
+        self.assertEqual(result, True)
+
+        result = self.role_1.get_users()
+        self.assertEqual(result[0].username, "john")
+
+        # Add another role to an user
+        self.user_2 = User.objects.create(username="jane")
+        result = permissions.utils.add_role(self.user_2, self.role_1)
+
+        result = self.role_1.get_users()
+        self.assertEqual(result[0].username, "john")
+        self.assertEqual(result[1].username, "jane")
+        self.assertEqual(len(result), 2)
+
+        # Add the role to an user
+        result = permissions.utils.add_role(self.group, self.role_1)
+        self.assertEqual(result, True)
+
+        # This shouldn't have an effect on the result
+        result = self.role_1.get_users()
+        self.assertEqual(result[0].username, "john")
+        self.assertEqual(result[1].username, "jane")
+        self.assertEqual(len(result), 2)
+
+    def test_get_users_2(self):
+        """Tests local roles for users.
+        """
+        result = self.role_1.get_users(self.page_1)
+        self.assertEqual(len(result), 0)
+
+        result = permissions.utils.add_local_role(self.page_1, self.user, self.role_1)
+        self.assertEqual(result, True)
+
+        result = self.role_1.get_users(self.page_1)
+        self.assertEqual(result[0].username, "john")
+
+        # Add another local role to an user
+        self.user_2 = User.objects.create(username="jane")
+        result = permissions.utils.add_local_role(self.page_1, self.user_2, self.role_1)
+
+        result = self.role_1.get_users(self.page_1)
+        self.assertEqual(result[0].username, "john")
+        self.assertEqual(result[1].username, "jane")
+
+        # A the global role to user
+        result = permissions.utils.add_role(self.user, self.role_1)
+        self.assertEqual(result, True)
+
+        # Nontheless there are just two users returned (and no duplicate)
+        result = self.role_1.get_users(self.page_1)
+        self.assertEqual(result[0].username, "john")
+        self.assertEqual(result[1].username, "jane")
+        self.assertEqual(len(result), 2)
+
+        # Andere there should one user for the global role
+        result = self.role_1.get_users()
+        self.assertEqual(result[0].username, "john")
+
+        # Add the role to an group
+        result = permissions.utils.add_local_role(self.page_1, self.group, self.role_1)
+        self.assertEqual(result, True)
+
+        # This shouldn't have an effect on the result
+        result = self.role_1.get_users(self.page_1)
+        self.assertEqual(result[0].username, "john")
+        self.assertEqual(result[1].username, "jane")
+        self.assertEqual(len(result), 2)
+
 class PermissionTestCase(TestCase):
     """
     """
