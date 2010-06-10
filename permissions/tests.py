@@ -26,9 +26,11 @@ class RoleTestCase(TestCase):
         self.user = User.objects.create(username="john")
         self.group = Group.objects.create(name="brights")
 
+        self.user.groups.add(self.group)
+
         self.page_1 = FlatPage.objects.create(url="/page-1/", title="Page 1")
         self.page_2 = FlatPage.objects.create(url="/page-1/", title="Page 2")
-    
+
     def test_getter(self):
         """
         """
@@ -49,7 +51,7 @@ class RoleTestCase(TestCase):
 
         result = permissions.utils.get_user(42)
         self.assertEqual(result, None)
-        
+
     def test_global_roles_user(self):
         """
         """
@@ -145,7 +147,7 @@ class RoleTestCase(TestCase):
         # Remove roles
         result = permissions.utils.remove_roles(self.user)
         self.assertEqual(result, True)
-        
+
         result = permissions.utils.get_roles(self.user)
         self.assertEqual(result, [])
 
@@ -173,7 +175,7 @@ class RoleTestCase(TestCase):
 
         result = permissions.utils.get_roles(self.group)
         self.assertEqual(result, [])
-        
+
         # Remove roles
         result = permissions.utils.remove_roles(self.group)
         self.assertEqual(result, False)
@@ -255,7 +257,7 @@ class RoleTestCase(TestCase):
 
         result = permissions.utils.get_local_roles(self.page_1, self.group)
         self.assertEqual(result, [])
-    
+
     def test_remove_local_roles_user(self):
         """
         """
@@ -269,18 +271,18 @@ class RoleTestCase(TestCase):
 
         result = permissions.utils.get_local_roles(self.page_1, self.user)
         self.assertEqual(result, [self.role_1, self.role_2])
-        
+
         # Remove all local roles
         result = permissions.utils.remove_local_roles(self.page_1, self.user)
         self.assertEqual(result, True)
-        
+
         result = permissions.utils.get_local_roles(self.page_1, self.user)
         self.assertEqual(result, [])
 
         # Remove all local roles again
         result = permissions.utils.remove_local_roles(self.page_1, self.user)
         self.assertEqual(result, False)
-        
+
 class PermissionTestCase(TestCase):
     """
     """
@@ -298,29 +300,29 @@ class PermissionTestCase(TestCase):
         self.page_2 = FlatPage.objects.create(url="/page-1/", title="Page 2")
 
         self.permission = permissions.utils.register_permission("View", "view")
-    
+
     def test_add_permissions(self):
         """
         """
         # Add per object
         result = permissions.utils.grant_permission(self.page_1, self.role_1, self.permission)
         self.assertEqual(result, True)
-        
+
         # Add per codename
         result = permissions.utils.grant_permission(self.page_1, self.role_1, "view")
         self.assertEqual(result, True)
-        
+
         # Add ermission which does not exist
         result = permissions.utils.grant_permission(self.page_1, self.role_1, "hurz")
         self.assertEqual(result, False)
-    
+
     def test_remove_permission(self):
         """
         """
         # Add
         result = permissions.utils.grant_permission(self.page_1, self.role_1, "view")
         self.assertEqual(result, True)
-        
+
         # Remove
         result = permissions.utils.remove_permission(self.page_1, self.role_1, "view")
         self.assertEqual(result, True)
@@ -328,7 +330,7 @@ class PermissionTestCase(TestCase):
         # Remove again
         result = permissions.utils.remove_permission(self.page_1, self.role_1, "view")
         self.assertEqual(result, False)
-        
+
     def test_has_permission_role(self):
         """
         """
@@ -378,7 +380,7 @@ class PermissionTestCase(TestCase):
         """
         result = permissions.utils.is_inherited(self.page_1, "view")
         self.assertEqual(result, True)
-        
+
         # per permission
         permissions.utils.add_inheritance_block(self.page_1, self.permission)
 
@@ -389,7 +391,7 @@ class PermissionTestCase(TestCase):
 
         result = permissions.utils.is_inherited(self.page_1, "view")
         self.assertEqual(result, True)
-        
+
         # per codename
         permissions.utils.add_inheritance_block(self.page_1, "view")
 
@@ -417,7 +419,7 @@ class PermissionTestCase(TestCase):
         opb = ObjectPermissionInheritanceBlock.objects.get(permission=self.permission)
 
         self.assertEqual(opb.__unicode__(), "View (view) / flat page - 1")
-    
+
     def test_reset(self):
         """
         """
@@ -431,7 +433,7 @@ class PermissionTestCase(TestCase):
 
         result = permissions.utils.is_inherited(self.page_1, "view")
         self.assertEqual(result, False)
-        
+
         permissions.utils.reset(self.page_1)
 
         result = permissions.utils.has_permission(self.page_1, self.user, "view")
@@ -441,7 +443,7 @@ class PermissionTestCase(TestCase):
         self.assertEqual(result, True)
 
         permissions.utils.reset(self.page_1)
-        
+
 class RegistrationTestCase(TestCase):
     """Tests the registration of different components.
     """

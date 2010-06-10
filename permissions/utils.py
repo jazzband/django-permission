@@ -195,7 +195,8 @@ def get_roles(principal, obj=None):
 
     if isinstance(principal, User):
         for group in principal.groups.all():
-            roles.extend(get_local_roles(obj, group))
+            if obj is not None:
+                roles.extend(get_local_roles(obj, group))
             roles.extend(get_roles(group))
 
     return roles
