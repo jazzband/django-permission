@@ -461,12 +461,16 @@ def register_permission(name, codename, ctypes=[]):
             identify the permission.
         content_types
             The content type for which the permission is active. This can be
-            used to display only reasonable permissions for an object.
+            used to display only reasonable permissions for an object. This 
+            must be a Django ContentType
     """
     try:
         p = Permission.objects.create(name=name, codename=codename)
-        p.content_types = ctypes
-        p.save()
+
+        ctypes = [ContentType.objects.get_for_model(ctype) for ctype in ctypes]
+        if ctypes:
+            p.content_types = ctypes
+            p.save()
     except IntegrityError:
         return False
     return p
