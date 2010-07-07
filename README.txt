@@ -22,6 +22,13 @@ a look at the CMS `LFC <http://pypi.python.org/pypi/django-lfc>`_
 Changes
 =======
 
+1.0 beta 3 (2010-07-07)
+-----------------------
+
+* Bugfix get_users/get_groups method of class Role; issue #2
+* Bugfix: check for an object before trying to add local role; issue #3
+* Bugfix: registration of permissions for specific content types only
+
 1.0 beta 2 (2010-05-17)
 -----------------------
 
