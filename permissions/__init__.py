@@ -34,8 +34,8 @@ class PermissionBase(object):
         return permissions.utils.remove_permission(self, role, permission)
 
     def has_permission(self, user, permission, roles=[]):
-        """Checks whether the passed user has passed permission for this
-        instance.
+        """Returns True if the passed user has passed permission for this
+        instance. Otherwise False.
 
         **Parameters:**
 
@@ -51,6 +51,26 @@ class PermissionBase(object):
             before the permissions are checked.
         """
         return permissions.utils.has_permission(self, user, permission, roles)
+
+    def check_permission(self, user, permission, roles=[]):
+        """Raise Unauthorized if the the passed user hasn't passed permission 
+        for this instance.
+
+        **Parameters:**
+
+        permission
+            The permission's codename which should be checked. Must be a
+            string with a valid codename.
+
+        user
+            The user for which the permission should be checked.
+
+        roles
+            If passed, these roles will be assigned to the user temporarily
+            before the permissions are checked.
+        """
+        if not self.has_permission(user, permission, roles):
+            raise Unauthorized("User %s doesn't have permission %s for object %s" % (user, permission, obj.slug))
 
     def add_inheritance_block(self, permission):
         """Adds an inheritance block for the passed permission.
