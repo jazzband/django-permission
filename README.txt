@@ -22,6 +22,12 @@ a look at the CMS `LFC <http://pypi.python.org/pypi/django-lfc>`_
 Changes
 =======
 
+1.0 beta 4 (2010-07-23)
+-----------------------
+
+* Added check_permission method to PermissionBase
+* Added Unauthorized exception
+
 1.0 beta 3 (2010-07-07)
 -----------------------
 
