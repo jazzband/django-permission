@@ -2,6 +2,7 @@
 from django.contrib.flatpages.models import FlatPage
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import Client
@@ -14,6 +15,37 @@ from permissions.models import Role
 
 import permissions.utils
 
+class BackendTestCase(TestCase):
+    """
+    """
+    def setUp(self):
+        """
+        """
+        settings.AUTHENTICATION_BACKENDS = (
+            'django.contrib.auth.backends.ModelBackend',
+            'permissions.backend.ObjectPermissionsBackend',
+        )
+        
+        self.role_1 = permissions.utils.register_role("Role 1")        
+        self.user = User.objects.create(username="john")
+        self.page_1 = FlatPage.objects.create(url="/page-1/", title="Page 1")
+        self.view = permissions.utils.register_permission("View", "view")
+        
+        # Add user to role
+        self.role_1.add_principal(self.user)
+
+    def test_has_perm(self):
+        """Tests has perm of the backend.
+        """
+        result = self.user.has_perm(self.view, self.page_1)
+        self.assertEqual(result, False)
+        
+        # assign view permission to role 1
+        permissions.utils.grant_permission(self.page_1, self.role_1, self.view)
+
+        result = self.user.has_perm("view", self.page_1)
+        self.assertEqual(result, True)
+    
 class RoleTestCase(TestCase):
     """
     """
@@ -30,7 +62,7 @@ class RoleTestCase(TestCase):
 
         self.page_1 = FlatPage.objects.create(url="/page-1/", title="Page 1")
         self.page_2 = FlatPage.objects.create(url="/page-1/", title="Page 2")
-
+        
     def test_getter(self):
         """
         """
