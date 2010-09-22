@@ -11,6 +11,11 @@ class ObjectPermissionsBackend(object):
             'django.contrib.auth.backends.ModelBackend',
             'permissions.backend.ObjectPermissionsBackend',
         )
+
+    Then you can use it like:
+
+        user.has_perm("view", your_object)
+
     """
     supports_object_permissions = True
     supports_anonymous_user = True
