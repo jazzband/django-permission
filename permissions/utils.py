@@ -223,6 +223,69 @@ def get_local_roles(obj, principal):
         return [prr.role for prr in PrincipalRoleRelation.objects.filter(
             group=principal, content_id=obj.id, content_type=ctype)]
 
+def has_role(principal, role, obj=None):
+    """Returns True if the passed principal has passed role. If an object is
+    passed local roles will also taking into account.
+
+    **Parameters:**
+
+    principal
+        The principal (user or group) for which the roles are checked.
+
+    role
+        The role which is checked. Either the role name or the Role instance.
+
+    obj
+        The object for which the role is checked
+    """
+    if isinstance(role, str):
+        role = Role.objects.get(name=role)
+
+    roles = get_roles(principal, obj)
+    return role in roles
+
+def has_local_role(principal, role, obj):
+    """Returns True if the passed principal has the passed role for passed
+    object.
+
+    **Parameters:**
+
+    principal
+        The principal (user or group) for which the roles are checked.
+
+    role
+        The role which is checked. Either the role name or the Role instance.
+
+    obj
+        The object for which the role is checked
+    """
+    if isinstance(role, str):
+        role = Role.objects.get(name=role)
+
+    roles = get_local_roles(obj, principal)
+    return role in roles
+
+def has_global_role(principal, role):
+    """Returns True if the passed principal has the global role for passed
+    object.
+    
+    **Parameters:**
+
+    principal
+        The principal (user or group) for which the roles are checked.
+
+    role
+        The role which is checked. Either the role name or the Role instance.
+
+    obj
+        The object for which the role is checked
+    """
+    if isinstance(role, str):
+        role = Role.objects.get(name=role)
+
+    roles = get_roles(principal)
+    return role in roles
+
 # Permissions ################################################################
 
 def check_permission(obj, user, permission, roles=None):
