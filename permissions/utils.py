@@ -216,7 +216,7 @@ def get_global_roles(principal):
             group=principal, content_id=None, content_type=None)]
 
 def get_local_roles(obj, principal):
-    """Returns local for passed user and content object.
+    """Returns local roles for passed user and content object.
     """
     ctype = ContentType.objects.get_for_model(obj)
 
