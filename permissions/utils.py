@@ -225,6 +225,28 @@ def get_local_roles(obj, principal):
 
 # Permissions ################################################################
 
+def check_permission(obj, user, permission, roles=None):
+    """Checks whether passed user has passed permission for passed obj.
+
+    **Parameters:**
+
+    obj
+        The object for which the permission should be checked.
+
+    codename
+        The permission's codename which should be checked.
+
+    user
+        The user for which the permission should be checked.
+
+    roles
+        If given these roles will be assigned to the user temporarily before
+        the permissions are checked.
+    """
+    if not has_permission(obj, user, permission):
+        raise Unauthorized("User '%s' doesn't have permission '%s' for object '%s' (%s)"
+            % (user, codename, obj.slug, obj.__class__.__name__))
+
 def grant_permission(obj, role, permission):
     """Grants passed permission to passed role. Returns True if the permission
     was able to be added, otherwise False.
@@ -461,7 +483,7 @@ def register_permission(name, codename, ctypes=[]):
             identify the permission.
         content_types
             The content type for which the permission is active. This can be
-            used to display only reasonable permissions for an object. This 
+            used to display only reasonable permissions for an object. This
             must be a Django ContentType
     """
     try:
