@@ -195,8 +195,12 @@ def get_roles(principal, obj=None):
 
     if isinstance(principal, User):
         for group in principal.groups.all():
-            if obj is not None:
+            while obj:
                 roles.extend(get_local_roles(obj, group))
+                try:
+                    obj = obj.get_parent_for_permissions()
+                except AttributeError:
+                    obj = None
             roles.extend(get_roles(group))
 
     return roles
@@ -383,8 +387,8 @@ def has_permission(obj, user, codename, roles=None):
     codename
         The permission's codename which should be checked.
 
-    user
-        The user for which the permission should be checked.
+    request
+        The current request.
 
     roles
         If given these roles will be assigned to the user temporarily before
@@ -522,6 +526,14 @@ def get_user(id):
         return User.objects.get(pk=id)
     except User.DoesNotExist:
         return None
+
+def has_group(user, group):
+    """Returns True if passed user has passed group.
+    """
+    if isinstance(group, str):
+        group = Group.objects.get(name=group)
+
+    return group in user.groups.all()
 
 def reset(obj):
     """Resets all permissions and inheritance blocks of passed object.
