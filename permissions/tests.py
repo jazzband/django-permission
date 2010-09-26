@@ -16,7 +16,7 @@ import permissions.utils
 
 class RoleTestCase(TestCase):
     """
-    """
+    """    
     def setUp(self):
         """
         """

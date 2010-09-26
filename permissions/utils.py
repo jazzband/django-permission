@@ -1,8 +1,11 @@
 # django imports
 from django.db import IntegrityError
+from django.db.models import Q
+from django.db import connection
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.models import ContentType
+from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 
 # permissions imports
@@ -11,6 +14,7 @@ from permissions.models import ObjectPermissionInheritanceBlock
 from permissions.models import Permission
 from permissions.models import PrincipalRoleRelation
 from permissions.models import Role
+from permissions.exceptions import Unauthorized
 
 # Roles ######################################################################
 
@@ -175,7 +179,7 @@ def remove_local_roles(obj, principal):
     else:
         return False
 
-def get_roles(principal, obj=None):
+def get_roles_1(principal, obj=None):
     """Returns all roles of passed user for passed content object. This takes
     direct and roles via a group into account. If an object is passed local
     roles will also added.
@@ -190,18 +194,71 @@ def get_roles(principal, obj=None):
     """
     roles = get_global_roles(principal)
 
+    # Get local roles for the user itself
     if obj is not None:
         roles.extend(get_local_roles(obj, principal))
 
+    # Get local roles for the user's groups
     if isinstance(principal, User):
-        for group in principal.groups.all():
-            while obj:
-                roles.extend(get_local_roles(obj, group))
-                try:
-                    obj = obj.get_parent_for_permissions()
-                except AttributeError:
-                    obj = None
-            roles.extend(get_roles(group))
+        groups = principal.groups.all()
+        roles.extend(get_global_roles(groups))
+        roles.extend(get_local_roles(obj, groups))
+    return roles
+
+def get_roles_2(user, obj=None):
+    """
+    """
+    roles = []
+    groups = user.groups.all()
+
+    # Gobal roles for user and groups
+    q = (Q(user=user) | Q(group__in=(groups))) & Q(content_id=None) & Q(content_type=None)
+    roles.extend(prr.role in PrincipalRoleRelation.objects.filter(q))
+
+    # Local roles for user and groups
+    while obj:
+        ctype = ContentType.objects.get_for_model(obj)
+        q = (Q(user=user) | Q(group__in=(groups))) & Q(content_id=obj.id) & Q(content_type=ctype)
+        roles.extend([prr.role in PrincipalRoleRelation.objects.filter(q)])
+        try:
+            obj = obj.get_parent_for_permissions()
+        except AttributeError:
+            obj = None
+
+    return roles
+
+def get_roles(user, obj=None):
+    """
+    """
+    roles = []
+    groups = user.groups.all()
+    groups_ids_str = ", ".join([str(g.id) for g in groups])
+
+    # Gobal roles for user and groups
+    cursor = connection.cursor()
+    cursor.execute("""SELECT role_id
+                      FROM permissions_principalrolerelation
+                      WHERE (user_id=%s OR group_id IN (%s)) 
+                      AND content_id is Null""" % (user.id, groups_ids_str))
+
+    for row in cursor.fetchall():
+        roles.append(row[0])
+
+    while obj:
+        ctype = ContentType.objects.get_for_model(obj)
+        cursor.execute("""SELECT role_id
+                          FROM permissions_principalrolerelation
+                          WHERE (user_id='%s' OR group_id IN (%s))
+                          AND content_id='%s'
+                          AND content_type_id='%s'""" % (user.id, groups_ids_str, obj.id, ctype.id))
+        
+        for row in cursor.fetchall():
+            roles.append(row[0])
+
+        try:
+            obj = obj.get_parent_for_permissions()
+        except AttributeError:
+            obj = None
 
     return roles
 
@@ -212,20 +269,37 @@ def get_global_roles(principal):
         return [prr.role for prr in PrincipalRoleRelation.objects.filter(
             user=principal, content_id=None, content_type=None)]
     else:
+        if isinstance(principal, Group):
+            principal = (principal,)
         return [prr.role for prr in PrincipalRoleRelation.objects.filter(
-            group=principal, content_id=None, content_type=None)]
+            group__in=principal, content_id=None, content_type=None)]
 
 def get_local_roles(obj, principal):
     """Returns local roles for passed user and content object.
     """
-    ctype = ContentType.objects.get_for_model(obj)
-
+    local_roles = []
     if isinstance(principal, User):
-        return [prr.role for prr in PrincipalRoleRelation.objects.filter(
-            user=principal, content_id=obj.id, content_type=ctype)]
+        while obj:
+            ctype = ContentType.objects.get_for_model(obj)
+            local_roles.extend([prr.role for prr in PrincipalRoleRelation.objects.filter(
+                user=principal, content_id=obj.id, content_type=ctype)])
+            try:
+                obj = obj.get_parent_for_permissions()
+            except AttributeError:
+                obj = None
     else:
-        return [prr.role for prr in PrincipalRoleRelation.objects.filter(
-            group=principal, content_id=obj.id, content_type=ctype)]
+        if isinstance(principal, Group):
+            principal = (principal,)
+        while obj:
+            ctype = ContentType.objects.get_for_model(obj)
+            local_roles.extend([prr.role for prr in PrincipalRoleRelation.objects.filter(
+                group__in=principal, content_id=obj.id, content_type=ctype)])
+            try:
+                obj = obj.get_parent_for_permissions()
+            except AttributeError:
+                obj = None
+
+    return local_roles
 
 def has_role(principal, role, obj=None):
     """Returns True if the passed principal has passed role. If an object is
@@ -272,7 +346,7 @@ def has_local_role(principal, role, obj):
 def has_global_role(principal, role):
     """Returns True if the passed principal has the global role for passed
     object.
-    
+
     **Parameters:**
 
     principal
@@ -312,7 +386,7 @@ def check_permission(obj, user, permission, roles=None):
     """
     if not has_permission(obj, user, permission):
         raise Unauthorized("User '%s' doesn't have permission '%s' for object '%s' (%s)"
-            % (user, codename, obj.slug, obj.__class__.__name__))
+            % (user, permission, obj.slug, obj.__class__.__name__))
 
 def grant_permission(obj, role, permission):
     """Grants passed permission to passed role. Returns True if the permission
@@ -376,6 +450,7 @@ def remove_permission(obj, role, permission):
     op.delete()
     return True
 
+import inspect
 def has_permission(obj, user, codename, roles=None):
     """Checks whether the passed user has passed permission for passed object.
 
@@ -393,7 +468,9 @@ def has_permission(obj, user, codename, roles=None):
     roles
         If given these roles will be assigned to the user temporarily before
         the permissions are checked.
-    """
+    """ 
+    import pdb; pdb.set_trace()
+    print "."
     if roles is None:
         roles = []
 
@@ -409,9 +486,9 @@ def has_permission(obj, user, codename, roles=None):
 
     while obj is not None:
         p = ObjectPermission.objects.filter(
-            content_type=ct, content_id=obj.id, role__in=roles, permission__codename = codename)
+            content_type=ct, content_id=obj.id, role__in=roles, permission__codename = codename).values("id")
 
-        if p.count() > 0:
+        if len(p) > 0:
             return True
 
         if is_inherited(obj, codename) == False:
