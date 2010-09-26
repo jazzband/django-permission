@@ -450,7 +450,6 @@ def remove_permission(obj, role, permission):
     op.delete()
     return True
 
-import inspect
 def has_permission(obj, user, codename, roles=None):
     """Checks whether the passed user has passed permission for passed object.
 
@@ -469,8 +468,6 @@ def has_permission(obj, user, codename, roles=None):
         If given these roles will be assigned to the user temporarily before
         the permissions are checked.
     """ 
-    import pdb; pdb.set_trace()
-    print "."
     if roles is None:
         roles = []
 
