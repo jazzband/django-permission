@@ -48,7 +48,7 @@ class BackendTestCase(TestCase):
     
 class RoleTestCase(TestCase):
     """
-    """
+    """    
     def setUp(self):
         """
         """
