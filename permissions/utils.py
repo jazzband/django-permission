@@ -9,11 +9,13 @@ from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 
 # permissions imports
+from permissions.exceptions import Unauthorized
 from permissions.models import ObjectPermission
 from permissions.models import ObjectPermissionInheritanceBlock
 from permissions.models import Permission
 from permissions.models import PrincipalRoleRelation
 from permissions.models import Role
+
 
 # Roles ######################################################################
 
@@ -258,7 +260,7 @@ def get_local_roles(obj, principal):
 
 # Permissions ################################################################
 
-def check_permission(obj, user, permission, roles=None):
+def check_permission(obj, user, codename, roles=None):
     """Checks whether passed user has passed permission for passed obj.
 
     **Parameters:**
@@ -276,7 +278,7 @@ def check_permission(obj, user, permission, roles=None):
         If given these roles will be assigned to the user temporarily before
         the permissions are checked.
     """
-    if not has_permission(obj, user, permission):
+    if not has_permission(obj, user, codename):
         raise Unauthorized("User '%s' doesn't have permission '%s' for object '%s' (%s)"
             % (user, codename, obj.slug, obj.__class__.__name__))
 
@@ -646,7 +648,7 @@ def _cache_permission(user, cache_key, data):
     """
     if not getattr(user, "permissions", None):
         user.permissions = {}
-    user.permissions[cache_key] = result
+    user.permissions[cache_key] = data
 
 def _get_cached_permission(user, cache_key):
     """Returns the stored data from passed user object for passed cache_key.
