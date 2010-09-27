@@ -119,7 +119,7 @@ class PermissionBase(object):
         return permissions.utils.add_local_role(self, principal, role)
 
     def get_roles(self, principal):
-        """Returns local roles for passed principal (user or group).
+        """Returns *direct* local roles for passed principal (user or group).
         """
         return permissions.utils.get_local_roles(self, principal)
 
