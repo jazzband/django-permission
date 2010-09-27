@@ -100,7 +100,7 @@ def remove_role(principal, role):
     return True
 
 def remove_local_role(obj, principal, role):
-    """Removes role from obj and principle.
+    """Removes role from passed object and principle.
 
     **Parameters:**
 
@@ -178,85 +178,31 @@ def remove_local_roles(obj, principal):
     else:
         return False
 
-def get_roles_1(principal, obj=None):
-    """Returns all roles of passed user for passed content object. This takes
-    direct and roles via a group into account. If an object is passed local
-    roles will also added.
-
-    **Parameters:**
-
-    obj
-        The object from which the roles are removed.
-
-    principal
-        The principal (user or group) from which the roles are removed.
-    """
-    roles = get_global_roles(principal)
-
-    # Get local roles for the user itself
-    if obj is not None:
-        roles.extend(get_local_roles(obj, principal))
-
-    # Get local roles for the user's groups
-    if isinstance(principal, User):
-        groups = principal.groups.all()
-        roles.extend(get_global_roles(groups))
-        roles.extend(get_local_roles(obj, groups))
-    return roles
-
-def get_roles_2(user, obj=None):
-    """Returns all roles of passed user for passed content object. This takes
-    direct and roles via a group into account. If an object is passed local
-    roles will also added.
-
-    **Parameters:**
-
-    obj
-        The object from which the roles are removed.
-
-    principal
-        The principal (user or group) from which the roles are removed.
-    """
-    roles = []
-    groups = user.groups.all()
-
-    # Gobal roles for user and groups
-    q = (Q(user=user) | Q(group__in=(groups))) & Q(content_id=None) & Q(content_type=None)
-    roles.extend(prr.role in PrincipalRoleRelation.objects.filter(q))
-
-    # Local roles for user and groups
-    while obj:
-        ctype = ContentType.objects.get_for_model(obj)
-        q = (Q(user=user) | Q(group__in=(groups))) & Q(content_id=obj.id) & Q(content_type=ctype)
-        roles.extend([prr.role in PrincipalRoleRelation.objects.filter(q)])
-        try:
-            obj = obj.get_parent_for_permissions()
-        except AttributeError:
-            obj = None
-
-    return roles
-
 def get_roles(user, obj=None):
-    """Returns all roles of passed user for passed content object. 
-    
-    This takes direct roles and roles via a group into account. 
-    
+    """Returns *all* roles of the passed user.
+
+    This takes direct roles and roles via the user's groups into account.
+
     If an object is passed local roles will also added. Then all local roles
-    from all ancestors will also taken into account.
+    from all ancestors and all user's groups are also taken into account.
+
+    This is the method to use if one want to know whether the passed user
+    has a role in general (for the passed object).
 
     **Parameters:**
 
-    obj
-        The object from which the roles are removed.
+    user
+        The user for which the roles are returned.
 
-    principal
-        The principal (user or group) from which the roles are removed.
+    obj
+        The object for which local roles will returned.
+
     """
     roles = []
     groups = user.groups.all()
     groups_ids_str = ", ".join([str(g.id) for g in groups])
 
-    # Gobal roles for user and groups
+    # Gobal roles for user and the user's groups
     cursor = connection.cursor()
     cursor.execute("""SELECT role_id
                       FROM permissions_principalrolerelation
@@ -266,6 +212,8 @@ def get_roles(user, obj=None):
     for row in cursor.fetchall():
         roles.append(row[0])
 
+    # Local roles for user and the user's groups and all ancestors of the
+    # passed object.
     while obj:
         ctype = ContentType.objects.get_for_model(obj)
         cursor.execute("""SELECT role_id
@@ -285,7 +233,7 @@ def get_roles(user, obj=None):
     return roles
 
 def get_global_roles(principal):
-    """Returns global roles of passed principal (user or group).
+    """Returns *direct* global roles of passed principal (user or group).
     """
     if isinstance(principal, User):
         return [prr.role for prr in PrincipalRoleRelation.objects.filter(
@@ -297,94 +245,16 @@ def get_global_roles(principal):
             group__in=principal, content_id=None, content_type=None)]
 
 def get_local_roles(obj, principal):
-    """Returns local roles for passed user and content object.
+    """Returns *direct* local roles for passed principal and content object.    
     """
-    local_roles = []
+    ctype = ContentType.objects.get_for_model(obj)
+
     if isinstance(principal, User):
-        while obj:
-            ctype = ContentType.objects.get_for_model(obj)
-            local_roles.extend([prr.role for prr in PrincipalRoleRelation.objects.filter(
-                user=principal, content_id=obj.id, content_type=ctype)])
-            try:
-                obj = obj.get_parent_for_permissions()
-            except AttributeError:
-                obj = None
+        return [prr.role for prr in PrincipalRoleRelation.objects.filter(
+            user=principal, content_id=obj.id, content_type=ctype)]
     else:
-        if isinstance(principal, Group):
-            principal = (principal,)
-        while obj:
-            ctype = ContentType.objects.get_for_model(obj)
-            local_roles.extend([prr.role for prr in PrincipalRoleRelation.objects.filter(
-                group__in=principal, content_id=obj.id, content_type=ctype)])
-            try:
-                obj = obj.get_parent_for_permissions()
-            except AttributeError:
-                obj = None
-
-    return local_roles
-
-def has_role(principal, role, obj=None):
-    """Returns True if the passed principal has passed role. If an object is
-    passed local roles will also taking into account.
-
-    **Parameters:**
-
-    principal
-        The principal (user or group) for which the roles are checked.
-
-    role
-        The role which is checked. Either the role name or the Role instance.
-
-    obj
-        The object for which the role is checked
-    """
-    if isinstance(role, str):
-        role = Role.objects.get(name=role)
-
-    roles = get_roles(principal, obj)
-    return role in roles
-
-def has_local_role(principal, role, obj):
-    """Returns True if the passed principal has the passed role for passed
-    object.
-
-    **Parameters:**
-
-    principal
-        The principal (user or group) for which the roles are checked.
-
-    role
-        The role which is checked. Either the role name or the Role instance.
-
-    obj
-        The object for which the role is checked
-    """
-    if isinstance(role, str):
-        role = Role.objects.get(name=role)
-
-    roles = get_local_roles(obj, principal)
-    return role in roles
-
-def has_global_role(principal, role):
-    """Returns True if the passed principal has the global role for passed
-    object.
-
-    **Parameters:**
-
-    principal
-        The principal (user or group) for which the roles are checked.
-
-    role
-        The role which is checked. Either the role name or the Role instance.
-
-    obj
-        The object for which the role is checked
-    """
-    if isinstance(role, str):
-        role = Role.objects.get(name=role)
-
-    roles = get_roles(principal)
-    return role in roles
+        return [prr.role for prr in PrincipalRoleRelation.objects.filter(
+            group=principal, content_id=obj.id, content_type=ctype)]
 
 # Permissions ################################################################
 
