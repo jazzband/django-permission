@@ -373,9 +373,7 @@ def has_permission(obj, user, codename, roles=None):
     if user.is_superuser:
         return True
 
-    if user.is_anonymous():
-        user = None
-    else:
+    if not user.is_anonymous():
         roles.extend(get_roles(user, obj))
 
     ct = ContentType.objects.get_for_model(obj)
