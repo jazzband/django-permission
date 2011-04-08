@@ -1,7 +1,5 @@
 # django imports
 from django import template
-from django.core.exceptions import ImproperlyConfigured
-from django.contrib.auth.models import User, AnonymousUser
 
 import permissions.utils
 register = template.Library()
@@ -27,15 +25,15 @@ class PermissionComparisonNode(template.Node):
 
         return cls(bits[1], nodelist_true, nodelist_false)
 
-    def __init__(self, permission, nodelist_true, nodelist_false):
-        self.permission = permission
+    def __init__(self, codename, nodelist_true, nodelist_false):
+        self.codename = codename
         self.nodelist_true = nodelist_true
         self.nodelist_false = nodelist_false
 
     def render(self, context):
         obj = context.get("obj")
         request = context.get("request")
-        if permissions.utils.has_permission(self.permission, request.user, obj):
+        if permissions.utils.has_permission(obj, request.user, self.codename):
             return self.nodelist_true.render(context)
         else:
             return self.nodelist_false
