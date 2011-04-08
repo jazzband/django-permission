@@ -3,12 +3,10 @@ import warnings
 
 # django imports
 from django.db import IntegrityError
-from django.db.models import Q
 from django.db import connection
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.models import ContentType
-from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 
 # permissions imports
@@ -18,7 +16,6 @@ from permissions.models import ObjectPermissionInheritanceBlock
 from permissions.models import Permission
 from permissions.models import PrincipalRoleRelation
 from permissions.models import Role
-
 
 # Roles ######################################################################
 
@@ -35,13 +32,13 @@ def add_role(principal, role):
     """
     if isinstance(principal, User):
         try:
-            ppr = PrincipalRoleRelation.objects.get(user=principal, role=role, content_id=None, content_type=None)
+            PrincipalRoleRelation.objects.get(user=principal, role=role, content_id=None, content_type=None)
         except PrincipalRoleRelation.DoesNotExist:
             PrincipalRoleRelation.objects.create(user=principal, role=role)
             return True
     else:
         try:
-            ppr = PrincipalRoleRelation.objects.get(group=principal, role=role, content_id=None, content_type=None)
+            PrincipalRoleRelation.objects.get(group=principal, role=role, content_id=None, content_type=None)
         except PrincipalRoleRelation.DoesNotExist:
             PrincipalRoleRelation.objects.create(group=principal, role=role)
             return True
@@ -65,13 +62,13 @@ def add_local_role(obj, principal, role):
     ctype = ContentType.objects.get_for_model(obj)
     if isinstance(principal, User):
         try:
-            ppr = PrincipalRoleRelation.objects.get(user=principal, role=role, content_id=obj.id, content_type=ctype)
+            PrincipalRoleRelation.objects.get(user=principal, role=role, content_id=obj.id, content_type=ctype)
         except PrincipalRoleRelation.DoesNotExist:
             PrincipalRoleRelation.objects.create(user=principal, role=role, content=obj)
             return True
     else:
         try:
-            ppr = PrincipalRoleRelation.objects.get(group=principal, role=role, content_id=obj.id, content_type=ctype)
+            PrincipalRoleRelation.objects.get(group=principal, role=role, content_id=obj.id, content_type=ctype)
         except PrincipalRoleRelation.DoesNotExist:
             PrincipalRoleRelation.objects.create(group=principal, role=role, content=obj)
             return True
@@ -365,8 +362,9 @@ def has_permission(obj, user, codename, roles=None):
         If given these roles will be assigned to the user temporarily before
         the permissions are checked.
     """
-    cache_key = "%s-%s-%s" % (obj.content_type, obj.id, codename)
-    result = _get_cached_permission(user, cache_key)
+    ctype = ContentType.objects.get_for_model(obj)
+    cache_key = "%s-%s-%s" % (ctype.id, obj.id, codename)
+    result = None # _get_cached_permission(user, cache_key)
     if result is not None:
         return result
 
@@ -428,7 +426,7 @@ def add_inheritance_block(obj, permission):
         ObjectPermissionInheritanceBlock.objects.get(content_type = ct, content_id=obj.id, permission=permission)
     except ObjectPermissionInheritanceBlock.DoesNotExist:
         try:
-            result = ObjectPermissionInheritanceBlock.objects.create(content=obj, permission=permission)
+            ObjectPermissionInheritanceBlock.objects.create(content=obj, permission=permission)
         except IntegrityError:
             return False
     return True
@@ -482,7 +480,6 @@ def is_inherited(obj, codename):
     else:
         return False
 
-def get_group(id):
 def get_group(name):
     """Returns the group with passed id or None.
     """
