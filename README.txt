@@ -22,6 +22,13 @@ a look at the CMS `LFC <http://pypi.python.org/pypi/django-lfc>`_
 Changes
 =======
 
+1.0.1 (2011-04-08)
+------------------
+
+* Bugfix: DatabaseErrors with Postgres. Issue #5.
+* Bugfix: Changed order of passed parameters to has_permission. Issue #6
+* Bugfix: removed not needed import of "sets". Issue #8
+
 1.0 (2010-08-24)
 ----------------
 
