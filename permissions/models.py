@@ -30,7 +30,7 @@ class Permission(models.Model):
         return "%s (%s)" % (self.name, self.codename)
 
 class ObjectPermission(models.Model):
-    """Grants permission for specific user/group and object.
+    """Grants permission for a role and an content object (optional).
 
     **Attributes:**
 
@@ -51,27 +51,7 @@ class ObjectPermission(models.Model):
     content = generic.GenericForeignKey(ct_field="content_type", fk_field="content_id")
 
     def __unicode__(self):
-        if self.role:
-            principal = self.role
-        else:
-            principal = self.user
-
-        return "%s / %s / %s - %s" % (self.permission.name, principal, self.content_type, self.content_id)
-
-    def get_principal(self):
-        """Returns the principal.
-        """
-        return self.user or self.group
-
-    def set_principal(self, principal):
-        """Sets the principal.
-        """
-        if isinstance(principal, User):
-            self.user = principal
-        else:
-            self.group = principal
-
-    principal = property(get_principal, set_principal)
+        return "%s / %s / %s - %s" % (self.permission.name, self.role, self.content_type, self.content_id)
 
 class ObjectPermissionInheritanceBlock(models.Model):
     """Blocks the inheritance for specific permission and object.
