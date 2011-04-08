@@ -66,22 +66,42 @@ class RoleTestCase(TestCase):
     def test_getter(self):
         """
         """
+        # Group
         result = permissions.utils.get_group(self.group.id)
         self.assertEqual(result, self.group)
 
         result = permissions.utils.get_group(42)
         self.assertEqual(result, None)
 
+        result = permissions.utils.get_group(self.group.name)
+        self.assertEqual(result, self.group)
+
+        result = permissions.utils.get_group("Not Existing")
+        self.assertEqual(result, None)
+
+        # Role
         result = permissions.utils.get_role(self.role_1.id)
         self.assertEqual(result, self.role_1)
 
         result = permissions.utils.get_role(42)
         self.assertEqual(result, None)
 
+        result = permissions.utils.get_role(self.role_1.name)
+        self.assertEqual(result, self.role_1)
+
+        result = permissions.utils.get_role("Not Existing")
+        self.assertEqual(result, None)
+
         result = permissions.utils.get_user(self.user.id)
         self.assertEqual(result, self.user)
 
         result = permissions.utils.get_user(42)
+        self.assertEqual(result, None)
+
+        result = permissions.utils.get_user(self.user.username)
+        self.assertEqual(result, self.user)
+
+        result = permissions.utils.get_user("Not Existing")
         self.assertEqual(result, None)
 
     def test_global_roles_user(self):
@@ -96,14 +116,14 @@ class RoleTestCase(TestCase):
         self.assertEqual(result, False)
 
         result = permissions.utils.get_roles(self.user)
-        self.assertEqual(result, [self.role_1])
+        self.assertEqual(result, [self.role_1.id])
 
         # Add role 2
         result = permissions.utils.add_role(self.user, self.role_2)
         self.assertEqual(result, True)
 
         result = permissions.utils.get_roles(self.user)
-        self.assertEqual(result, [self.role_1, self.role_2])
+        self.assertEqual(result, [self.role_1.id, self.role_2.id])
 
         # Remove role 1
         result = permissions.utils.remove_role(self.user, self.role_1)
@@ -114,7 +134,7 @@ class RoleTestCase(TestCase):
         self.assertEqual(result, False)
 
         result = permissions.utils.get_roles(self.user)
-        self.assertEqual(result, [self.role_2])
+        self.assertEqual(result, [self.role_2.id])
 
         # Remove role 2
         result = permissions.utils.remove_role(self.user, self.role_2)
@@ -134,14 +154,14 @@ class RoleTestCase(TestCase):
         result = permissions.utils.add_role(self.group, self.role_1)
         self.assertEqual(result, False)
 
-        result = permissions.utils.get_roles(self.group)
+        result = permissions.utils.get_global_roles(self.group)
         self.assertEqual(result, [self.role_1])
 
         # Add role 2
         result = permissions.utils.add_role(self.group, self.role_2)
         self.assertEqual(result, True)
 
-        result = permissions.utils.get_roles(self.group)
+        result = permissions.utils.get_global_roles(self.group)
         self.assertEqual(result, [self.role_1, self.role_2])
 
         # Remove role 1
@@ -152,14 +172,14 @@ class RoleTestCase(TestCase):
         result = permissions.utils.remove_role(self.group, self.role_1)
         self.assertEqual(result, False)
 
-        result = permissions.utils.get_roles(self.group)
+        result = permissions.utils.get_global_roles(self.group)
         self.assertEqual(result, [self.role_2])
 
         # Remove role 2
         result = permissions.utils.remove_role(self.group, self.role_2)
         self.assertEqual(result, True)
 
-        result = permissions.utils.get_roles(self.group)
+        result = permissions.utils.get_global_roles(self.group)
         self.assertEqual(result, [])
 
     def test_remove_roles_user(self):
@@ -174,7 +194,7 @@ class RoleTestCase(TestCase):
         self.assertEqual(result, True)
 
         result = permissions.utils.get_roles(self.user)
-        self.assertEqual(result, [self.role_1, self.role_2])
+        self.assertEqual(result, [self.role_1.id, self.role_2.id])
 
         # Remove roles
         result = permissions.utils.remove_roles(self.user)
@@ -198,14 +218,14 @@ class RoleTestCase(TestCase):
         result = permissions.utils.add_role(self.group, self.role_2)
         self.assertEqual(result, True)
 
-        result = permissions.utils.get_roles(self.group)
+        result = permissions.utils.get_global_roles(self.group)
         self.assertEqual(result, [self.role_1, self.role_2])
 
         # Remove roles
         result = permissions.utils.remove_roles(self.group)
         self.assertEqual(result, True)
 
-        result = permissions.utils.get_roles(self.group)
+        result = permissions.utils.get_global_roles(self.group)
         self.assertEqual(result, [])
 
         # Remove roles
