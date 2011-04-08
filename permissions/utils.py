@@ -1,3 +1,6 @@
+# python imports
+import warnings
+
 # django imports
 from django.db import IntegrityError
 from django.db.models import Q
@@ -480,28 +483,59 @@ def is_inherited(obj, codename):
         return False
 
 def get_group(id):
+def get_group(name):
     """Returns the group with passed id or None.
     """
-    try:
-        return Group.objects.get(pk=id)
-    except Group.DoesNotExist:
-        return None
+    if isinstance(name, int):
+        warnings.warn(
+            "The use of get_group with an id is deprecated, please use the group name instead.",
+            PendingDeprecationWarning
+        )        
+        try:
+            return Group.objects.get(pk=name)
+        except Group.DoesNotExist:
+            return None
+    else:
+        try:
+            return Group.objects.get(name=name)
+        except Group.DoesNotExist:
+            return None
 
-def get_role(id):
-    """Returns the role with passed id or None.
+def get_role(name):
+    """Returns the role with passed name or None.
     """
-    try:
-        return Role.objects.get(pk=id)
-    except Role.DoesNotExist:
-        return None
+    if isinstance(name, int):
+        warnings.warn(
+            "The use of get_role with an id is deprecated, please use the group name instead.",
+            PendingDeprecationWarning
+        )
+        try:
+            return Role.objects.get(pk=name)
+        except Role.DoesNotExist:
+            return None
+    else:
+        try:
+            return Role.objects.get(name=name)
+        except Role.DoesNotExist:
+            return None
 
-def get_user(id):
+def get_user(username):
     """Returns the user with passed id or None.
     """
-    try:
-        return User.objects.get(pk=id)
-    except User.DoesNotExist:
-        return None
+    if isinstance(username, int):
+        warnings.warn(
+            "The use of get_user with an id is deprecated, please use the username instead.",
+            PendingDeprecationWarning
+        )        
+        try:
+            return User.objects.get(pk=username)
+        except User.DoesNotExist:
+            return None
+    else:
+        try:
+            return User.objects.get(username=username)
+        except User.DoesNotExist:
+            return None
 
 def has_group(user, group):
     """Returns True if passed user has passed group.
