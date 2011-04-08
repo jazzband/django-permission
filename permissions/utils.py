@@ -4,6 +4,7 @@ import warnings
 # django imports
 from django.db import IntegrityError
 from django.db import connection
+from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.models import ContentType
@@ -568,15 +569,17 @@ def register_permission(name, codename, ctypes=[]):
             used to display only reasonable permissions for an object. This
             must be a Django ContentType
     """
-    try:
-        p = Permission.objects.create(name=name, codename=codename)
-
-        ctypes = [ContentType.objects.get_for_model(ctype) for ctype in ctypes]
-        if ctypes:
-            p.content_types = ctypes
-            p.save()
-    except IntegrityError:
+    # Permission with same codename and/or name must not exist.
+    if Permission.objects.filter(Q(name=name) | Q(codename=codename)):
         return False
+
+    p = Permission.objects.create(name=name, codename=codename)
+
+    ctypes = [ContentType.objects.get_for_model(ctype) for ctype in ctypes]
+    if ctypes:
+        p.content_types = ctypes
+        p.save()
+
     return p
 
 def unregister_permission(codename):
@@ -602,12 +605,12 @@ def register_role(name):
 
     name
         The unique role name.
-    """
-    try:
-        role = Role.objects.create(name=name)
-    except IntegrityError:
+    """    
+    role, created = Role.objects.get_or_create(name=name)
+    if created:
+        return role
+    else:
         return False
-    return role
 
 def unregister_role(name):
     """Unregisters the role with passed name.
@@ -636,11 +639,11 @@ def register_group(name):
     name
         The unique group name.
     """
-    try:
-        group = Group.objects.create(name=name)
-    except IntegrityError:
+    group, created = Group.objects.get_or_create(name=name)
+    if created:
+        return group
+    else:
         return False
-    return group
 
 def unregister_group(name):
     """Unregisters the group with passed name. Returns True if the
