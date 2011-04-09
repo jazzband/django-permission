@@ -499,11 +499,11 @@ def is_inherited(obj, codename):
 def get_group(name):
     """Returns the group with passed id or None.
     """
-    if isinstance(name, int):
+    if isinstance(name, (int, long)):
         warnings.warn(
             "The use of get_group with an id is deprecated, please use the group name instead.",
             PendingDeprecationWarning
-        )        
+        )
         try:
             return Group.objects.get(pk=name)
         except Group.DoesNotExist:
@@ -517,7 +517,7 @@ def get_group(name):
 def get_role(name):
     """Returns the role with passed name or None.
     """
-    if isinstance(name, int):
+    if isinstance(name, (int, long)):
         warnings.warn(
             "The use of get_role with an id is deprecated, please use the group name instead.",
             PendingDeprecationWarning
@@ -535,11 +535,11 @@ def get_role(name):
 def get_user(username):
     """Returns the user with passed id or None.
     """
-    if isinstance(username, int):
+    if isinstance(username, (int, long)):
         warnings.warn(
             "The use of get_user with an id is deprecated, please use the username instead.",
             PendingDeprecationWarning
-        )        
+        )
         try:
             return User.objects.get(pk=username)
         except User.DoesNotExist:
@@ -620,7 +620,7 @@ def register_role(name):
 
     name
         The unique role name.
-    """    
+    """
     role, created = Role.objects.get_or_create(name=name)
     if created:
         return role
