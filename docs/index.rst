@@ -1,7 +1,10 @@
 django-permissions
 ==================
 
-Contents:
+django-permissions is a generic framework for per-object permissions for Django based on roles: http://en.wikipedia.org/wiki/Role-based_access_control
+
+Contents
+========
 
 .. toctree::
    :maxdepth: 1
