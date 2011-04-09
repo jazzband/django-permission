@@ -18,11 +18,7 @@ import sys, os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.append(os.path.abspath('.'))
 
-sys.path.append(os.path.abspath("../../../lfc_project"))
-sys.path.append(os.path.abspath("../../../parts/lfc"))
-sys.path.append(os.path.abspath("../../../parts/django"))
-sys.path.append(os.path.abspath("../../../parts/tagging"))
-sys.path.append(os.path.abspath("../../../parts/portlets"))
+sys.path.append(os.path.abspath("../../../project"))
 sys.path.append(os.path.abspath("../../../parts/permissions"))
 
 # -- General configuration -----------------------------------------------------
