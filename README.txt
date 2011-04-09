@@ -21,6 +21,7 @@ Changes
 ------------------
 
 * Bugfix: prevent to add same Users several times to a Role; issue #6 of django-workflows
+* Updated Development Status to "5 - Production/Stable"
 
 1.0.1 (2011-04-08)
 ------------------
