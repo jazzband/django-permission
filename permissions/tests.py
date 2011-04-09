@@ -432,6 +432,18 @@ class RoleTestCase(TestCase):
         self.assertEqual(result[0].username, "john")
         self.assertEqual(result[1].username, "jane")
         self.assertEqual(len(result), 2)
+        
+    def test_get_users_3(self):
+        """
+        """
+        self.role_1.add_principal(self.user)
+        result = self.role_1.get_users()
+        self.assertEqual(result, [self.user])
+        
+        # Add same user again
+        self.role_1.add_principal(self.user)
+        result = self.role_1.get_users()
+        self.assertEqual(result, [self.user])
 
 class PermissionTestCase(TestCase):
     """

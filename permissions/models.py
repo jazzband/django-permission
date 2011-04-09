@@ -6,6 +6,9 @@ from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext_lazy as _
 
+# permissions imports
+import permissions.utils
+
 class Permission(models.Model):
     """A permission which can be granted to users/groups and objects.
 
@@ -93,10 +96,7 @@ class Role(models.Model):
     def add_principal(self, principal, content=None):
         """Addes the given principal (user or group) ot the Role.
         """
-        if isinstance(principal, User):
-            PrincipalRoleRelation.objects.create(user=principal, role=self)
-        else:
-            PrincipalRoleRelation.objects.create(group=principal, role=self)
+        return permissions.utils.add_role(principal, self)
 
     def get_groups(self, content=None):
         """Returns all groups which has this role assigned. If content is given
