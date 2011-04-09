@@ -124,7 +124,7 @@ class PermissionBase(object):
         return permissions.utils.get_local_roles(self, principal)
 
     def remove_role(self, principal, role):
-        """Adds a local role for the principal to the object.
+        """Removes a local role for the principal to the object.
 
         **Parameters:**
 
