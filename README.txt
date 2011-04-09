@@ -3,11 +3,6 @@ What is it?
 
 django-permissions provides per-object permissions for Django
 
-Documentation
-=============
-
-For more documentation please visit: http://packages.python.org/django-permissions/
-
 Code
 ====
 
@@ -21,6 +16,11 @@ a look at the CMS `LFC <http://pypi.python.org/pypi/django-lfc>`_
 
 Changes
 =======
+
+1.0.2 (2011-04-09)
+------------------
+
+* Bugfix: prevent to add same Users several times to a Role; issue #6 of django-workflows
 
 1.0.1 (2011-04-08)
 ------------------
