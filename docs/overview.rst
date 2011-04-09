@@ -3,7 +3,7 @@ Overview
 ========
 
 * django-permissions is a generic framework for per-object permissions for
-  Django.
+  Django which is based on roles: http://en.wikipedia.org/wiki/Role-based_access_control
 
 Permissions
 ===========
@@ -20,7 +20,7 @@ Roles
 Local Roles
 ===========
 
-* Local roles are roles which are assigned to users and groups for a specific 
+* Local roles are roles which are assigned to users and groups for specific 
   content objects.
 
 Users
