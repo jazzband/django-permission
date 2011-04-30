@@ -533,7 +533,7 @@ def reset(obj):
 
 # Registering ################################################################
 
-def register_permission(name, codename, ctypes=[]):
+def register_permission(name, codename, ctypes=None):
     """Registers a permission to the framework. Returns the permission if the
     registration was successfully, otherwise False.
 
@@ -551,6 +551,9 @@ def register_permission(name, codename, ctypes=[]):
         used to display only reasonable permissions for an object. This
         must be a Django ContentType
     """
+    if ctypes = None:
+        ctypes = []
+
     # Permission with same codename and/or name must not exist.
     if Permission.objects.filter(Q(name=name) | Q(codename=codename)):
         return False
