@@ -585,7 +585,7 @@ def register_permission(name, codename, ctypes=None):
         used to display only reasonable permissions for an object. This
         must be a Django ContentType
     """
-    if ctypes = None:
+    if ctypes is None:
         ctypes = []
 
     # Permission with same codename and/or name must not exist.
