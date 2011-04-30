@@ -457,12 +457,12 @@ def remove_inheritance_block(obj, permission):
 
     **Parameters:**
 
-        obj
-            The content object for which an inheritance block should be added.
+    obj
+        The content object for which an inheritance block should be added.
 
-        permission
-            The permission for which an inheritance block should be removed.
-            Either a permission object or the codename of a permission.
+    permission
+        The permission for which an inheritance block should be removed.
+        Either a permission object or the codename of a permission.
     """
     if not isinstance(permission, Permission):
         try:
@@ -484,12 +484,12 @@ def is_inherited(obj, codename):
 
     **Parameters:**
 
-        obj
-            The content object for which the permission should be checked.
+    obj
+        The content object for which the permission should be checked.
 
-        codename
-            The permission which should be checked. Must be the codename of
-            the permission.
+    codename
+        The permission which should be checked. Must be the codename of the 
+        permission.
     """
     ct = ContentType.objects.get_for_model(obj)
     try:
@@ -539,16 +539,17 @@ def register_permission(name, codename, ctypes=[]):
 
     **Parameters:**
 
-        name
-            The unique name of the permission. This is displayed to the
-            customer.
-        codename
-            The unique codename of the permission. This is used internally to
-            identify the permission.
-        content_types
-            The content type for which the permission is active. This can be
-            used to display only reasonable permissions for an object. This
-            must be a Django ContentType
+    name
+        The unique name of the permission. This is displayed to the customer.
+
+    codename
+        The unique codename of the permission. This is used internally to
+        identify the permission.
+
+    content_types
+        The content type for which the permission is active. This can be
+        used to display only reasonable permissions for an object. This
+        must be a Django ContentType
     """
     # Permission with same codename and/or name must not exist.
     if Permission.objects.filter(Q(name=name) | Q(codename=codename)):
@@ -568,8 +569,8 @@ def unregister_permission(codename):
 
     **Parameters:**
 
-        codename
-            The unique codename of the permission.
+    codename
+        The unique codename of the permission.
     """
     try:
         permission = Permission.objects.get(codename=codename)
