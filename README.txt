@@ -1,7 +1,7 @@
 What is it?
 ===========
 
-django-permissions provides per-object permissions for Django.
+django-permissions provides per-object permissions for Django on roles: http://en.wikipedia.org/wiki/Role-based_access_control
 
 Code
 ====
