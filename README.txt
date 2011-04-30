@@ -22,7 +22,7 @@ Changes
 
 Bugfix release
 
-* Bugfix: Removed mutuable parameters.
+* Bugfix: Removed mutuable parameters; issue #11
 
 Changes
 =======
