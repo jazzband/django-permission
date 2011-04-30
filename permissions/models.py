@@ -153,7 +153,15 @@ class PrincipalRoleRelation(models.Model):
     content_type = models.ForeignKey(ContentType, verbose_name=_(u"Content type"), blank=True, null=True)
     content_id = models.PositiveIntegerField(verbose_name=_(u"Content id"), blank=True, null=True)
     content = generic.GenericForeignKey(ct_field="content_type", fk_field="content_id")
-
+    
+    def __unicode__(self):
+        if self.user:
+            principal = self.user.username
+        else:
+            principal = self.group
+        
+        return "%s - %s" % (principal, self.role)
+        
     def get_principal(self):
         """Returns the principal.
         """

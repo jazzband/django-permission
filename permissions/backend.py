@@ -1,9 +1,8 @@
-# permissions import
+# permissions imports
 import permissions.utils
 
 class ObjectPermissionsBackend(object):
     """Django backend for object permissions. Needs Django 1.2.
-
 
     Use it together with the default ModelBackend like so::
 
@@ -11,6 +10,11 @@ class ObjectPermissionsBackend(object):
             'django.contrib.auth.backends.ModelBackend',
             'permissions.backend.ObjectPermissionsBackend',
         )
+
+    Then you can use it like:
+
+        user.has_perm("view", your_object)
+
     """
     supports_object_permissions = True
     supports_anonymous_user = True
@@ -18,7 +22,15 @@ class ObjectPermissionsBackend(object):
     def authenticate(self, username, password):
         return None
 
-    def has_permission(self, permission_codename, user, obj=None):
+    def has_permission(self, user_obj, perm, obj=None):
+        import warnings
+        warnings.warn(
+            "The use of has_permission is deprecated, please use the has_perm instead.",
+            PendingDeprecationWarning
+        )
+        return self.has_perm(user_obj, perm, obj)
+
+    def has_perm(self, user_obj, perm, obj=None):
         """Checks whether the passed user has passed permission for passed
         object (obj).
 
@@ -28,13 +40,13 @@ class ObjectPermissionsBackend(object):
         Parameters
         ==========
 
-        permission
+        perm
             The permission's codename which should be checked.
 
-        user
+        user_obj
             The user for which the permission should be checked.
 
         obj
             The object for which the permission should be checked.
         """
-        return permissions.utils.has_permission(obj, user, permission_codename)
+        return permissions.utils.has_permission(obj, user_obj, perm)

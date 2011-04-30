@@ -1,4 +1,6 @@
+# permissions imports
 import permissions.utils
+from permissions.exceptions import Unauthorized
 
 class PermissionBase(object):
     """Mix-in class for permissions.
@@ -75,7 +77,7 @@ class PermissionBase(object):
             roles = []
 
         if not self.has_permission(user, permission, roles):
-            raise Unauthorized("User %s doesn't have permission %s for object %s" % (user, permission, obj.slug))
+            raise Unauthorized("User %s doesn't have permission %s for object %s" % (user, permission, self.slug))
 
     def add_inheritance_block(self, permission):
         """Adds an inheritance block for the passed permission.
@@ -124,7 +126,7 @@ class PermissionBase(object):
         return permissions.utils.add_local_role(self, principal, role)
 
     def get_roles(self, principal):
-        """Returns local roles for passed principal (user or group).
+        """Returns *direct* local roles for passed principal (user or group).
         """
         return permissions.utils.get_local_roles(self, principal)
 
