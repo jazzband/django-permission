@@ -502,12 +502,11 @@ def get_group(id_or_name):
     """
     try:
         return Group.objects.get(pk=id_or_name)
-    except Group.DoesNotExist:
-        return None
-    try:
-        return Group.objects.get(name=id_or_name)
-    except Group.DoesNotExist:
-        return None
+    except (Group.DoesNotExist, ValueError):
+        try:
+            return Group.objects.get(name=id_or_name)
+        except Group.DoesNotExist:
+            return None
 
 def get_role(id_or_name):
     """Returns the role with passed id or name. If it not exists it returns 
@@ -520,12 +519,11 @@ def get_role(id_or_name):
     """
     try:
         return Role.objects.get(pk=id_or_name)
-    except Role.DoesNotExist:
-        return None
-    try:
-        return Role.objects.get(name=id_or_name)
-    except Role.DoesNotExist:
-        return None
+    except (Role.DoesNotExist, ValueError):
+        try:
+            return Role.objects.get(name=id_or_name)
+        except Role.DoesNotExist:
+            return None
 
 def get_user(id_or_username):
     """Returns the user with passed id or username. If it not exists it returns
@@ -538,12 +536,11 @@ def get_user(id_or_username):
     """
     try:
         return User.objects.get(pk=id_or_username)
-    except User.DoesNotExist:
-        return None
-    try:
-        return User.objects.get(username=id_or_username)
-    except User.DoesNotExist:
-        return None
+    except (User.DoesNotExist, ValueError):
+        try:
+            return User.objects.get(username=id_or_username)
+        except User.DoesNotExist:
+            return None
 
 def has_group(user, group):
     """Returns True if passed user has passed group.
