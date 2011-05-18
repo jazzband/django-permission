@@ -247,7 +247,7 @@ def get_roles(user, obj=None):
             obj = obj.get_parent_for_permissions()
         except AttributeError:
             obj = None
-    
+
     return Role.objects.filter(pk__in=role_ids)
 
 def get_global_roles(principal):
@@ -484,7 +484,7 @@ def is_inherited(obj, codename):
         The content object for which the permission should be checked.
 
     codename
-        The permission which should be checked. Must be the codename of the 
+        The permission which should be checked. Must be the codename of the
         permission.
     """
     ct = ContentType.objects.get_for_model(obj)
@@ -496,59 +496,54 @@ def is_inherited(obj, codename):
     else:
         return False
 
-def get_group(name):
-    """Returns the group with passed id or None.
+def get_group(id_or_name):
+    """Returns the group with passed id or name. If it not exists it returns
+    None.
     """
-    if isinstance(name, (int, long)):
-        warnings.warn(
-            "The use of get_group with an id is deprecated, please use the group name instead.",
-            PendingDeprecationWarning
-        )
-        try:
-            return Group.objects.get(pk=name)
-        except Group.DoesNotExist:
-            return None
-    else:
-        try:
-            return Group.objects.get(name=name)
-        except Group.DoesNotExist:
-            return None
+    try:
+        return Group.objects.get(pk=id_or_name)
+    except Group.DoesNotExist:
+        return None
+    try:
+        return Group.objects.get(name=id_or_name)
+    except Group.DoesNotExist:
+        return None
 
-def get_role(name):
-    """Returns the role with passed name or None.
-    """
-    if isinstance(name, (int, long)):
-        warnings.warn(
-            "The use of get_role with an id is deprecated, please use the group name instead.",
-            PendingDeprecationWarning
-        )
-        try:
-            return Role.objects.get(pk=name)
-        except Role.DoesNotExist:
-            return None
-    else:
-        try:
-            return Role.objects.get(name=name)
-        except Role.DoesNotExist:
-            return None
+def get_role(id_or_name):
+    """Returns the role with passed id or name. If it not exists it returns 
+    None.
 
-def get_user(username):
-    """Returns the user with passed id or None.
+    **Parameters:**
+
+    id_or_name
+        The id or the name of the role which should be returned.
     """
-    if isinstance(username, (int, long)):
-        warnings.warn(
-            "The use of get_user with an id is deprecated, please use the username instead.",
-            PendingDeprecationWarning
-        )
-        try:
-            return User.objects.get(pk=username)
-        except User.DoesNotExist:
-            return None
-    else:
-        try:
-            return User.objects.get(username=username)
-        except User.DoesNotExist:
-            return None
+    try:
+        return Role.objects.get(pk=id_or_name)
+    except Role.DoesNotExist:
+        return None
+    try:
+        return Role.objects.get(name=id_or_name)
+    except Role.DoesNotExist:
+        return None
+
+def get_user(id_or_username):
+    """Returns the user with passed id or username. If it not exists it returns
+    None.
+
+    **Parameters:**
+
+    id_or_username
+        The id or the username of the user which should be returned.
+    """
+    try:
+        return User.objects.get(pk=id_or_username)
+    except User.DoesNotExist:
+        return None
+    try:
+        return User.objects.get(username=id_or_username)
+    except User.DoesNotExist:
+        return None
 
 def has_group(user, group):
     """Returns True if passed user has passed group.
