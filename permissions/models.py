@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 # permissions imports
 import permissions.utils
 
+
 class Permission(models.Model):
     """A permission which can be granted to users/groups and objects.
 
@@ -31,6 +32,7 @@ class Permission(models.Model):
 
     def __unicode__(self):
         return "%s (%s)" % (self.name, self.codename)
+
 
 class ObjectPermission(models.Model):
     """Grants permission for a role and an content object (optional).

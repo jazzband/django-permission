@@ -380,7 +380,7 @@ def has_permission(obj, user, codename, roles=None):
     """
     ctype = ContentType.objects.get_for_model(obj)
     cache_key = "%s-%s-%s" % (ctype.id, obj.id, codename)
-    result = None # _get_cached_permission(user, cache_key)
+    result = None  # _get_cached_permission(user, cache_key)
     if result is not None:
         return result
 
