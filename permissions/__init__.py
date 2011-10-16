@@ -57,7 +57,7 @@ class PermissionBase(object):
         return permissions.utils.has_permission(self, user, permission, roles)
 
     def check_permission(self, user, permission, roles=None):
-        """Raise Unauthorized if the the passed user hasn't passed permission 
+        """Raise Unauthorized if the the passed user hasn't passed permission
         for this instance.
 
         **Parameters:**
@@ -77,7 +77,7 @@ class PermissionBase(object):
             roles = []
 
         if not self.has_permission(user, permission, roles):
-            raise Unauthorized("User %s doesn't have permission %s for object %s" % (user, permission, self.slug))
+            raise Unauthorized("User '%s' doesn't have permission '%s' for object '/%s' (%s)." % (user, permission, self.slug, self.__class__.name))
 
     def add_inheritance_block(self, permission):
         """Adds an inheritance block for the passed permission.

@@ -294,8 +294,8 @@ def check_permission(obj, user, codename, roles=None):
         If given these roles will be assigned to the user temporarily before
         the permissions are checked.
     """
-    if not has_permission(obj, user, codename):
-        raise Unauthorized("User '%s' doesn't have permission '%s' for object '%s' (%s)"
+    if not has_permission(obj, user, codename, roles):
+        raise Unauthorized("User '%s' doesn't have permission '%s' for object '/%s' (%s)."
             % (user, codename, obj.slug, obj.__class__.__name__))
 
 def grant_permission(obj, role, permission):
@@ -378,27 +378,21 @@ def has_permission(obj, user, codename, roles=None):
         If given these roles will be assigned to the user temporarily before
         the permissions are checked.
     """
-    ctype = ContentType.objects.get_for_model(obj)
-    cache_key = "%s-%s-%s" % (ctype.id, obj.id, codename)
-    result = None  # _get_cached_permission(user, cache_key)
-    if result is not None:
-        return result
+    if user.is_superuser:
+        return True
 
     if roles is None:
         roles = []
 
-    if user.is_superuser:
-        return True
-
     if not user.is_anonymous():
         roles.extend(get_roles(user, obj))
 
-    ct = ContentType.objects.get_for_model(obj)
+    ctype = ContentType.objects.get_for_model(obj)
 
     result = False
     while obj is not None:
         p = ObjectPermission.objects.filter(
-            content_type=ct, content_id=obj.id, role__in=roles, permission__codename = codename).values("id")
+            content_type=ctype, content_id=obj.id, role__in=roles, permission__codename = codename).values("id")
 
         if len(p) > 0:
             result = True
@@ -410,12 +404,11 @@ def has_permission(obj, user, codename, roles=None):
 
         try:
             obj = obj.get_parent_for_permissions()
-            ct = ContentType.objects.get_for_model(obj)
+            ctype = ContentType.objects.get_for_model(obj)
         except AttributeError:
             result = False
             break
 
-    _cache_permission(user, cache_key, result)
     return result
 
 # Inheritance ################################################################
@@ -487,10 +480,10 @@ def is_inherited(obj, codename):
         The permission which should be checked. Must be the codename of the
         permission.
     """
-    ct = ContentType.objects.get_for_model(obj)
+    ctype = ContentType.objects.get_for_model(obj)
     try:
         ObjectPermissionInheritanceBlock.objects.get(
-            content_type=ct, content_id=obj.id, permission__codename = codename)
+            content_type=ctype, content_id=obj.id, permission__codename = codename)
     except ObjectDoesNotExist:
         return True
     else:
@@ -509,7 +502,7 @@ def get_group(id_or_name):
             return None
 
 def get_role(id_or_name):
-    """Returns the role with passed id or name. If it not exists it returns 
+    """Returns the role with passed id or name. If it not exists it returns
     None.
 
     **Parameters:**
@@ -674,37 +667,3 @@ def unregister_group(name):
 
     group.delete()
     return True
-
-def _cache_permission(user, cache_key, data):
-    """Stores the passed data on the passed user object.
-
-    **Parameters:**
-
-    user
-        The user on which the data is stored.
-
-    cache_key
-        The key under which the data is stored.
-
-    data
-        The data which is stored.
-    """
-    if not getattr(user, "permissions", None):
-        user.permissions = {}
-    user.permissions[cache_key] = data
-
-def _get_cached_permission(user, cache_key):
-    """Returns the stored data from passed user object for passed cache_key.
-
-    **Parameters:**
-
-    user
-        The user from which the data is retrieved.
-
-    cache_key
-        The key under which the data is stored.
-
-    """
-    permissions = getattr(user, "permissions", None)
-    if permissions:
-        return user.permissions.get(cache_key, None)
