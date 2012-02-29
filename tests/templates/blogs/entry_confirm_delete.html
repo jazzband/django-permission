@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block contents %}
+<h1>Delete '{{ object }}'</h1>
+
+<blockquote>
+    {{ object.body|linebreaks|truncatewords_html:100 }}
+</blockquote>
+
+<p>Are you sure to delete this entry?</p>
+<form action="" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <p><input type="submit" value="Yes"> <a href="" onclick="javascript:history.back();">cancel</a></p>
+</form>
+{% endblock %}

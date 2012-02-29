@@ -1,0 +1,51 @@
+- model: auth.user
+  pk: 1
+  fields:
+    username: permission_test_user1
+    email: permission_test_user1@test.com
+    password: sha1$588be$494b93325fbfd299a39691b4dddef29ac0ed3008
+    is_active: true
+    is_superuser: true
+    is_staff: true
+- model: auth.user
+  pk: 2
+  fields:
+    username: permission_test_user2
+    email: permission_test_user2@test.com
+    password: sha1$588be$494b93325fbfd299a39691b4dddef29ac0ed3008
+    is_active: true
+    is_superuser: false
+    is_staff: true
+- model: auth.user
+  pk: 3
+  fields:
+    username: permission_test_user3
+    email: permission_test_user3@test.com
+    password: sha1$588be$494b93325fbfd299a39691b4dddef29ac0ed3008
+    is_active: true
+    is_superuser: false
+    is_staff: false
+- model: auth.user
+  pk: 4
+  fields:
+    username: permission_test_user4
+    email: permission_test_user4@test.com
+    password: sha1$588be$494b93325fbfd299a39691b4dddef29ac0ed3008
+    is_active: true
+    is_superuser: false
+    is_staff: false
+
+- model: test_app.article
+  pk: 1
+  fields:
+    title: permission_test_article1
+    body: permission_test_article1
+    author: 3
+    created_at: 2000-01-01
+- model: test_app.article
+  pk: 2
+  fields:
+    title: permission_test_article2
+    body: permission_test_article2
+    author: 4
+    created_at: 2000-01-01

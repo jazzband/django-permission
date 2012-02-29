@@ -1,0 +1,224 @@
+#
+# All lyrics are cite from 
+# http://www.sing365.com/music/lyric.nsf/the-beatles-lyrics/b295ead4908586f94825699d00291c62
+#
+- model: auth.user
+  pk: 2
+  fields:
+    username: foo
+    email: foo@test.com
+    password: sha1$588be$494b93325fbfd299a39691b4dddef29ac0ed3008
+    is_active: true
+    is_superuser: false
+    is_staff: false
+- model: auth.user
+  pk: 3
+  fields:
+    username: bar
+    email: bar@test.com
+    password: sha1$588be$494b93325fbfd299a39691b4dddef29ac0ed3008
+    is_active: true
+    is_superuser: false
+    is_staff: false
+- model: auth.user
+  pk: 4
+  fields:
+    username: hoge
+    email: hoge@test.com
+    password: sha1$588be$494b93325fbfd299a39691b4dddef29ac0ed3008
+    is_active: true
+    is_superuser: false
+    is_staff: false
+
+- model: blogs.entry
+  pk: 1
+  fields:
+    title: All You Need Is Love
+    body: |
+      Love, Love, Love.
+      Love, Love, Love.
+      Love, Love, Love.
+
+      There's nothing you can do that can't be done.
+      Nothing you can sing that can't be sung.
+      Nothing you can say but you can learn how to play the game.
+      It's easy.
+
+      Nothing you can make that can't be made.
+      No one you can save that can't be saved.
+      Nothing you can do but you can learn how to be you in time.
+      It's easy.
+
+      All you need is love.
+      All you need is love.
+      All you need is love, love.
+      Love is all you need.
+
+      All you need is love.
+      All you need is love.
+      All you need is love, love.
+      Love is all you need.
+
+      Nothing you can know that isn't known.
+      Nothing you can see that isn't shown.
+      Nowhere you can be that isn't where you're meant to be.
+      It's easy.
+
+      All you need is love.
+      All you need is love.
+      All you need is love, love.
+      Love is all you need.
+
+      All you need is love (All together, now!)
+      All you need is love. (Everybody!)
+      All you need is love, love.
+      Love is all you need (love is all you need)
+      (love is all you need) (love is all you need)
+      (love is all you need) Yesterday (love is all you need)
+      (love is all you need) (love is all you need)
+
+      Yee-hai!
+      Oh yeah!
+      love is all you need, love is all you need,love is all you need, love is all you need, oh yeah oh hell yea! love is all you need love is all you need love is all you need
+    created_at: 2000-01-01
+    updated_at: 2000-01-01
+- model: blogs.entry
+  pk: 2
+  fields:
+    title: Can't Buy Me Love
+    body: |
+      Can't buy me love, love
+      Can't buy me love
+
+      I'll buy you a diamond ring my friend if it makes you feel alright
+      I'll get you anything my friend if it makes you feel alright
+      I don't care too much for money, money can't buy me love
+
+      I'll give you all I got to give if you say you'll love me too
+      I may not have a lot to give but what I got I'll give to you
+      I don't care too much for money, money can't buy me love
+
+      Can't buy me love, everybody tells me so
+      Can't buy me love, no no no, no
+
+      Say you don't need no diamond ring and I'll be satisfied
+      Tell me that you want the kind of thing that money just can't buy
+      I don't care too much for money, money can't buy me love
+      Owww
+
+      Can't buy me love, everybody tells me so
+      Can't buy me love, no no no, no
+
+      Say you don't need no diamond rings and I'll be satisfied
+      Tell me that you want those kinds of things that money just can't buy
+      I don't care too much for money, money can't buy me love
+
+      Can't buy me love, love
+      Can't buy me love
+    created_at: 2000-01-01
+    updated_at: 2000-01-01
+- model: blogs.entry
+  pk: 3
+  fields:
+    title: Get Back
+    body: |
+      Jojo was a man who thought he was a loner
+      But he knew it couldn't last
+      Jojo left his home in Tucson, Arizona
+      For some California grass
+
+      Get back, get back
+      Get back to where you once belonged
+      Get back, get back
+      Get back to where you once belonged
+      Get back, Jojo
+      Go home
+
+      Get back, get back
+      Back to where you once belonged
+      Get back, get back
+      Back to where you once belonged
+      Get back, Jo
+
+      Sweet Loretta Martin thought she was a woman
+      But she was another man
+      All the girls around her say she's got it coming
+      But she gets it while she can
+
+      Get back, get back
+      Get back to where you once belonged
+      Get back, get back
+      Get back to where you once belonged
+      Get back, Loretta
+      Go home
+
+      Get back, get back
+      Get back to where you once belonged
+      Get back, get back
+      Get back to where you once belonged
+      Oooh...
+
+      Get back, Loretta
+      Your mama's waiting for you
+      Wearing her high-heel shoes
+      And her low-neck sweater
+      Get back home, Loretta
+
+      Get back, get back
+      Get back to where you once belonged
+      Get back, get back
+      Get back
+      Oh, yeah
+    created_at: 2000-01-01
+    updated_at: 2000-01-01
+- model: blogs.entry
+  pk: 4
+  fields:
+    title: Hello Goodbye
+    body: |
+      You say yes, I say no.
+      You say stop and I say go go go, oh no.
+      You say goodbye and I say hello
+      Hello hello
+      I don't know why you say goodbye, I say hello
+      Hello hello
+      I don't know why you say goodbye, I say hello
+
+      I say high, you say low
+      You say why and I say I don't know, oh no
+      You say goodbye and I say hello
+      (Hello Goodbye Hello Goodbye) hello hello
+      (Hello Goodbye) I don't know why you say goodbye, I say hello
+      (Hello Goodbye Hello Goodbye) hello hello
+      (Hello Goodbye) I don't know why you say goodbye
+      (Hello Goodbye) I say hello
+
+      Why why why why why why do you say goodbye goodbye, oh no?
+
+      You say goodbye and I say hello
+      Hello hello
+      I don't know why you say goodbye, I say hello
+      Hello hello
+      I don't know why you say goodbye, I say hello
+
+      You say yes (I say "yes") I say no (but I may mean no.)
+      You say stop (I can stay) and I say go go go (till it's time to go ), oh no no
+      You say goodbye and I say hello
+      Hello hello
+      I don't know why you say goodbye, I say hello
+      Hello hello
+      I don't know why you say goodbye, I say hello
+      Hello hello
+      I don't know why you say goodbye, I say hello hello
+      Hellooooo
+
+      Hela hey helloa
+      Hela hey helloa Cha Cha Cha
+      Hela hey helloa Whooo
+      Hela hey helloa Hela
+      Hela hey helloa Cha Cha Cha
+      Hela hey helloa Whooo
+      Hela hey helloa Cha Cha
+      Hela hey helloa
+    created_at: 2000-01-01
+    updated_at: 2000-01-01
