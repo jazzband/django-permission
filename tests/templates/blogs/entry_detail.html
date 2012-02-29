@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load url from future %}
+
+{% block contents %}
+<article class="entry" id="entry">
+    <h1>{{ object.title }}</h1>
+    {% if user.is_authenticated %}
+    <nav>
+        <ul>
+            <li class="entry-update"><a href="{% url 'blogs-entry-update' pk=object.pk %}">Update</a></li>
+            <li class="entry-delete"><a href="{% url 'blogs-entry-delete' pk=object.pk %}">Delete</a></li>
+        </ul>
+    </nav>
+    {% endif %}
+
+    <section class="body">
+        {{ object.body|linebreaks }}
+    </section>
+</article>
+{% endblock %}
+

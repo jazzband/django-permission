@@ -1,0 +1,117 @@
+body {
+    color: #3d3d3d;
+}
+a {
+    color: #2f4f4f;
+    text-decoration: none;
+    &:hover {
+        color: #778899;
+    }
+}
+
+div#container{
+    position: relative;
+    width: 980px;
+    margin: 20px auto;
+}
+
+header{
+	margin: 0 0 50px 0;
+
+    h1 {
+        font-family: Georgia, sans-serif;
+        font-style: normal;
+        letter-spacing: 0.1em;
+        word-spacing: 0.6em;
+        line-height: 1.2em;
+        text-align: center;
+
+        a {
+            color: #3d3d3d;
+        }
+    }   
+    p {
+        font-size: 1.2em;
+        font-family: Arial, serif;
+        text-align: center;
+        color: #6d6d6d;
+    }       
+
+    nav {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+}
+
+section#contents{
+	border-top: 1px solid #dedede;
+	border-bottom: 1px solid #dedede;
+	margin: 20px 0;
+
+	> h1{
+	    display: none;
+	}
+    &:after{
+        visibility: hidden;
+        display: block;
+        font-size: 0;
+        content: " ";
+        clear: both;
+        height: 0;
+    }
+    article.entry{
+        position: relative;
+        float: left;
+        width: 460px;
+        height: 200px;
+        padding: 10px;
+        overflow: hidden;
+
+        h1 {
+            display: inline-block;
+        }
+        nav {
+            display: inline-block;
+            ul {
+                margin: 0;
+                padding: 0;
+
+                li {
+                    display: inline-block;
+
+                    a {
+                        display: block;
+                        width: 16px;
+                        height: 16px;
+                        text-indent: -10000px;
+                    }
+                    &.entry-update a {
+                        background: url(image/edit.png) no-repeat;
+                    }
+                    &.entry-delete a {
+                        background: url(image/trash.png) no-repeat;
+                    }
+                }
+            }
+        }
+        p.subscription{
+            font-size: smaller;
+            color: #ababab;
+        }
+    }
+    article#entry{
+        height: auto;
+    }
+}
+* html section#content
+{ zoom: 1; } /* IE6 */
+*:first-child+html section#content
+{ zoom: 1; } /* IE7 */
+
+footer{
+	margin: 30px 0 0 0;
+	font-size: 0.9em;
+	color: #ababab;
+	text-align: center;
+}

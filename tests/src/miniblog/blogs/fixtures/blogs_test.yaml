@@ -1,0 +1,49 @@
+- model: auth.user
+  pk: 1
+  fields:
+    username: admin
+    email: admin@test.com
+    password: sha1$588be$494b93325fbfd299a39691b4dddef29ac0ed3008
+    is_active: true
+    is_superuser: true
+    is_staff: true
+- model: auth.user
+  pk: 2
+  fields:
+    username: foo
+    email: foo@test.com
+    password: sha1$588be$494b93325fbfd299a39691b4dddef29ac0ed3008
+    is_active: true
+    is_superuser: false
+    is_staff: false
+- model: auth.user
+  pk: 3
+  fields:
+    username: bar
+    email: bar@test.com
+    password: sha1$588be$494b93325fbfd299a39691b4dddef29ac0ed3008
+    is_active: true
+    is_superuser: false
+    is_staff: false
+
+- model: blogs.entry
+  pk: 1
+  fields:
+    title: foo
+    body: foo
+    created_at: 2000-01-01
+    updated_at: 2000-01-01
+- model: blogs.entry
+  pk: 2
+  fields:
+    title: bar
+    body: bar
+    created_at: 2000-01-01
+    updated_at: 2000-01-01
+- model: blogs.entry
+  pk: 3
+  fields:
+    title: hoge
+    body: hoge
+    created_at: 2000-01-01
+    updated_at: 2000-01-01

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block contents %}
+<h1>{% if object %}{{ object }}{% else %}Create new entry{% endif %}</h1>
+
+<form action="" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <p><input type="submit" value="Submit"></p>
+</form>
+{% endblock %}
