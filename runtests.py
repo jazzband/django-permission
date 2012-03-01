@@ -36,6 +36,11 @@ License:
 """   
 from __future__ import with_statement
 import os, sys
+try:
+    import cProfile as profile
+except ImportError:
+    import profile
+
 os.environ['DJANGO_SETTINGS_MODULE'] = 'miniblog.settings'
 pack_dir = os.path.dirname(__file__)
 test_dir = os.path.join(pack_dir, 'tests', 'src')
@@ -50,8 +55,15 @@ def runtests(verbosity=1, interactive=True):
     TestRunner = get_runner(settings)
     test_runner = TestRunner(
             verbosity=verbosity, interactive=interactive, failfast=False)
-    failures = test_runner.run_tests([])
-    sys.exit(bool(failures))
+    app_tests = [
+            'permission'
+        ]
+    p = profile.Profile()
+    p.runctx('test_runner.run_tests(app_tests)',{
+        'test_runner': test_runner, 
+        'app_tests': app_tests}, None)
+    p.dump_stats('profile')
+    sys.exit(None)
 
 if __name__ == '__main__':
     runtests()

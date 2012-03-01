@@ -1,5 +1,7 @@
 .ropeproject
 .project
+coverage
+profile
 *.pyc
 *.egg
 *.egg-info

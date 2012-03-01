@@ -68,16 +68,20 @@ class PermissionBackend(object):
         """This backend is only for checking permission"""
         return None
 
-
     def has_perm(self, user_obj, perm, obj=None):
-        """check permission 
-
-
-        """
+        """check permission"""
         # get permission handlers fot this perm
         handlers = registry.get_handlers(perm)
         for handler in handlers:
             if handler.has_perm(user_obj, perm, obj=obj):
                 return True
         # do not touch this permission
+        return False
+
+    def has_module_perms(self, user_obj, app_label):
+        # get permission handlers fot this perm
+        handlers = registry.get_module_handlers(app_label)
+        for handler in handlers:
+            if handler.has_module_perms(user_obj, app_label):
+                return True
         return False

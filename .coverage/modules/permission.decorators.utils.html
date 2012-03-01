@@ -1,0 +1,324 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <title>Test coverage report: permission.decorators.utils</title>
+    <style type="text/css" media="screen">
+      a
+      {
+        color: #3d707a;
+      }
+      
+      a:hover, a:active
+      {
+        color: #bf7d18;
+      }
+    
+      body 
+      {
+        font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+        font-size: 13px;
+      }
+      
+      .nav 
+      {
+        font-size: 12px;
+        margin-left: 50px;
+      }
+
+      .ignored
+      {
+        color: #707070;
+      }
+
+      .executed 
+      {
+        color: #3d9900;
+      }
+
+      .missed 
+      {
+        color: red;
+        font-weight: bold;
+      }
+
+      .excluded 
+      {
+        color: #6090f0;
+        font-weight: lighter;
+      }
+    
+      #content-header 
+      {
+        font-size: 12px;
+        padding: 18px 0 18px 50px;
+      }
+
+      #content-header h1 
+      {
+        font-size: 16px;
+        margin: 10px 0 0 0;
+        color: #909090;
+      }
+      
+      #module-name
+      {
+        color: #583707;
+      }
+    
+      #content-header p
+      {
+        font-size: 13px;
+        margin: 0;
+        color: #909090;
+      }
+
+      #content-header .normal 
+      {
+        color: #609030;
+      }
+
+      #content-header .warning 
+      {
+        color: #d0a000;
+      }
+
+      #content-header .critical 
+      {
+        color: red;
+      }
+      
+      #source-listing 
+      {
+        margin-bottom: 24px;
+      }
+
+      #source-listing ol 
+      {
+        padding: 0 0 0 50px;
+        width: 90%;
+        font-family: monospace;
+        list-style-position: outside;
+      }
+
+      #source-listing ol li 
+      {
+        line-height: 18px;
+        font-size: small;
+      }
+        
+      #source-listing ol code 
+      {
+        padding:  0 .001em 0 0; /* Firefox doesn't render empty li's properly */
+        font-size: medium;
+        white-space: pre;
+      }
+   </style>
+  </head>
+
+  <body>
+
+<div class="nav">
+  <a href="permission.decorators.method_decorators.html">permission.decorators.method_decorators</a> &lt;&lt;
+  <a href="../index.html">index</a>
+  &gt;&gt; <a href="permission.exceptions.html">permission.exceptions</a>
+</div>
+
+<div id="content-header">
+  <h1>
+    <span id="module-name">permission.decorators.utils</span>:
+    94 total statements,
+    <span class="normal">84.1% covered</span>
+  </h1>
+  <p>Generated: Thu 2012-03-01 14:22 CST</p>
+  <p>Source file: /home/alisue/Dropbox/Codes/django-permission/permission/decorators/utils.py</p>
+  <p>
+    Stats:
+    <span class="executed">69 executed</span>,
+    <span class="missed">13 missed</span>,
+    <span class="excluded">12 excluded</span>,
+    <span class="ignored">73 ignored</span> 
+  </p> 
+</div>
+
+<div id="source-listing">
+  <ol>
+    <li class="ignored"><code>#!/usr/bin/env python</code></li>
+<li class="ignored"><code># vim: set fileencoding=utf-8 :</code></li>
+<li class="executed"><code>"""</code></li>
+<li class="ignored"><code>Utils used in decorators</code></li>
+<li class="ignored"><code></code></li>
+<li class="ignored"><code></code></li>
+<li class="ignored"><code>AUTHOR:</code></li>
+<li class="ignored"><code>    lambdalisue[Ali su ae] (lambdalisue@hashnote.net)</code></li>
+<li class="ignored"><code></code></li>
+<li class="ignored"><code>License:</code></li>
+<li class="ignored"><code>    The MIT License (MIT)</code></li>
+<li class="ignored"><code></code></li>
+<li class="ignored"><code>    Copyright (c) 2012 Alisue allright reserved.</code></li>
+<li class="ignored"><code></code></li>
+<li class="ignored"><code>    Permission is hereby granted, free of charge, to any person obtaining a copy</code></li>
+<li class="ignored"><code>    of this software and associated documentation files (the "Software"), to</code></li>
+<li class="ignored"><code>    deal in the Software without restriction, including without limitation the</code></li>
+<li class="ignored"><code>    rights to use, copy, modify, merge, publish, distribute, sublicense, and/or</code></li>
+<li class="ignored"><code>    sell copies of the Software, and to permit persons to whom the Software is</code></li>
+<li class="ignored"><code>    furnished to do so, subject to the following conditions:</code></li>
+<li class="ignored"><code></code></li>
+<li class="ignored"><code>    The above copyright notice and this permission notice shall be included in</code></li>
+<li class="ignored"><code>    all copies or substantial portions of the Software.</code></li>
+<li class="ignored"><code></code></li>
+<li class="ignored"><code>    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</code></li>
+<li class="ignored"><code>    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</code></li>
+<li class="ignored"><code>    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</code></li>
+<li class="ignored"><code>    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</code></li>
+<li class="ignored"><code>    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING</code></li>
+<li class="ignored"><code>    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS</code></li>
+<li class="ignored"><code>    IN THE SOFTWARE.</code></li>
+<li class="ignored"><code></code></li>
+<li class="ignored"><code>"""</code></li>
+<li class="excluded"><code>from __future__ import with_statement</code></li>
+<li class="excluded"><code>import time</code></li>
+<li class="excluded"><code>import datetime</code></li>
+<li class="excluded"><code>import urlparse</code></li>
+<li class="excluded"><code>from django.conf import settings</code></li>
+<li class="excluded"><code>from django.http import Http404</code></li>
+<li class="excluded"><code>from django.db.models.fields import DateTimeField</code></li>
+<li class="excluded"><code>from django.shortcuts import get_object_or_404</code></li>
+<li class="excluded"><code>from django.contrib.auth import REDIRECT_FIELD_NAME</code></li>
+<li class="excluded"><code>from permission.exceptions import ValidationError</code></li>
+<li class="ignored"><code></code></li>
+<li class="executed"><code>try:</code></li>
+<li class="excluded"><code>    from django.utils import timezone</code></li>
+<li class="missed"><code>    datetime_now = timezone.now</code></li>
+<li class="executed"><code>except ImportError:</code></li>
+<li class="executed"><code>    datetime_now = datetime.datetime.now</code></li>
+<li class="ignored"><code></code></li>
+<li class="executed"><code>def redirect_to_login(request, login_url=None, redirect_field_name=REDIRECT_FIELD_NAME):</code></li>
+<li class="ignored"><code>    """redirect to login"""</code></li>
+<li class="executed"><code>    path = request.build_absolute_uri()</code></li>
+<li class="ignored"><code>    # if the login url is the same scheme and net location then just</code></li>
+<li class="ignored"><code>    # use the path as the "next" url.</code></li>
+<li class="executed"><code>    login_scheme, login_netloc = urlparse.urlparse(login_url or settings.LOGIN_URL)[:2]</code></li>
+<li class="executed"><code>    current_scheme, current_netloc = urlparse.urlparse(path)[:2]</code></li>
+<li class="executed"><code>    if ((not login_scheme or login_scheme == current_scheme) and</code></li>
+<li class="ignored"><code>        (not login_netloc or login_netloc == current_netloc)):</code></li>
+<li class="executed"><code>        path = request.get_full_path()</code></li>
+<li class="excluded"><code>    from django.contrib.auth.views import redirect_to_login as auth_redirect_to_login</code></li>
+<li class="executed"><code>    return auth_redirect_to_login(path, login_url, redirect_field_name)</code></li>
+<li class="ignored"><code></code></li>
+<li class="executed"><code>def get_object_from_classbased_instance(instance, queryset, request, *args, **kwargs):</code></li>
+<li class="ignored"><code>    """get object from an instance of classbased generic view"""</code></li>
+<li class="ignored"><code>    # initialize request, args, kwargs of classbased_instance</code></li>
+<li class="ignored"><code>    # most of methods of classbased view assumed these attributes</code></li>
+<li class="ignored"><code>    # but these attributes is initialized in ``dispatch`` method.</code></li>
+<li class="executed"><code>    instance.request = request</code></li>
+<li class="executed"><code>    instance.args = args</code></li>
+<li class="executed"><code>    instance.kwargs = kwargs</code></li>
+<li class="ignored"><code></code></li>
+<li class="ignored"><code>    # get queryset from class if ``queryset_or_model`` is not specified</code></li>
+<li class="executed"><code>    if hasattr(instance, 'get_queryset') and not queryset:</code></li>
+<li class="executed"><code>        queryset = instance.get_queryset()</code></li>
+<li class="executed"><code>    elif hasattr(instance, 'queryset') and not queryset:</code></li>
+<li class="executed"><code>        queryset = instance.queryset</code></li>
+<li class="executed"><code>    elif hasattr(instance, 'model') and not queryset:</code></li>
+<li class="missed"><code>        queryset = instance.model._default_manager.all()</code></li>
+<li class="ignored"><code></code></li>
+<li class="ignored"><code>    # get object</code></li>
+<li class="executed"><code>    if hasattr(instance, 'get_object'):</code></li>
+<li class="executed"><code>        obj = instance.get_object(queryset)</code></li>
+<li class="executed"><code>    elif hasattr(instance, 'object'):</code></li>
+<li class="executed"><code>        obj = instance.object</code></li>
+<li class="ignored"><code>    else:</code></li>
+<li class="missed"><code>        obj = None</code></li>
+<li class="executed"><code>    return obj</code></li>
+<li class="ignored"><code></code></li>
+<li class="executed"><code>def get_object_from_list_detail_view(request, *args, **kwargs):</code></li>
+<li class="ignored"><code>    """get object from generic list_detail.detail view"""</code></li>
+<li class="executed"><code>    queryset = kwargs['queryset']</code></li>
+<li class="executed"><code>    object_id = kwargs.get('object_id', None)</code></li>
+<li class="executed"><code>    slug = kwargs.get('slug', None)</code></li>
+<li class="executed"><code>    slug_field = kwargs.get('slug_field', 'slug')</code></li>
+<li class="executed"><code>    if object_id:</code></li>
+<li class="executed"><code>        obj = get_object_or_404(queryset, pk=object_id)</code></li>
+<li class="executed"><code>    elif slug and slug_field:</code></li>
+<li class="executed"><code>        obj = get_object_or_404(queryset, **{slug_field: slug})</code></li>
+<li class="ignored"><code>    else:</code></li>
+<li class="missed"><code>        raise AttributeError(</code></li>
+<li class="ignored"><code>                "Generic detail view must be called with either an "</code></li>
+<li class="ignored"><code>                "object_id or a slug/slug_field."</code></li>
+<li class="ignored"><code>            )</code></li>
+<li class="executed"><code>    return obj</code></li>
+<li class="executed"><code>def _get_object_from_list_detail_view_validation(request, *args, **kwargs):</code></li>
+<li class="executed"><code>    if 'queryset' not in kwargs:</code></li>
+<li class="executed"><code>        return False</code></li>
+<li class="executed"><code>    elif 'object_id' not in kwargs and 'slug' not in kwargs:</code></li>
+<li class="missed"><code>        return False</code></li>
+<li class="executed"><code>    return True</code></li>
+<li class="executed"><code>get_object_from_list_detail_view.validate = _get_object_from_list_detail_view_validation</code></li>
+<li class="ignored"><code></code></li>
+<li class="ignored"><code></code></li>
+<li class="executed"><code>def get_object_from_date_based_view(request, *args, **kwargs):</code></li>
+<li class="ignored"><code>    """get object from generic date_based.detail view"""</code></li>
+<li class="executed"><code>    year, month, day = kwargs['year'], kwargs['month'], kwargs['day']</code></li>
+<li class="executed"><code>    month_format = kwargs.get('month_format', '%b')</code></li>
+<li class="executed"><code>    day_format = kwargs.get('day_format', '%d')</code></li>
+<li class="executed"><code>    date_field = kwargs['date_field']</code></li>
+<li class="executed"><code>    queryset = kwargs['queryset']</code></li>
+<li class="executed"><code>    object_id = kwargs.get('object_id', None)</code></li>
+<li class="executed"><code>    slug = kwargs.get('slug', None)</code></li>
+<li class="executed"><code>    slug_field = kwargs.get('slug_field', 'slug')</code></li>
+<li class="ignored"><code></code></li>
+<li class="executed"><code>    try:</code></li>
+<li class="executed"><code>        tt = time.strptime(</code></li>
+<li class="ignored"><code>                '%s-%s-%s' % (year, month, day),</code></li>
+<li class="ignored"><code>                '%s-%s-%s' % ('%Y', month_format, day_format)</code></li>
+<li class="ignored"><code>            )</code></li>
+<li class="executed"><code>        date = datetime.date(*tt[:3])</code></li>
+<li class="missed"><code>    except ValueError:</code></li>
+<li class="missed"><code>        raise Http404</code></li>
+<li class="ignored"><code></code></li>
+<li class="executed"><code>    model = queryset.model</code></li>
+<li class="ignored"><code></code></li>
+<li class="executed"><code>    if isinstance(model._meta.get_field(date_field), DateTimeField):</code></li>
+<li class="executed"><code>        lookup_kwargs = {</code></li>
+<li class="ignored"><code>                '%s__range' % date_field: (</code></li>
+<li class="ignored"><code>                    datetime.datetime.combine(date, datetime.time.min),</code></li>
+<li class="ignored"><code>                    datetime.datetime.combine(date, datetime.time.max),</code></li>
+<li class="ignored"><code>                )}</code></li>
+<li class="ignored"><code>    else:</code></li>
+<li class="missed"><code>        lookup_kwargs = {date_field: date}</code></li>
+<li class="ignored"><code></code></li>
+<li class="executed"><code>    now = datetime_now()</code></li>
+<li class="executed"><code>    if date &gt;= now.date() and not kwargs.get('allow_future', False):</code></li>
+<li class="missed"><code>        lookup_kwargs['%s__lte' % date_field] = now</code></li>
+<li class="executed"><code>    if object_id:</code></li>
+<li class="executed"><code>        lookup_kwargs['pk'] = object_id</code></li>
+<li class="executed"><code>    elif slug and slug_field:</code></li>
+<li class="executed"><code>        lookup_kwargs['%s__exact' % slug_field] = slug</code></li>
+<li class="ignored"><code>    else:</code></li>
+<li class="missed"><code>        raise AttributeError(</code></li>
+<li class="ignored"><code>                "Generic detail view must be called with either an "</code></li>
+<li class="ignored"><code>                "object_id or a slug/slug_field."</code></li>
+<li class="ignored"><code>            )</code></li>
+<li class="executed"><code>    return get_object_or_404(queryset, **lookup_kwargs)</code></li>
+<li class="executed"><code>def _get_object_from_date_based_view_validation(request, *args, **kwargs):</code></li>
+<li class="executed"><code>    if 'queryset' not in kwargs:</code></li>
+<li class="missed"><code>        return False</code></li>
+<li class="executed"><code>    elif 'year' not in kwargs or 'month' not in kwargs or 'day' not in kwargs:</code></li>
+<li class="missed"><code>        return False</code></li>
+<li class="executed"><code>    elif 'object_id' not in kwargs and 'slug' not in kwargs:</code></li>
+<li class="missed"><code>        return False</code></li>
+<li class="executed"><code>    return True</code></li>
+<li class="executed"><code>get_object_from_date_based_view.validate = _get_object_from_date_based_view_validation</code></li>
+  </ol>
+</div>
+
+<div class="nav">
+  <a href="permission.decorators.method_decorators.html">permission.decorators.method_decorators</a> &lt;&lt;
+  <a href="../index.html">index</a>
+  &gt;&gt; <a href="permission.exceptions.html">permission.exceptions</a>
+</div>
+
+  </body>
+</html>
+

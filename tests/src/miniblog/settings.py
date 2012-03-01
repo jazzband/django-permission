@@ -129,12 +129,16 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'miniblog.autocmds',
     'miniblog.blogs',
+    #'mptt',
+    'feincms',      # to improve the visual of admin.
     'permission',
 )
 
 AUTHENTICATION_BACKENDS = (
         'django.contrib.auth.backends.ModelBackend',
+        'permission.backends.ModelBackend',
         'permission.backends.PermissionBackend',
+        'permission.backends.RoleBackend',
     )
 
 FIXTURE_DIRS = (
@@ -165,3 +169,8 @@ LOGGING = {
         },
     }
 }
+
+try:
+    from local_settings import *
+except ImportError:
+    pass

@@ -87,3 +87,31 @@ def mock_request():
     
     """
     return MockRequestClient().request()
+
+def create_user(username):
+    from django.contrib.auth.models import User
+    user = User.objects.create_user(
+            username=username,
+            email='%s@test.com'%username,
+            password='password'
+        )
+    return user
+
+def create_role(name, parent=None):
+    from permission.models import Role
+    role = Role.objects.create(
+            name=name, codename=name, description=name,
+            parent=parent,
+        )
+    return role
+
+def create_permission(name):
+    from django.contrib.auth.models import Permission
+    from django.contrib.contenttypes.models import ContentType
+    from permission.models import Role
+    ct = ContentType.objects.get_for_model(Role)
+    permission = Permission.objects.create(
+            name=name, codename=name,
+            content_type=ct
+        )
+    return permission

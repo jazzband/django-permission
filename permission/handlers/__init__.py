@@ -107,4 +107,7 @@ class Registry(object):
             return tuple(self._permissions[perm])
         return tuple()
 
+    def get_module_handlers(self, app_label):
+        return tuple()
+
 registry = Registry()
