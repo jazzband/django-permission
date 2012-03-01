@@ -57,13 +57,11 @@ class PermissionRoleManagerTestCase(TestCase):
         user7 = create_user('permission_test_user7')
         user8 = create_user('permission_test_user8')
         role1 = create_role('permission_test_role1')
-        role2 = create_role('permission_test_role2')
-        role3 = create_role('permission_test_role3')
-        role4 = create_role('permission_test_role4')
-        role5 = create_role('permission_test_role5')
-        role6 = create_role('permission_test_role6')
-        role1._subroles.add(role2, role3, role6)
-        role3._subroles.add(role4, role5)
+        role2 = create_role('permission_test_role2', role1)
+        role3 = create_role('permission_test_role3', role1)
+        role4 = create_role('permission_test_role4', role3)
+        role5 = create_role('permission_test_role5', role3)
+        role6 = create_role('permission_test_role6', role1)
         role1._users.add(user1, user2)
         role2._users.add(user3)
         role3._users.add(user4, user5)
@@ -71,30 +69,30 @@ class PermissionRoleManagerTestCase(TestCase):
         role5._users.add(user7)
         role6._users.add(user8)
 
-        self.assertEqual(frozenset(Role.objects.filter_by_user(user1)), frozenset([
+        self.assertItemsEqual(Role.objects.filter_by_user(user1), [
                 role1, role2, role3, role4, role5, role6
-            ]))
-        self.assertEqual(frozenset(Role.objects.filter_by_user(user2)), frozenset([
+            ])
+        self.assertItemsEqual(Role.objects.filter_by_user(user2), [
                 role1, role2, role3, role4, role5, role6
-            ]))
-        self.assertEqual(frozenset(Role.objects.filter_by_user(user3)), frozenset([
+            ])
+        self.assertItemsEqual(Role.objects.filter_by_user(user3), [
                 role2,
-            ]))
-        self.assertEqual(frozenset(Role.objects.filter_by_user(user4)), frozenset([
+            ])
+        self.assertItemsEqual(Role.objects.filter_by_user(user4), [
                 role3, role4, role5,
-            ]))
-        self.assertEqual(frozenset(Role.objects.filter_by_user(user5)), frozenset([
+            ])
+        self.assertItemsEqual(Role.objects.filter_by_user(user5), [
                 role3, role4, role5,
-            ]))
-        self.assertEqual(frozenset(Role.objects.filter_by_user(user6)), frozenset([
+            ])
+        self.assertItemsEqual(Role.objects.filter_by_user(user6), [
                 role4,
-            ]))
-        self.assertEqual(frozenset(Role.objects.filter_by_user(user7)), frozenset([
+            ])
+        self.assertItemsEqual(Role.objects.filter_by_user(user7), [
                 role5,
-            ]))
-        self.assertEqual(frozenset(Role.objects.filter_by_user(user8)), frozenset([
+            ])
+        self.assertItemsEqual(Role.objects.filter_by_user(user8), [
                 role6,
-            ]))
+            ])
 
     def test_get_all_permissions_of_user(self):
         # role1           -- user1, user2 -- perm1, perm2
@@ -120,13 +118,11 @@ class PermissionRoleManagerTestCase(TestCase):
         perm7 = create_permission('permission_test_perm7')
         perm8 = create_permission('permission_test_perm8')
         role1 = create_role('permission_test_role1')
-        role2 = create_role('permission_test_role2')
-        role3 = create_role('permission_test_role3')
-        role4 = create_role('permission_test_role4')
-        role5 = create_role('permission_test_role5')
-        role6 = create_role('permission_test_role6')
-        role1._subroles.add(role2, role3, role6)
-        role3._subroles.add(role4, role5)
+        role2 = create_role('permission_test_role2', role1)
+        role3 = create_role('permission_test_role3', role1)
+        role4 = create_role('permission_test_role4', role3)
+        role5 = create_role('permission_test_role5', role3)
+        role6 = create_role('permission_test_role6', role1)
         role1._users.add(user1, user2)
         role2._users.add(user3)
         role3._users.add(user4, user5)
@@ -140,32 +136,32 @@ class PermissionRoleManagerTestCase(TestCase):
         role5._permissions.add(perm7)
         role6._permissions.add(perm8)
 
-        self.assertEqual(frozenset(Role.objects.get_all_permissions_of_user(user1)), frozenset([
+        self.assertItemsEqual(Role.objects.get_all_permissions_of_user(user1), [
                 perm1, perm2, perm3, perm4,
                 perm5, perm6, perm7, perm8,
-            ]))
-        self.assertEqual(frozenset(Role.objects.get_all_permissions_of_user(user2)), frozenset([
+            ])
+        self.assertItemsEqual(Role.objects.get_all_permissions_of_user(user2), [
                 perm1, perm2, perm3, perm4,
                 perm5, perm6, perm7, perm8,
-            ]))
-        self.assertEqual(frozenset(Role.objects.get_all_permissions_of_user(user3)), frozenset([
+            ])
+        self.assertItemsEqual(Role.objects.get_all_permissions_of_user(user3), [
                 perm3,
-            ]))
-        self.assertEqual(frozenset(Role.objects.get_all_permissions_of_user(user4)), frozenset([
+            ])
+        self.assertItemsEqual(Role.objects.get_all_permissions_of_user(user4), [
                 perm4, perm5, perm6, perm7,
-            ]))
-        self.assertEqual(frozenset(Role.objects.get_all_permissions_of_user(user5)), frozenset([
+            ])
+        self.assertItemsEqual(Role.objects.get_all_permissions_of_user(user5), [
                 perm4, perm5, perm6, perm7,
-            ]))
-        self.assertEqual(frozenset(Role.objects.get_all_permissions_of_user(user6)), frozenset([
+            ])
+        self.assertItemsEqual(Role.objects.get_all_permissions_of_user(user6), [
                 perm6,
-            ]))
-        self.assertEqual(frozenset(Role.objects.get_all_permissions_of_user(user7)), frozenset([
+            ])
+        self.assertItemsEqual(Role.objects.get_all_permissions_of_user(user7), [
                 perm7,
-            ]))
-        self.assertEqual(frozenset(Role.objects.get_all_permissions_of_user(user8)), frozenset([
+            ])
+        self.assertItemsEqual(Role.objects.get_all_permissions_of_user(user8), [
                 perm8,
-            ]))
+            ])
 
 
 
@@ -173,117 +169,11 @@ class PermissionRoleModelTestCase(TestCase):
 
     def testcreate(self):
         role = create_role('permission_test_role1')
-        self.assertEqual(role.name, 'permission_test_role1')
-        self.assertEqual(role.codename, 'permission_test_role1')
-        self.assertEqual(role.description, 'permission_test_role1')
+        self.assertItemsEqual(role.name, 'permission_test_role1')
+        self.assertItemsEqual(role.codename, 'permission_test_role1')
+        self.assertItemsEqual(role.description, 'permission_test_role1')
 
         return role
-
-    def test__get_all_subroles(self):
-        # role1
-        #   +- role2
-        #   |    +- role3
-        #   |    +- role4
-        #   |    |   +- role5
-        #   |    |   +- role6
-        #   |    +- role7
-        #   |         +- role8
-        #   +- role9
-        #        +- role10
-        #        +- role11
-        role1 = create_role('permission_test_role1')
-        role2 = create_role('permission_test_role2')
-        role3 = create_role('permission_test_role3')
-        role4 = create_role('permission_test_role4')
-        role5 = create_role('permission_test_role5')
-        role6 = create_role('permission_test_role6')
-        role7 = create_role('permission_test_role7')
-        role8 = create_role('permission_test_role8')
-        role9 = create_role('permission_test_role9')
-        role10 = create_role('permission_test_role10')
-        role11 = create_role('permission_test_role11')
-        role1._subroles.add(role2, role9)
-        role2._subroles.add(role3, role4, role7)
-        role4._subroles.add(role5, role6)
-        role7._subroles.add(role8)
-        role9._subroles.add(role10, role11)
-
-        self.assertEqual(role1.subroles, frozenset([
-                role2, role3, role4, role5,
-                role6, role7, role8, role9, role10, role11,
-            ]))
-        self.assertEqual(role2.subroles, frozenset([
-                role3, role4, role5,
-                role6, role7, role8,
-            ]))
-        self.assertEqual(role3.subroles, frozenset([]))
-        self.assertEqual(role4.subroles, frozenset([
-                role5, role6,
-            ]))
-        self.assertEqual(role5.subroles, frozenset([]))
-        self.assertEqual(role6.subroles, frozenset([]))
-        self.assertEqual(role7.subroles, frozenset([
-                role8,
-            ]))
-        self.assertEqual(role8.subroles, frozenset([]))
-        self.assertEqual(role9.subroles, frozenset([
-                role10, role11,
-            ]))
-        self.assertEqual(role10.subroles, frozenset([]))
-        self.assertEqual(role11.subroles, frozenset([]))
-
-    def test__get_all_roles(self):
-        # role1
-        #   +- role2
-        #   |    +- role3
-        #   |    +- role4
-        #   |    |   +- role5
-        #   |    |   +- role6
-        #   |    +- role7
-        #   |         +- role8
-        #   +- role9
-        #        +- role10
-        #        +- role11
-        role1 = create_role('permission_test_role1')
-        role2 = create_role('permission_test_role2')
-        role3 = create_role('permission_test_role3')
-        role4 = create_role('permission_test_role4')
-        role5 = create_role('permission_test_role5')
-        role6 = create_role('permission_test_role6')
-        role7 = create_role('permission_test_role7')
-        role8 = create_role('permission_test_role8')
-        role9 = create_role('permission_test_role9')
-        role10 = create_role('permission_test_role10')
-        role11 = create_role('permission_test_role11')
-        role1._subroles.add(role2, role9)
-        role2._subroles.add(role3, role4, role7)
-        role4._subroles.add(role5, role6)
-        role7._subroles.add(role8)
-        role9._subroles.add(role10, role11)
-
-        self.assertEqual(role1.roles, frozenset([
-                role1, role2, role3, role4, role5,
-                role6, role7, role8, role9, role10, role11,
-            ]))
-        self.assertEqual(role2.roles, frozenset([
-                role2, role3, role4, role5,
-                role6, role7, role8,
-            ]))
-        self.assertEqual(role3.roles, frozenset([role3]))
-        self.assertEqual(role4.roles, frozenset([
-                role4, role5, role6,
-            ]))
-        self.assertEqual(role5.roles, frozenset([role5]))
-        self.assertEqual(role6.roles, frozenset([role6]))
-        self.assertEqual(role7.roles, frozenset([
-                role7, role8,
-            ]))
-        self.assertEqual(role8.roles, frozenset([role8]))
-        self.assertEqual(role9.roles, frozenset([
-                role9, role10, role11,
-            ]))
-        self.assertEqual(role10.roles, frozenset([role10]))
-        self.assertEqual(role11.roles, frozenset([role11]))
 
     def test__get_all_users(self):
         # role1           -- user1, user2
@@ -301,13 +191,11 @@ class PermissionRoleModelTestCase(TestCase):
         user7 = create_user('permission_test_user7')
         user8 = create_user('permission_test_user8')
         role1 = create_role('permission_test_role1')
-        role2 = create_role('permission_test_role2')
-        role3 = create_role('permission_test_role3')
-        role4 = create_role('permission_test_role4')
-        role5 = create_role('permission_test_role5')
-        role6 = create_role('permission_test_role6')
-        role1._subroles.add(role2, role3, role6)
-        role3._subroles.add(role4, role5)
+        role2 = create_role('permission_test_role2', role1)
+        role3 = create_role('permission_test_role3', role1)
+        role4 = create_role('permission_test_role4', role3)
+        role5 = create_role('permission_test_role5', role3)
+        role6 = create_role('permission_test_role6', role1)
         role1._users.add(user1, user2)
         role2._users.add(user3)
         role3._users.add(user4, user5)
@@ -315,25 +203,25 @@ class PermissionRoleModelTestCase(TestCase):
         role5._users.add(user7)
         role6._users.add(user8)
 
-        self.assertEqual(frozenset(role1.users), frozenset([
+        self.assertItemsEqual(role1.users, [
                 user1, user2, user3, user4,
                 user5, user6, user7, user8,
-            ]))
-        self.assertEqual(frozenset(role2.users), frozenset([
+            ])
+        self.assertItemsEqual(role2.users, [
                 user3,
-            ]))
-        self.assertEqual(frozenset(role3.users), frozenset([
+            ])
+        self.assertItemsEqual(role3.users, [
                 user4, user5, user6, user7,
-            ]))
-        self.assertEqual(frozenset(role4.users), frozenset([
+            ])
+        self.assertItemsEqual(role4.users, [
                 user6,
-            ]))
-        self.assertEqual(frozenset(role5.users), frozenset([
+            ])
+        self.assertItemsEqual(role5.users, [
                 user7,
-            ]))
-        self.assertEqual(frozenset(role6.users), frozenset([
+            ])
+        self.assertItemsEqual(role6.users, [
                 user8,
-            ]))
+            ])
 
     def test__get_all_permissions(self):
         # role1           -- perm1, perm2
@@ -351,13 +239,11 @@ class PermissionRoleModelTestCase(TestCase):
         perm7 = create_permission('permission_test_perm7')
         perm8 = create_permission('permission_test_perm8')
         role1 = create_role('permission_test_role1')
-        role2 = create_role('permission_test_role2')
-        role3 = create_role('permission_test_role3')
-        role4 = create_role('permission_test_role4')
-        role5 = create_role('permission_test_role5')
-        role6 = create_role('permission_test_role6')
-        role1._subroles.add(role2, role3, role6)
-        role3._subroles.add(role4, role5)
+        role2 = create_role('permission_test_role2', role1)
+        role3 = create_role('permission_test_role3', role1)
+        role4 = create_role('permission_test_role4', role3)
+        role5 = create_role('permission_test_role5', role3)
+        role6 = create_role('permission_test_role6', role1)
         role1._permissions.add(perm1, perm2)
         role2._permissions.add(perm3)
         role3._permissions.add(perm4, perm5)
@@ -365,25 +251,25 @@ class PermissionRoleModelTestCase(TestCase):
         role5._permissions.add(perm7)
         role6._permissions.add(perm8)
 
-        self.assertEqual(frozenset(role1.permissions), frozenset([
+        self.assertItemsEqual(role1.permissions, [
                 perm1, perm2, perm3, perm4,
-                perm5, perm6, perm7, perm8,
-            ]))
-        self.assertEqual(frozenset(role2.permissions), frozenset([
+                perm5, perm6, perm7, perm8
+            ])
+        self.assertItemsEqual(role2.permissions, [
                 perm3,
-            ]))
-        self.assertEqual(frozenset(role3.permissions), frozenset([
-                perm4, perm5, perm6, perm7,
-            ]))
-        self.assertEqual(frozenset(role4.permissions), frozenset([
+            ])
+        self.assertItemsEqual(role3.permissions, [
+                perm4, perm5, perm6, perm7
+            ])
+        self.assertItemsEqual(role4.permissions, [
                 perm6,
-            ]))
-        self.assertEqual(frozenset(role5.permissions), frozenset([
+            ])
+        self.assertItemsEqual(role5.permissions, [
                 perm7,
-            ]))
-        self.assertEqual(frozenset(role6.permissions), frozenset([
+            ])
+        self.assertItemsEqual(role6.permissions, [
                 perm8,
-            ]))
+            ])
 
     def test_is_belong(self):
         # role1           -- user1, user2
@@ -401,13 +287,11 @@ class PermissionRoleModelTestCase(TestCase):
         user7 = create_user('permission_test_user7')
         user8 = create_user('permission_test_user8')
         role1 = create_role('permission_test_role1')
-        role2 = create_role('permission_test_role2')
-        role3 = create_role('permission_test_role3')
-        role4 = create_role('permission_test_role4')
-        role5 = create_role('permission_test_role5')
-        role6 = create_role('permission_test_role6')
-        role1._subroles.add(role2, role3, role6)
-        role3._subroles.add(role4, role5)
+        role2 = create_role('permission_test_role2', role1)
+        role3 = create_role('permission_test_role3', role1)
+        role4 = create_role('permission_test_role4', role3)
+        role5 = create_role('permission_test_role5', role3)
+        role6 = create_role('permission_test_role6', role1)
         role1._users.add(user1, user2)
         role2._users.add(user3)
         role3._users.add(user4, user5)
@@ -458,13 +342,11 @@ class PermissionRoleModelTestCase(TestCase):
         user7 = create_user('permission_test_user7')
         user8 = create_user('permission_test_user8')
         role1 = create_role('permission_test_role1')
-        role2 = create_role('permission_test_role2')
-        role3 = create_role('permission_test_role3')
-        role4 = create_role('permission_test_role4')
-        role5 = create_role('permission_test_role5')
-        role6 = create_role('permission_test_role6')
-        role1._subroles.add(role2, role3, role6)
-        role3._subroles.add(role4, role5)
+        role2 = create_role('permission_test_role2', role1)
+        role3 = create_role('permission_test_role3', role1)
+        role4 = create_role('permission_test_role4', role3)
+        role5 = create_role('permission_test_role5', role3)
+        role6 = create_role('permission_test_role6', role1)
         role1._users.add(user1, user2)
         role2._users.add(user3)
         role3._users.add(user4, user5)
@@ -500,13 +382,11 @@ class PermissionRoleModelTestCase(TestCase):
         user7 = create_user('permission_test_user7')
         user8 = create_user('permission_test_user8')
         role1 = create_role('permission_test_role1')
-        role2 = create_role('permission_test_role2')
-        role3 = create_role('permission_test_role3')
-        role4 = create_role('permission_test_role4')
-        role5 = create_role('permission_test_role5')
-        role6 = create_role('permission_test_role6')
-        role1._subroles.add(role2, role3, role6)
-        role3._subroles.add(role4, role5)
+        role2 = create_role('permission_test_role2', role1)
+        role3 = create_role('permission_test_role3', role1)
+        role4 = create_role('permission_test_role4', role3)
+        role5 = create_role('permission_test_role5', role3)
+        role6 = create_role('permission_test_role6', role1)
         role1._users.add(user1, user2)
         role2._users.add(user3)
         role3._users.add(user4, user5)
@@ -545,13 +425,11 @@ class PermissionRoleModelTestCase(TestCase):
         perm7 = create_permission('permission_test_perm7')
         perm8 = create_permission('permission_test_perm8')
         role1 = create_role('permission_test_role1')
-        role2 = create_role('permission_test_role2')
-        role3 = create_role('permission_test_role3')
-        role4 = create_role('permission_test_role4')
-        role5 = create_role('permission_test_role5')
-        role6 = create_role('permission_test_role6')
-        role1._subroles.add(role2, role3, role6)
-        role3._subroles.add(role4, role5)
+        role2 = create_role('permission_test_role2', role1)
+        role3 = create_role('permission_test_role3', role1)
+        role4 = create_role('permission_test_role4', role3)
+        role5 = create_role('permission_test_role5', role3)
+        role6 = create_role('permission_test_role6', role1)
         role1._permissions.add(perm1, perm2)
         role2._permissions.add(perm3)
         role3._permissions.add(perm4, perm5)
@@ -587,13 +465,11 @@ class PermissionRoleModelTestCase(TestCase):
         perm7 = create_permission('permission_test_perm7')
         perm8 = create_permission('permission_test_perm8')
         role1 = create_role('permission_test_role1')
-        role2 = create_role('permission_test_role2')
-        role3 = create_role('permission_test_role3')
-        role4 = create_role('permission_test_role4')
-        role5 = create_role('permission_test_role5')
-        role6 = create_role('permission_test_role6')
-        role1._subroles.add(role2, role3, role6)
-        role3._subroles.add(role4, role5)
+        role2 = create_role('permission_test_role2', role1)
+        role3 = create_role('permission_test_role3', role1)
+        role4 = create_role('permission_test_role4', role3)
+        role5 = create_role('permission_test_role5', role3)
+        role6 = create_role('permission_test_role6', role1)
         role1._permissions.add(perm1, perm2)
         role2._permissions.add(perm3)
         role3._permissions.add(perm4, perm5)

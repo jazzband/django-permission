@@ -127,17 +127,17 @@
 <div id="content-header">
   <h1>
     <span id="module-name">permission.models</span>:
-    118 total statements,
-    <span class="normal">90.1% covered</span>
+    96 total statements,
+    <span class="normal">88.4% covered</span>
   </h1>
-  <p>Generated: Thu 2012-03-01 10:30 CST</p>
+  <p>Generated: Thu 2012-03-01 14:22 CST</p>
   <p>Source file: /home/alisue/Dropbox/Codes/django-permission/permission/models.py</p>
   <p>
     Stats:
-    <span class="executed">100 executed</span>,
-    <span class="missed">11 missed</span>,
-    <span class="excluded">7 excluded</span>,
-    <span class="ignored">110 ignored</span> 
+    <span class="executed">76 executed</span>,
+    <span class="missed">10 missed</span>,
+    <span class="excluded">10 excluded</span>,
+    <span class="ignored">108 ignored</span> 
   </p> 
 </div>
 
@@ -181,89 +181,77 @@
 <li class="excluded"><code>from django.contrib.auth.models import Permission</code></li>
 <li class="excluded"><code>from django.utils.translation import ugettext_lazy as _</code></li>
 <li class="ignored"><code></code></li>
+<li class="excluded"><code>from mptt.models import MPTTModel</code></li>
+<li class="excluded"><code>from mptt.models import TreeForeignKey</code></li>
+<li class="excluded"><code>from mptt.models import TreeManager</code></li>
 <li class="ignored"><code></code></li>
-<li class="executed"><code>class RoleManager(models.Manager):</code></li>
+<li class="executed"><code>class RoleManager(TreeManager):</code></li>
 <li class="executed"><code>    def get_by_natural_key(self, codename):</code></li>
 <li class="missed"><code>        return self.get(codename=codename)</code></li>
 <li class="ignored"><code></code></li>
 <li class="executed"><code>    def filter_by_user(self, user_obj):</code></li>
 <li class="ignored"><code>        """return queryset of roles which ``user_obj`` have"""</code></li>
-<li class="executed"><code>        roles_qs = self.defer('id', '_users').filter(_users=user_obj)</code></li>
-<li class="executed"><code>        roles = []</code></li>
-<li class="executed"><code>        for role in roles_qs.iterator():</code></li>
-<li class="executed"><code>            roles.extend(role.roles)</code></li>
-<li class="executed"><code>        role_pks = [r.pk for r in set(roles)]</code></li>
-<li class="executed"><code>        roles = self.defer('id').filter(pk__in=role_pks)</code></li>
-<li class="executed"><code>        return roles.defer(None)</code></li>
+<li class="ignored"><code>        # do not defer anything otherwise the returning queryset</code></li>
+<li class="ignored"><code>        # contains defered instance.</code></li>
+<li class="executed"><code>        roles_qs = self.none()</code></li>
+<li class="executed"><code>        for role in self.filter(_users=user_obj).iterator():</code></li>
+<li class="executed"><code>            roles_qs |= role.get_descendants(include_self=True)</code></li>
+<li class="executed"><code>        return roles_qs</code></li>
 <li class="ignored"><code></code></li>
 <li class="executed"><code>    def get_all_permissions_of_user(self, user_obj):</code></li>
 <li class="ignored"><code>        """get a set of all permissions of ``user_obj``"""</code></li>
-<li class="executed"><code>        roles = self.defer('id', '_users').filter(_users=user_obj)</code></li>
-<li class="executed"><code>        permissions = []</code></li>
+<li class="ignored"><code>        # name, parent, _users, _permissions are required.</code></li>
+<li class="executed"><code>        roles = self.defer('codename', 'description').filter(_users=user_obj)</code></li>
+<li class="executed"><code>        permissions = Permission.objects.none()</code></li>
 <li class="executed"><code>        for role in roles.iterator():</code></li>
-<li class="executed"><code>            permissions.extend(role.permissions)</code></li>
-<li class="executed"><code>        return frozenset(permissions)</code></li>
+<li class="executed"><code>            permissions |= role.permissions</code></li>
+<li class="executed"><code>        return permissions.distinct()</code></li>
 <li class="ignored"><code></code></li>
 <li class="ignored"><code></code></li>
-<li class="executed"><code>class Role(models.Model):</code></li>
+<li class="executed"><code>class Role(MPTTModel):</code></li>
 <li class="ignored"><code>    """A role model for enhanced permission system."""</code></li>
 <li class="executed"><code>    name = models.CharField(_('name'), max_length=50)</code></li>
 <li class="executed"><code>    codename = models.CharField(_('codename'), max_length=100, unique=True)</code></li>
 <li class="executed"><code>    description = models.TextField(_('description'), blank=True,</code></li>
 <li class="ignored"><code>            help_text=_('A description of this permission role'))</code></li>
 <li class="ignored"><code></code></li>
-<li class="executed"><code>    superrole = models.ForeignKey('self', verbose_name=_('super roles'),</code></li>
-<li class="ignored"><code>            related_name='_subroles', blank=True, null=True)</code></li>
+<li class="executed"><code>    parent = TreeForeignKey('self', verbose_name=_('parent role'),</code></li>
+<li class="ignored"><code>            related_name='children', blank=True, null=True)</code></li>
 <li class="ignored"><code></code></li>
 <li class="executed"><code>    _users = models.ManyToManyField(User, verbose_name=_('user'),</code></li>
 <li class="ignored"><code>            related_name='_roles', db_column='users', blank=True)</code></li>
 <li class="ignored"><code></code></li>
 <li class="executed"><code>    _permissions = models.ManyToManyField(Permission, verbose_name=_('permissions'),</code></li>
 <li class="ignored"><code>            related_name='roles', db_column='permissions', blank=True)</code></li>
-<li class="executed"><code>    order = models.PositiveIntegerField(editable=False)</code></li>
 <li class="ignored"><code></code></li>
 <li class="executed"><code>    objects = RoleManager()</code></li>
 <li class="ignored"><code></code></li>
 <li class="executed"><code>    class Meta:</code></li>
 <li class="executed"><code>        verbose_name = _('role')</code></li>
 <li class="executed"><code>        verbose_name_plural = _('roles')</code></li>
-<li class="executed"><code>        ordering = ('order',)</code></li>
+<li class="ignored"><code></code></li>
+<li class="executed"><code>    class MPTTMeta:</code></li>
+<li class="executed"><code>        order_insertion_by = ['name']</code></li>
 <li class="ignored"><code></code></li>
 <li class="excluded"><code>    def __unicode__(self):</code></li>
-<li class="excluded"><code>        return u"&lt;Role: %s&gt;" % self.codename</code></li>
+<li class="excluded"><code>        return self.name</code></li>
 <li class="ignored"><code></code></li>
 <li class="executed"><code>    def natural_key(self):</code></li>
 <li class="missed"><code>        return (self.codename,)</code></li>
 <li class="ignored"><code></code></li>
-<li class="executed"><code>    def _get_all_subroles(self):</code></li>
-<li class="ignored"><code>        """get a frozenset of all subroles of this role"""</code></li>
-<li class="executed"><code>        roles = []</code></li>
-<li class="executed"><code>        for role in self._subroles.iterator():</code></li>
-<li class="executed"><code>            roles.append(role)</code></li>
-<li class="executed"><code>            roles.extend(role._get_all_subroles())</code></li>
-<li class="executed"><code>        return frozenset(roles)</code></li>
-<li class="executed"><code>    subroles = property(_get_all_subroles)</code></li>
-<li class="ignored"><code></code></li>
-<li class="executed"><code>    def _get_all_roles(self):</code></li>
-<li class="ignored"><code>        """get a frozenset of all subroles and this role"""</code></li>
-<li class="executed"><code>        roles = set(self.subroles)</code></li>
-<li class="executed"><code>        roles.add(self)</code></li>
-<li class="executed"><code>        return frozenset(roles)</code></li>
-<li class="executed"><code>    roles = property(_get_all_roles)</code></li>
-<li class="ignored"><code></code></li>
-<li class="executed"><code>    def _get_all_users(self):</code></li>
+<li class="executed"><code>    @property</code></li>
+<li class="ignored"><code>    def users(self):</code></li>
 <li class="ignored"><code>        """get all users who belongs to this role or superroles"""</code></li>
-<li class="executed"><code>        role_pks = [r.pk for r in self.roles]</code></li>
-<li class="executed"><code>        qs = User.objects.defer('pk', '_roles').filter(_roles__pk__in=role_pks).distinct()</code></li>
+<li class="executed"><code>        role_pks = self.get_descendants(include_self=True).values_list('id', flat=True)</code></li>
+<li class="executed"><code>        qs = User.objects.only('id', '_roles').filter(_roles__pk__in=role_pks).distinct()</code></li>
 <li class="executed"><code>        return qs.defer(None)</code></li>
-<li class="executed"><code>    users = property(_get_all_users)</code></li>
 <li class="ignored"><code></code></li>
-<li class="executed"><code>    def _get_all_permissions(self):</code></li>
+<li class="executed"><code>    @property</code></li>
+<li class="ignored"><code>    def permissions(self):</code></li>
 <li class="ignored"><code>        """get all permissions which this role or subroles have"""</code></li>
-<li class="executed"><code>        role_pks = [r.pk for r in self.roles]</code></li>
-<li class="executed"><code>        qs = Permission.objects.defer('pk', 'roles').filter(roles__pk__in=role_pks).distinct()</code></li>
+<li class="executed"><code>        role_pks = self.get_descendants(include_self=True).values_list('id', flat=True)</code></li>
+<li class="executed"><code>        qs = Permission.objects.only('id', 'roles').filter(roles__pk__in=role_pks).distinct()</code></li>
 <li class="executed"><code>        return qs.defer(None)</code></li>
-<li class="executed"><code>    permissions = property(_get_all_permissions)</code></li>
 <li class="ignored"><code></code></li>
 <li class="executed"><code>    def is_belong(self, user_obj):</code></li>
 <li class="ignored"><code>        """whether the ``user_obj`` belongs to this role or superroles"""</code></li>
@@ -280,11 +268,13 @@
 <li class="ignored"><code>        """</code></li>
 <li class="executed"><code>        if isinstance(user_or_iterable, User):</code></li>
 <li class="missed"><code>            user_or_iterable = [user_or_iterable]</code></li>
-<li class="executed"><code>        user_or_iterable = frozenset(user_or_iterable)</code></li>
-<li class="executed"><code>        existing_users = frozenset(self.users.all())</code></li>
-<li class="executed"><code>        user_or_iterable = user_or_iterable.difference(existing_users)</code></li>
-<li class="executed"><code>        if len(user_or_iterable) &gt; 0:</code></li>
-<li class="executed"><code>            self._users.add(*user_or_iterable)</code></li>
+<li class="executed"><code>        users_add = []</code></li>
+<li class="executed"><code>        existing_users = self.users</code></li>
+<li class="executed"><code>        for user in user_or_iterable:</code></li>
+<li class="executed"><code>            if not existing_users.filter(pk=user.pk).exists():</code></li>
+<li class="executed"><code>                users_add.append(user)</code></li>
+<li class="executed"><code>        if len(users_add) &gt; 0:</code></li>
+<li class="executed"><code>            self._users.add(*users_add)</code></li>
 <li class="ignored"><code></code></li>
 <li class="executed"><code>    def remove_users(self, *user_or_iterable):</code></li>
 <li class="ignored"><code>        """remove users if the users have belong to this role</code></li>
@@ -297,11 +287,13 @@
 <li class="ignored"><code>        """</code></li>
 <li class="executed"><code>        if isinstance(user_or_iterable, User):</code></li>
 <li class="missed"><code>            user_or_iterable = [user_or_iterable]</code></li>
-<li class="executed"><code>        user_or_iterable = frozenset(user_or_iterable)</code></li>
-<li class="executed"><code>        existing_users = frozenset(self._users.all())</code></li>
-<li class="executed"><code>        user_or_iterable = user_or_iterable.intersection(existing_users)</code></li>
-<li class="executed"><code>        if len(user_or_iterable) &gt; 0:</code></li>
-<li class="executed"><code>            self._users.remove(*user_or_iterable)</code></li>
+<li class="executed"><code>        users_remove = []</code></li>
+<li class="executed"><code>        existing_users = self._users</code></li>
+<li class="executed"><code>        for user in user_or_iterable:</code></li>
+<li class="executed"><code>            if existing_users.filter(pk=user.pk).exists():</code></li>
+<li class="executed"><code>                users_remove.append(user)</code></li>
+<li class="executed"><code>        if len(users_remove) &gt; 0:</code></li>
+<li class="executed"><code>            self._users.remove(*users_remove)</code></li>
 <li class="ignored"><code></code></li>
 <li class="executed"><code>    def add_permissions(self, *perm_or_iterable):</code></li>
 <li class="ignored"><code>        """add permissions if the permissions have not belong to this role or subroles</code></li>
@@ -355,22 +347,6 @@
 <li class="executed"><code>            if existing_perms.filter(content_type__app_label=app_label, codename=codename).exists():</code></li>
 <li class="executed"><code>                self._permissions.remove(instance)</code></li>
 <li class="ignored"><code></code></li>
-<li class="executed"><code>    @staticmethod</code></li>
-<li class="ignored"><code>    def extra_filters(obj):</code></li>
-<li class="executed"><code>        if not obj.superrole:</code></li>
-<li class="executed"><code>            return {'superrole__isnull': True}</code></li>
-<li class="missed"><code>        return {'superrole__pk': obj.superrole.id }</code></li>
-<li class="ignored"><code></code></li>
-<li class="executed"><code>    def save(self, *args, **kwargs):</code></li>
-<li class="executed"><code>        if not self.id:</code></li>
-<li class="executed"><code>            try:</code></li>
-<li class="executed"><code>                filters = self.__class__.extra_filters(self)</code></li>
-<li class="executed"><code>                self.order = self.__class__.objects.filter(</code></li>
-<li class="ignored"><code>                    **filters</code></li>
-<li class="ignored"><code>                ).order_by("-order")[0].order + 1</code></li>
-<li class="executed"><code>            except IndexError:</code></li>
-<li class="executed"><code>                self.order = 0</code></li>
-<li class="executed"><code>        super(Role, self).save(*args, **kwargs)</code></li>
   </ol>
 </div>
 

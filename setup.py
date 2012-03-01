@@ -36,6 +36,7 @@ setup(
         'distribute',
         'setuptools-git',
         'django>=1.3',
+        'django-mptt',
     ],
     test_suite='runtests.runtests',
     tests_require=[

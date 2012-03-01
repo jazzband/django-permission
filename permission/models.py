@@ -36,89 +36,77 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission
 from django.utils.translation import ugettext_lazy as _
 
+from mptt.models import MPTTModel
+from mptt.models import TreeForeignKey
+from mptt.models import TreeManager
 
-class RoleManager(models.Manager):
+class RoleManager(TreeManager):
     def get_by_natural_key(self, codename):
         return self.get(codename=codename)
 
     def filter_by_user(self, user_obj):
         """return queryset of roles which ``user_obj`` have"""
-        roles_qs = self.defer('id', '_users').filter(_users=user_obj)
-        roles = []
-        for role in roles_qs.iterator():
-            roles.extend(role.roles)
-        role_pks = [r.pk for r in set(roles)]
-        roles = self.defer('id').filter(pk__in=role_pks)
-        return roles.defer(None)
+        # do not defer anything otherwise the returning queryset
+        # contains defered instance.
+        roles_qs = self.none()
+        for role in self.filter(_users=user_obj).iterator():
+            roles_qs |= role.get_descendants(include_self=True)
+        return roles_qs
 
     def get_all_permissions_of_user(self, user_obj):
         """get a set of all permissions of ``user_obj``"""
-        roles = self.defer('id', '_users').filter(_users=user_obj)
-        permissions = []
+        # name, parent, _users, _permissions are required.
+        roles = self.defer('codename', 'description').filter(_users=user_obj)
+        permissions = Permission.objects.none()
         for role in roles.iterator():
-            permissions.extend(role.permissions)
-        return frozenset(permissions)
+            permissions |= role.permissions
+        return permissions.distinct()
 
 
-class Role(models.Model):
+class Role(MPTTModel):
     """A role model for enhanced permission system."""
     name = models.CharField(_('name'), max_length=50)
     codename = models.CharField(_('codename'), max_length=100, unique=True)
     description = models.TextField(_('description'), blank=True,
             help_text=_('A description of this permission role'))
 
-    superrole = models.ForeignKey('self', verbose_name=_('super roles'),
-            related_name='_subroles', blank=True, null=True)
+    parent = TreeForeignKey('self', verbose_name=_('parent role'),
+            related_name='children', blank=True, null=True)
 
     _users = models.ManyToManyField(User, verbose_name=_('user'),
             related_name='_roles', db_column='users', blank=True)
 
     _permissions = models.ManyToManyField(Permission, verbose_name=_('permissions'),
             related_name='roles', db_column='permissions', blank=True)
-    order = models.PositiveIntegerField(editable=False)
 
     objects = RoleManager()
 
     class Meta:
         verbose_name = _('role')
         verbose_name_plural = _('roles')
-        ordering = ('order',)
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
 
     def __unicode__(self):
-        return u"<Role: %s>" % self.codename
+        return self.name
 
     def natural_key(self):
         return (self.codename,)
 
-    def _get_all_subroles(self):
-        """get a frozenset of all subroles of this role"""
-        roles = []
-        for role in self._subroles.iterator():
-            roles.append(role)
-            roles.extend(role._get_all_subroles())
-        return frozenset(roles)
-    subroles = property(_get_all_subroles)
-
-    def _get_all_roles(self):
-        """get a frozenset of all subroles and this role"""
-        roles = set(self.subroles)
-        roles.add(self)
-        return frozenset(roles)
-    roles = property(_get_all_roles)
-
-    def _get_all_users(self):
+    @property
+    def users(self):
         """get all users who belongs to this role or superroles"""
-        role_pks = [r.pk for r in self.roles]
-        qs = User.objects.defer('pk', '_roles').filter(_roles__pk__in=role_pks).distinct()
+        role_pks = self.get_descendants(include_self=True).values_list('id', flat=True)
+        qs = User.objects.only('id', '_roles').filter(_roles__pk__in=role_pks).distinct()
         return qs.defer(None)
-    users = property(_get_all_users)
 
-    def _get_all_permissions(self):
+    @property
+    def permissions(self):
         """get all permissions which this role or subroles have"""
-        role_pks = [r.pk for r in self.roles]
-        qs = Permission.objects.defer('pk', 'roles').filter(roles__pk__in=role_pks).distinct()
+        role_pks = self.get_descendants(include_self=True).values_list('id', flat=True)
+        qs = Permission.objects.only('id', 'roles').filter(roles__pk__in=role_pks).distinct()
         return qs.defer(None)
-    permissions = property(_get_all_permissions)
 
     def is_belong(self, user_obj):
         """whether the ``user_obj`` belongs to this role or superroles"""
@@ -135,11 +123,13 @@ class Role(models.Model):
         """
         if isinstance(user_or_iterable, User):
             user_or_iterable = [user_or_iterable]
-        user_or_iterable = frozenset(user_or_iterable)
-        existing_users = frozenset(self.users.all())
-        user_or_iterable = user_or_iterable.difference(existing_users)
-        if len(user_or_iterable) > 0:
-            self._users.add(*user_or_iterable)
+        users_add = []
+        existing_users = self.users
+        for user in user_or_iterable:
+            if not existing_users.filter(pk=user.pk).exists():
+                users_add.append(user)
+        if len(users_add) > 0:
+            self._users.add(*users_add)
 
     def remove_users(self, *user_or_iterable):
         """remove users if the users have belong to this role
@@ -152,11 +142,13 @@ class Role(models.Model):
         """
         if isinstance(user_or_iterable, User):
             user_or_iterable = [user_or_iterable]
-        user_or_iterable = frozenset(user_or_iterable)
-        existing_users = frozenset(self._users.all())
-        user_or_iterable = user_or_iterable.intersection(existing_users)
-        if len(user_or_iterable) > 0:
-            self._users.remove(*user_or_iterable)
+        users_remove = []
+        existing_users = self._users
+        for user in user_or_iterable:
+            if existing_users.filter(pk=user.pk).exists():
+                users_remove.append(user)
+        if len(users_remove) > 0:
+            self._users.remove(*users_remove)
 
     def add_permissions(self, *perm_or_iterable):
         """add permissions if the permissions have not belong to this role or subroles
@@ -210,19 +202,3 @@ class Role(models.Model):
             if existing_perms.filter(content_type__app_label=app_label, codename=codename).exists():
                 self._permissions.remove(instance)
 
-    @staticmethod
-    def extra_filters(obj):
-        if not obj.superrole:
-            return {'superrole__isnull': True}
-        return {'superrole__pk': obj.superrole.id }
-
-    def save(self, *args, **kwargs):
-        if not self.id:
-            try:
-                filters = self.__class__.extra_filters(self)
-                self.order = self.__class__.objects.filter(
-                    **filters
-                ).order_by("-order")[0].order + 1
-            except IndexError:
-                self.order = 0
-        super(Role, self).save(*args, **kwargs)

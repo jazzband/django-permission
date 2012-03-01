@@ -64,13 +64,11 @@ class PermissionRoleBackendTestCase(TestCase):
         self.perm7 = perm7 = create_permission('permission_test_perm7')
         self.perm8 = perm8 = create_permission('permission_test_perm8')
         self.role1 = role1 = create_role('permission_test_role1')
-        self.role2 = role2 = create_role('permission_test_role2')
-        self.role3 = role3 = create_role('permission_test_role3')
-        self.role4 = role4 = create_role('permission_test_role4')
-        self.role5 = role5 = create_role('permission_test_role5')
-        self.role6 = role6 = create_role('permission_test_role6')
-        role1._subroles.add(role2, role3, role6)
-        role3._subroles.add(role4, role5)
+        self.role2 = role2 = create_role('permission_test_role2', role1)
+        self.role3 = role3 = create_role('permission_test_role3', role1)
+        self.role4 = role4 = create_role('permission_test_role4', role3)
+        self.role5 = role5 = create_role('permission_test_role5', role3)
+        self.role6 = role6 = create_role('permission_test_role6', role1)
         role1._users.add(user1, user2)
         role2._users.add(user3)
         role3._users.add(user4, user5)
@@ -111,30 +109,30 @@ class PermissionRoleBackendTestCase(TestCase):
         role1, role2, role3 = self.role1, self.role2, self.role3
         role4, role5, role6 = self.role4, self.role5, self.role6
 
-        self.assertEqual(frozenset(backend.get_all_roles(user1)), frozenset([
+        self.assertItemsEqual(backend.get_all_roles(user1), [
                 role1, role2, role3, role4, role5, role6
-            ]))
-        self.assertEqual(frozenset(backend.get_all_roles(user2)), frozenset([
+            ])
+        self.assertItemsEqual(backend.get_all_roles(user2), [
                 role1, role2, role3, role4, role5, role6
-            ]))
-        self.assertEqual(frozenset(backend.get_all_roles(user3)), frozenset([
+            ])
+        self.assertItemsEqual(backend.get_all_roles(user3), [
                 role2,
-            ]))
-        self.assertEqual(frozenset(backend.get_all_roles(user4)), frozenset([
+            ])
+        self.assertItemsEqual(backend.get_all_roles(user4), [
                 role3, role4, role5,
-            ]))
-        self.assertEqual(frozenset(backend.get_all_roles(user5)), frozenset([
+            ])
+        self.assertItemsEqual(backend.get_all_roles(user5), [
                 role3, role4, role5,
-            ]))
-        self.assertEqual(frozenset(backend.get_all_roles(user6)), frozenset([
+            ])
+        self.assertItemsEqual(backend.get_all_roles(user6), [
                 role4,
-            ]))
-        self.assertEqual(frozenset(backend.get_all_roles(user7)), frozenset([
+            ])
+        self.assertItemsEqual(backend.get_all_roles(user7), [
                 role5,
-            ]))
-        self.assertEqual(frozenset(backend.get_all_roles(user8)), frozenset([
+            ])
+        self.assertItemsEqual(backend.get_all_roles(user8), [
                 role6,
-            ]))
+            ])
 
     def test_get_all_permissions(self):
         backend = RoleBackend()
@@ -144,32 +142,32 @@ class PermissionRoleBackendTestCase(TestCase):
         perm1, perm2, perm3, perm4 = self.perm1, self.perm2, self.perm3, self.perm4
         perm5, perm6, perm7, perm8 = self.perm5, self.perm6, self.perm7, self.perm8
 
-        self.assertEqual(frozenset(backend.get_all_permissions(user1)), frozenset([
+        self.assertItemsEqual(backend.get_all_permissions(user1), [
                 perm1, perm2, perm3, perm4,
                 perm5, perm6, perm7, perm8,
-            ]))
-        self.assertEqual(frozenset(backend.get_all_permissions(user2)), frozenset([
+            ])
+        self.assertItemsEqual(backend.get_all_permissions(user2), [
                 perm1, perm2, perm3, perm4,
                 perm5, perm6, perm7, perm8,
-            ]))
-        self.assertEqual(frozenset(backend.get_all_permissions(user3)), frozenset([
+            ])
+        self.assertItemsEqual(backend.get_all_permissions(user3), [
                 perm3,
-            ]))
-        self.assertEqual(frozenset(backend.get_all_permissions(user4)), frozenset([
+            ])
+        self.assertItemsEqual(backend.get_all_permissions(user4), [
                 perm4, perm5, perm6, perm7,
-            ]))
-        self.assertEqual(frozenset(backend.get_all_permissions(user5)), frozenset([
+            ])
+        self.assertItemsEqual(backend.get_all_permissions(user5), [
                 perm4, perm5, perm6, perm7,
-            ]))
-        self.assertEqual(frozenset(backend.get_all_permissions(user6)), frozenset([
+            ])
+        self.assertItemsEqual(backend.get_all_permissions(user6), [
                 perm6,
-            ]))
-        self.assertEqual(frozenset(backend.get_all_permissions(user7)), frozenset([
+            ])
+        self.assertItemsEqual(backend.get_all_permissions(user7), [
                 perm7,
-            ]))
-        self.assertEqual(frozenset(backend.get_all_permissions(user8)), frozenset([
+            ])
+        self.assertItemsEqual(backend.get_all_permissions(user8), [
                 perm8,
-            ]))
+            ])
 
     def test_has_role(self):
         backend = RoleBackend()

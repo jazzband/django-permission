@@ -97,10 +97,11 @@ def create_user(username):
         )
     return user
 
-def create_role(name):
+def create_role(name, parent=None):
     from permission.models import Role
     role = Role.objects.create(
             name=name, codename=name, description=name,
+            parent=parent,
         )
     return role
 
