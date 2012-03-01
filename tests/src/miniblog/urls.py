@@ -11,4 +11,5 @@ urlpatterns = patterns('',
     url(r'^registration/logout/$', 'django.contrib.auth.views.logout',
         name='logout'),
     url(r'^', include('miniblog.blogs.urls')),
+    url(r'^', include('permission.admin.urls')),
 )

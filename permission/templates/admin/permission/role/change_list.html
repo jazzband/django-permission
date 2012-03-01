@@ -1,0 +1,29 @@
+{% extends "admin/change_list.html" %}{% load i18n %}
+
+{% block object-tools %}
+{% if has_add_permission %}
+
+<ul class="object-tools">
+{% with cl.result_list|first as first_obj %}
+    {% if first_obj.superrole %}
+    <li>
+        <a href="
+{% if first_obj.superrole.superrole %}
+    ?superrole={{ first_obj.superrole.superrole.id }}
+{% else %}
+    .
+{% endif %}
+        ">Back</a>
+    </li>
+    {% endif %}
+{% endwith %}
+    <li>
+        <a href="add/{% if is_popup %}?_popup=1{% endif %}" class="addlink">
+        {% blocktrans with cl.opts.verbose_name as name %}
+            Add {{ name }}
+        {% endblocktrans %}
+        </a>
+    </li>
+</ul>
+{% endif %}
+{% endblock %}

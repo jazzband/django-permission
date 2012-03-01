@@ -67,20 +67,22 @@ class Role(models.Model):
     description = models.TextField(_('description'), blank=True,
             help_text=_('A description of this permission role'))
 
-    _subroles = models.ManyToManyField('self', verbose_name=_('sub roles'),
-            related_name='_superroles', db_column='subroles', symmetrical=False, blank=True)
+    superrole = models.ForeignKey('self', verbose_name=_('super roles'),
+            related_name='_subroles', blank=True, null=True)
 
     _users = models.ManyToManyField(User, verbose_name=_('user'),
             related_name='_roles', db_column='users', blank=True)
 
     _permissions = models.ManyToManyField(Permission, verbose_name=_('permissions'),
             related_name='roles', db_column='permissions', blank=True)
+    order = models.PositiveIntegerField(editable=False)
 
     objects = RoleManager()
 
     class Meta:
         verbose_name = _('role')
         verbose_name_plural = _('roles')
+        ordering = ('order',)
 
     def __unicode__(self):
         return u"<Role: %s>" % self.codename
@@ -208,3 +210,19 @@ class Role(models.Model):
             if existing_perms.filter(content_type__app_label=app_label, codename=codename).exists():
                 self._permissions.remove(instance)
 
+    @staticmethod
+    def extra_filters(obj):
+        if not obj.superrole:
+            return {'superrole__isnull': True}
+        return {'superrole__pk': obj.superrole.id }
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            try:
+                filters = self.__class__.extra_filters(self)
+                self.order = self.__class__.objects.filter(
+                    **filters
+                ).order_by("-order")[0].order + 1
+            except IndexError:
+                self.order = 0
+        super(Role, self).save(*args, **kwargs)
