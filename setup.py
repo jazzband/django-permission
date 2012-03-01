@@ -1,7 +1,7 @@
 # vim: set fileencoding=utf-8 :
 from setuptools import setup, find_packages
 
-version = '0.1.0'
+version = '0.2.0'
 
 def read(filename):
     import os.path
@@ -36,6 +36,7 @@ setup(
         'distribute',
         'setuptools-git',
         'django>=1.3',
+        'django-mptt',
     ],
     test_suite='runtests.runtests',
     tests_require=[

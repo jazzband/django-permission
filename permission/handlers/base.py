@@ -107,3 +107,6 @@ class PermissionHandler(object):
                 '"%s" does not have ``has_perm`` method. Subclasses must '
                 'define ``has_perm(user_obj, perm, obj=None)`` method.'
             )
+
+    def has_module_perm(self, user_obj, app_label):
+        return False

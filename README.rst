@@ -2,7 +2,8 @@
  djagno-permission
 **********************************
 
-django-permission is an enhanced permission system which support object permission.
+django-permission is an enhanced permission system which support object permission and role based permission system.
+
 
 Install
 ==============
@@ -20,13 +21,20 @@ Quick tutorial
 1.  Add ``'permission'`` to ``INSTALLED_APPS`` of your ``settings.py`` and confirm
     ''django.contrib.auth' and 'django.contrib.contenttypes' is in ``INSTALLED_APPS``
 
+    .. Note::
+        django-permission can use `django-fenicms <https://github.com/matiasb/fenics>`_ to improve
+        the visual design of change_list page in django admin if available. Add 'fenicms' to
+        your ``INSTALLED_APPS`` to enable AJAX sorting, adding, expanding features.
+
 2.  Add ``'permission.backends.PermissionBackend'`` to ``AUTHENTICATION_BACKENDS``
     of your ``settings.py``. If you cannot existing settings, simply add 
     following code::
 
         AUTHENTICATION_BACKENDS = (
-            'django.contrib.auth.backends.ModelBackend',
+            #'django.contrib.auth.backends.ModelBackend',   # Do not use this backend with RoleBackend
+            'permission.backends.ModelBackend',             # use permission.backends.ModelBackend insted
             'permission.backends.PermissionBackend',
+            'permission.backends.RoleBackend',
         )
 
 3.  Add ``permissions.py`` to the directory which contains ``models.py``. And
@@ -53,6 +61,26 @@ Quick tutorial
 
         # register this ``YourModelPermissionHandler`` with ``YourModel``
         registry.register(YourModel, YourModelPermissionHandler)
+
+Role?
+==========
+
+django-permission has role based permission system. visit your django admin page to create/modify roles (See the screenshots below).
+The role permissions are handled with ``permission.backends.RoleBackend``.
+
+.. image:: http://s1-01.twitpicproxy.com/photos/full/528601159.png?key=943727
+    :align: center
+
+.. image:: http://s1-04.twitpicproxy.com/photos/full/528601385.png?key=9431458
+    :align: center
+
+This role system is under development. This system might not work correctly yet.
+
+.. Note::
+    Role based permission system does not support object permission and anonymous permission. 
+    However these permissions are handled with Individual handler based permission backend
+    (``permission.backends.PermissionBackend``)
+
 
 How to regulate permissions used in the handler
 ==============================================================================================
