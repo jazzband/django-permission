@@ -4,6 +4,7 @@
 
 django-permission is an enhanced permission system which support object permission and role based permission system.
 
+**This is under development. The codes below may not works in the future**
 
 Install
 ==============
