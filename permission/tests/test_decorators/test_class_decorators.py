@@ -69,7 +69,7 @@ class PermissionClassDecoratorsTestCase(TestCase):
                 Mock(return_value=self.mock_handler)
             )
         self.view_func = Mock(return_value=HttpResponse)
-        view_class = View
+        view_class = type('MockView', (View,), {})
         view_class.dispatch = self.view_func
         view_class = permission_required('test_app.add_article')(view_class)
         self.view_class = view_class
