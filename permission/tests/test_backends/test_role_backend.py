@@ -110,28 +110,28 @@ class PermissionRoleBackendTestCase(TestCase):
         role4, role5, role6 = self.role4, self.role5, self.role6
 
         self.assertItemsEqual(backend.get_all_roles(user1), [
-                role1, role2, role3, role4, role5, role6
+                role1,
             ])
         self.assertItemsEqual(backend.get_all_roles(user2), [
-                role1, role2, role3, role4, role5, role6
+                role1,
             ])
         self.assertItemsEqual(backend.get_all_roles(user3), [
-                role2,
+                role1, role2,
             ])
         self.assertItemsEqual(backend.get_all_roles(user4), [
-                role3, role4, role5,
+                role1, role3,
             ])
         self.assertItemsEqual(backend.get_all_roles(user5), [
-                role3, role4, role5,
+                role1, role3,
             ])
         self.assertItemsEqual(backend.get_all_roles(user6), [
-                role4,
+                role1, role3, role4,
             ])
         self.assertItemsEqual(backend.get_all_roles(user7), [
-                role5,
+                role1, role3, role5,
             ])
         self.assertItemsEqual(backend.get_all_roles(user8), [
-                role6,
+                role1, role6,
             ])
 
     def test_get_all_permissions(self):
@@ -143,30 +143,28 @@ class PermissionRoleBackendTestCase(TestCase):
         perm5, perm6, perm7, perm8 = self.perm5, self.perm6, self.perm7, self.perm8
 
         self.assertItemsEqual(backend.get_all_permissions(user1), [
-                perm1, perm2, perm3, perm4,
-                perm5, perm6, perm7, perm8,
+                perm1, perm2,
             ])
         self.assertItemsEqual(backend.get_all_permissions(user2), [
-                perm1, perm2, perm3, perm4,
-                perm5, perm6, perm7, perm8,
+                perm1, perm2,
             ])
         self.assertItemsEqual(backend.get_all_permissions(user3), [
-                perm3,
+                perm1, perm2, perm3,
             ])
         self.assertItemsEqual(backend.get_all_permissions(user4), [
-                perm4, perm5, perm6, perm7,
+                perm1, perm2, perm4, perm5,
             ])
         self.assertItemsEqual(backend.get_all_permissions(user5), [
-                perm4, perm5, perm6, perm7,
+                perm1, perm2, perm4, perm5,
             ])
         self.assertItemsEqual(backend.get_all_permissions(user6), [
-                perm6,
+                perm1, perm2, perm4, perm5, perm6,
             ])
         self.assertItemsEqual(backend.get_all_permissions(user7), [
-                perm7,
+                perm1, perm2, perm4, perm5, perm7,
             ])
         self.assertItemsEqual(backend.get_all_permissions(user8), [
-                perm8,
+                perm1, perm2, perm8,
             ])
 
     def test_has_role(self):
@@ -176,55 +174,55 @@ class PermissionRoleBackendTestCase(TestCase):
         user5, user6, user7, user8 = self.user5, self.user6, self.user7, self.user8
 
         self.assertTrue(backend.has_role(user1, 'permission_test_role1'))
-        self.assertTrue(backend.has_role(user1, 'permission_test_role2'))
-        self.assertTrue(backend.has_role(user1, 'permission_test_role3'))
-        self.assertTrue(backend.has_role(user1, 'permission_test_role4'))
-        self.assertTrue(backend.has_role(user1, 'permission_test_role5'))
-        self.assertTrue(backend.has_role(user1, 'permission_test_role6'))
+        self.assertFalse(backend.has_role(user1, 'permission_test_role2'))
+        self.assertFalse(backend.has_role(user1, 'permission_test_role3'))
+        self.assertFalse(backend.has_role(user1, 'permission_test_role4'))
+        self.assertFalse(backend.has_role(user1, 'permission_test_role5'))
+        self.assertFalse(backend.has_role(user1, 'permission_test_role6'))
 
         self.assertTrue(backend.has_role(user2, 'permission_test_role1'))
-        self.assertTrue(backend.has_role(user2, 'permission_test_role2'))
-        self.assertTrue(backend.has_role(user2, 'permission_test_role3'))
-        self.assertTrue(backend.has_role(user2, 'permission_test_role4'))
-        self.assertTrue(backend.has_role(user2, 'permission_test_role5'))
-        self.assertTrue(backend.has_role(user2, 'permission_test_role6'))
+        self.assertFalse(backend.has_role(user2, 'permission_test_role2'))
+        self.assertFalse(backend.has_role(user2, 'permission_test_role3'))
+        self.assertFalse(backend.has_role(user2, 'permission_test_role4'))
+        self.assertFalse(backend.has_role(user2, 'permission_test_role5'))
+        self.assertFalse(backend.has_role(user2, 'permission_test_role6'))
 
-        self.assertFalse(backend.has_role(user3, 'permission_test_role1'))
+        self.assertTrue(backend.has_role(user3, 'permission_test_role1'))
         self.assertTrue(backend.has_role(user3, 'permission_test_role2'))
         self.assertFalse(backend.has_role(user3, 'permission_test_role3'))
         self.assertFalse(backend.has_role(user3, 'permission_test_role4'))
         self.assertFalse(backend.has_role(user3, 'permission_test_role5'))
         self.assertFalse(backend.has_role(user3, 'permission_test_role6'))
 
-        self.assertFalse(backend.has_role(user4, 'permission_test_role1'))
+        self.assertTrue(backend.has_role(user4, 'permission_test_role1'))
         self.assertFalse(backend.has_role(user4, 'permission_test_role2'))
         self.assertTrue(backend.has_role(user4, 'permission_test_role3'))
-        self.assertTrue(backend.has_role(user4, 'permission_test_role4'))
-        self.assertTrue(backend.has_role(user4, 'permission_test_role5'))
+        self.assertFalse(backend.has_role(user4, 'permission_test_role4'))
+        self.assertFalse(backend.has_role(user4, 'permission_test_role5'))
         self.assertFalse(backend.has_role(user4, 'permission_test_role6'))
 
-        self.assertFalse(backend.has_role(user5, 'permission_test_role1'))
+        self.assertTrue(backend.has_role(user5, 'permission_test_role1'))
         self.assertFalse(backend.has_role(user5, 'permission_test_role2'))
         self.assertTrue(backend.has_role(user5, 'permission_test_role3'))
-        self.assertTrue(backend.has_role(user5, 'permission_test_role4'))
-        self.assertTrue(backend.has_role(user5, 'permission_test_role5'))
+        self.assertFalse(backend.has_role(user5, 'permission_test_role4'))
+        self.assertFalse(backend.has_role(user5, 'permission_test_role5'))
         self.assertFalse(backend.has_role(user5, 'permission_test_role6'))
 
-        self.assertFalse(backend.has_role(user6, 'permission_test_role1'))
+        self.assertTrue(backend.has_role(user6, 'permission_test_role1'))
         self.assertFalse(backend.has_role(user6, 'permission_test_role2'))
-        self.assertFalse(backend.has_role(user6, 'permission_test_role3'))
+        self.assertTrue(backend.has_role(user6, 'permission_test_role3'))
         self.assertTrue(backend.has_role(user6, 'permission_test_role4'))
         self.assertFalse(backend.has_role(user6, 'permission_test_role5'))
         self.assertFalse(backend.has_role(user6, 'permission_test_role6'))
 
-        self.assertFalse(backend.has_role(user7, 'permission_test_role1'))
+        self.assertTrue(backend.has_role(user7, 'permission_test_role1'))
         self.assertFalse(backend.has_role(user7, 'permission_test_role2'))
-        self.assertFalse(backend.has_role(user7, 'permission_test_role3'))
+        self.assertTrue(backend.has_role(user7, 'permission_test_role3'))
         self.assertFalse(backend.has_role(user7, 'permission_test_role4'))
         self.assertTrue(backend.has_role(user7, 'permission_test_role5'))
         self.assertFalse(backend.has_role(user7, 'permission_test_role6'))
 
-        self.assertFalse(backend.has_role(user8, 'permission_test_role1'))
+        self.assertTrue(backend.has_role(user8, 'permission_test_role1'))
         self.assertFalse(backend.has_role(user8, 'permission_test_role2'))
         self.assertFalse(backend.has_role(user8, 'permission_test_role3'))
         self.assertFalse(backend.has_role(user8, 'permission_test_role4'))
@@ -239,24 +237,24 @@ class PermissionRoleBackendTestCase(TestCase):
 
         self.assertTrue(backend.has_perm(user1, 'permission.permission_test_perm1'))
         self.assertTrue(backend.has_perm(user1, 'permission.permission_test_perm2'))
-        self.assertTrue(backend.has_perm(user1, 'permission.permission_test_perm3'))
-        self.assertTrue(backend.has_perm(user1, 'permission.permission_test_perm4'))
-        self.assertTrue(backend.has_perm(user1, 'permission.permission_test_perm5'))
-        self.assertTrue(backend.has_perm(user1, 'permission.permission_test_perm6'))
-        self.assertTrue(backend.has_perm(user1, 'permission.permission_test_perm7'))
-        self.assertTrue(backend.has_perm(user1, 'permission.permission_test_perm8'))
+        self.assertFalse(backend.has_perm(user1, 'permission.permission_test_perm3'))
+        self.assertFalse(backend.has_perm(user1, 'permission.permission_test_perm4'))
+        self.assertFalse(backend.has_perm(user1, 'permission.permission_test_perm5'))
+        self.assertFalse(backend.has_perm(user1, 'permission.permission_test_perm6'))
+        self.assertFalse(backend.has_perm(user1, 'permission.permission_test_perm7'))
+        self.assertFalse(backend.has_perm(user1, 'permission.permission_test_perm8'))
         
         self.assertTrue(backend.has_perm(user2, 'permission.permission_test_perm1'))
         self.assertTrue(backend.has_perm(user2, 'permission.permission_test_perm2'))
-        self.assertTrue(backend.has_perm(user2, 'permission.permission_test_perm3'))
-        self.assertTrue(backend.has_perm(user2, 'permission.permission_test_perm4'))
-        self.assertTrue(backend.has_perm(user2, 'permission.permission_test_perm5'))
-        self.assertTrue(backend.has_perm(user2, 'permission.permission_test_perm6'))
-        self.assertTrue(backend.has_perm(user2, 'permission.permission_test_perm7'))
-        self.assertTrue(backend.has_perm(user2, 'permission.permission_test_perm8'))
+        self.assertFalse(backend.has_perm(user2, 'permission.permission_test_perm3'))
+        self.assertFalse(backend.has_perm(user2, 'permission.permission_test_perm4'))
+        self.assertFalse(backend.has_perm(user2, 'permission.permission_test_perm5'))
+        self.assertFalse(backend.has_perm(user2, 'permission.permission_test_perm6'))
+        self.assertFalse(backend.has_perm(user2, 'permission.permission_test_perm7'))
+        self.assertFalse(backend.has_perm(user2, 'permission.permission_test_perm8'))
         
-        self.assertFalse(backend.has_perm(user3, 'permission.permission_test_perm1'))
-        self.assertFalse(backend.has_perm(user3, 'permission.permission_test_perm2'))
+        self.assertTrue(backend.has_perm(user3, 'permission.permission_test_perm1'))
+        self.assertTrue(backend.has_perm(user3, 'permission.permission_test_perm2'))
         self.assertTrue(backend.has_perm(user3, 'permission.permission_test_perm3'))
         self.assertFalse(backend.has_perm(user3, 'permission.permission_test_perm4'))
         self.assertFalse(backend.has_perm(user3, 'permission.permission_test_perm5'))
@@ -264,44 +262,44 @@ class PermissionRoleBackendTestCase(TestCase):
         self.assertFalse(backend.has_perm(user3, 'permission.permission_test_perm7'))
         self.assertFalse(backend.has_perm(user3, 'permission.permission_test_perm8'))
         
-        self.assertFalse(backend.has_perm(user4, 'permission.permission_test_perm1'))
-        self.assertFalse(backend.has_perm(user4, 'permission.permission_test_perm2'))
+        self.assertTrue(backend.has_perm(user4, 'permission.permission_test_perm1'))
+        self.assertTrue(backend.has_perm(user4, 'permission.permission_test_perm2'))
         self.assertFalse(backend.has_perm(user4, 'permission.permission_test_perm3'))
         self.assertTrue(backend.has_perm(user4, 'permission.permission_test_perm4'))
         self.assertTrue(backend.has_perm(user4, 'permission.permission_test_perm5'))
-        self.assertTrue(backend.has_perm(user4, 'permission.permission_test_perm6'))
-        self.assertTrue(backend.has_perm(user4, 'permission.permission_test_perm7'))
+        self.assertFalse(backend.has_perm(user4, 'permission.permission_test_perm6'))
+        self.assertFalse(backend.has_perm(user4, 'permission.permission_test_perm7'))
         self.assertFalse(backend.has_perm(user4, 'permission.permission_test_perm8'))
         
-        self.assertFalse(backend.has_perm(user5, 'permission.permission_test_perm1'))
-        self.assertFalse(backend.has_perm(user5, 'permission.permission_test_perm2'))
+        self.assertTrue(backend.has_perm(user5, 'permission.permission_test_perm1'))
+        self.assertTrue(backend.has_perm(user5, 'permission.permission_test_perm2'))
         self.assertFalse(backend.has_perm(user5, 'permission.permission_test_perm3'))
         self.assertTrue(backend.has_perm(user5, 'permission.permission_test_perm4'))
         self.assertTrue(backend.has_perm(user5, 'permission.permission_test_perm5'))
-        self.assertTrue(backend.has_perm(user5, 'permission.permission_test_perm6'))
-        self.assertTrue(backend.has_perm(user5, 'permission.permission_test_perm7'))
+        self.assertFalse(backend.has_perm(user5, 'permission.permission_test_perm6'))
+        self.assertFalse(backend.has_perm(user5, 'permission.permission_test_perm7'))
         self.assertFalse(backend.has_perm(user5, 'permission.permission_test_perm8'))
         
-        self.assertFalse(backend.has_perm(user6, 'permission.permission_test_perm1'))
-        self.assertFalse(backend.has_perm(user6, 'permission.permission_test_perm2'))
+        self.assertTrue(backend.has_perm(user6, 'permission.permission_test_perm1'))
+        self.assertTrue(backend.has_perm(user6, 'permission.permission_test_perm2'))
         self.assertFalse(backend.has_perm(user6, 'permission.permission_test_perm3'))
-        self.assertFalse(backend.has_perm(user6, 'permission.permission_test_perm4'))
-        self.assertFalse(backend.has_perm(user6, 'permission.permission_test_perm5'))
+        self.assertTrue(backend.has_perm(user6, 'permission.permission_test_perm4'))
+        self.assertTrue(backend.has_perm(user6, 'permission.permission_test_perm5'))
         self.assertTrue(backend.has_perm(user6, 'permission.permission_test_perm6'))
         self.assertFalse(backend.has_perm(user6, 'permission.permission_test_perm7'))
         self.assertFalse(backend.has_perm(user6, 'permission.permission_test_perm8'))
         
-        self.assertFalse(backend.has_perm(user7, 'permission.permission_test_perm1'))
-        self.assertFalse(backend.has_perm(user7, 'permission.permission_test_perm2'))
+        self.assertTrue(backend.has_perm(user7, 'permission.permission_test_perm1'))
+        self.assertTrue(backend.has_perm(user7, 'permission.permission_test_perm2'))
         self.assertFalse(backend.has_perm(user7, 'permission.permission_test_perm3'))
-        self.assertFalse(backend.has_perm(user7, 'permission.permission_test_perm4'))
-        self.assertFalse(backend.has_perm(user7, 'permission.permission_test_perm5'))
+        self.assertTrue(backend.has_perm(user7, 'permission.permission_test_perm4'))
+        self.assertTrue(backend.has_perm(user7, 'permission.permission_test_perm5'))
         self.assertFalse(backend.has_perm(user7, 'permission.permission_test_perm6'))
         self.assertTrue(backend.has_perm(user7, 'permission.permission_test_perm7'))
         self.assertFalse(backend.has_perm(user7, 'permission.permission_test_perm8'))
         
-        self.assertFalse(backend.has_perm(user8, 'permission.permission_test_perm1'))
-        self.assertFalse(backend.has_perm(user8, 'permission.permission_test_perm2'))
+        self.assertTrue(backend.has_perm(user8, 'permission.permission_test_perm1'))
+        self.assertTrue(backend.has_perm(user8, 'permission.permission_test_perm2'))
         self.assertFalse(backend.has_perm(user8, 'permission.permission_test_perm3'))
         self.assertFalse(backend.has_perm(user8, 'permission.permission_test_perm4'))
         self.assertFalse(backend.has_perm(user8, 'permission.permission_test_perm5'))
