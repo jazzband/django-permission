@@ -136,7 +136,6 @@ INSTALLED_APPS = (
 
 AUTHENTICATION_BACKENDS = (
         'django.contrib.auth.backends.ModelBackend',
-        'permission.backends.ModelBackend',
         'permission.backends.PermissionBackend',
         'permission.backends.RoleBackend',
     )

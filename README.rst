@@ -32,8 +32,7 @@ Quick tutorial
     following code::
 
         AUTHENTICATION_BACKENDS = (
-            #'django.contrib.auth.backends.ModelBackend',   # Do not use this backend with RoleBackend
-            'permission.backends.ModelBackend',             # use permission.backends.ModelBackend insted
+            'django.contrib.auth.backends.ModelBackend',
             'permission.backends.PermissionBackend',
             'permission.backends.RoleBackend',
         )
@@ -62,6 +61,37 @@ Quick tutorial
 
         # register this ``YourModelPermissionHandler`` with ``YourModel``
         registry.register(YourModel, YourModelPermissionHandler)
+
+4.  ``has`` and ``of`` keyword is added to ``if`` in template. You can check permission
+    as::
+
+        {% if user has 'blog.add_entry' %}
+        <p>You can add entry</p>
+        {% endif %}
+        {% if object and user has 'blog.change_entry' of object or user has 'blog.delete_entry' of object %}
+        <!-- object is exist and user can change or delete this object. -->
+        <div class="control-panel">
+            {% if user has 'blog.change_entry' of object %}
+            <p>You can change this entry.</p>
+            {% endif %}
+            {% if user has 'blog.delete_entry' of object %}
+            <p>You can delete this entry.</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+    .. Note::
+        If you don't want django-permission to replace builtin ``if`` tag, set
+        ``PERMISSION_REPLATE_BUILTIN_IF`` to ``False`` in your ``settings.py``.
+        Then you have to use ``{% permission %}`` templatetag as::
+
+            {% permission user has 'blog.add_entry' %}
+            <p>You can add entry</p>
+            {% endpermission %}
+
+        ``{% permission %}`` tag is exactuly same as ``{% if %}`` thus you can use
+        ``{% elpermission %}`` for ``{% elif %}`` and ``{% else %}``.
+
 
 Role?
 ==========
@@ -129,3 +159,7 @@ The sample code below show how to handle all permissions of the app of the model
     # registry.register(HisModel, AppPermissionHandler) # or you can register with HisModel
     # registry.register(HerModel, AppPermissionHandler) # or you can register with HerModel
     
+
+.. Note::
+    DO NOT call ``user.has_perm()`` in ``has_perm()`` method unless the checking permissions are
+    excluded by ``permissions`` attribute or ``get_permissions()`` method.
