@@ -1,7 +1,7 @@
 # vim: set fileencoding=utf-8 :
 from setuptools import setup, find_packages
 
-version = '0.2.2'
+version = '0.3.0'
 
 def read(filename):
     import os.path
@@ -41,5 +41,6 @@ setup(
     test_suite='runtests.runtests',
     tests_require=[
         'PyYAML',
+        'feincms',
     ],
 )
