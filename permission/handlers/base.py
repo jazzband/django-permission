@@ -109,4 +109,5 @@ class PermissionHandler(object):
             )
 
     def has_module_perm(self, user_obj, app_label):
+        """whether the ``user_obj`` has permissions of ``app_label``"""
         return False
