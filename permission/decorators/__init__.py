@@ -52,7 +52,7 @@ def permission_required(perm, queryset_or_model=None, login_url=None, raise_exce
 
     """
     # convert model to queryset
-    if issubclass(queryset_or_model, ModelBase):
+    if queryset_or_model and issubclass(queryset_or_model, ModelBase):
         queryset_or_model = queryset_or_model._default_manager.all()
 
     def wrapper(class_or_method):
