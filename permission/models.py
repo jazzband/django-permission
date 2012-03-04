@@ -50,7 +50,8 @@ class RoleManager(TreeManager):
         # contains defered instance.
         roles_qs = self.none()
         for role in self.filter(_users=user_obj).iterator():
-            roles_qs |= role.get_descendants(include_self=True)
+            roles_qs |= role.get_ancestors()
+            roles_qs |= self.filter(pk=role.pk)
         return roles_qs
 
     def get_all_permissions_of_user(self, user_obj):
@@ -97,108 +98,41 @@ class Role(MPTTModel):
     @property
     def users(self):
         """get all users who belongs to this role or superroles"""
-        role_pks = self.get_descendants(include_self=True).values_list('id', flat=True)
+        role_pks = self.get_descendants(True).values_list('id', flat=True)
         qs = User.objects.only('id', '_roles').filter(_roles__pk__in=role_pks).distinct()
-        return qs.defer(None)
+        qs = qs.defer(None)
+        # add methods
+        qs.add = self._users.add
+        qs.remove = self._users.remove
+        qs.clear = self._users.clear
+        return qs
 
     @property
     def permissions(self):
         """get all permissions which this role or subroles have"""
-        role_pks = self.get_descendants(include_self=True).values_list('id', flat=True)
+        role_pks = list(self.get_ancestors().values_list('id', flat=True))
+        role_pks.append(self.pk)
         qs = Permission.objects.only('id', 'roles').filter(roles__pk__in=role_pks).distinct()
-        return qs.defer(None)
+        qs = qs.defer(None)
+        # add methods
+        qs.add = self._permissions.add
+        qs.remove = self._permissions.remove
+        qs.clear = self._permissions.clear
+        return qs
 
     def is_belong(self, user_obj):
         """whether the ``user_obj`` belongs to this role or superroles"""
         return self.users.filter(pk=user_obj.pk).exists()
 
-    def add_users(self, *user_or_iterable):
-        """add users if the users have not belong to this role or subroles
-        
-        .. Note::
-            Adding user doesn't add the user who belongs to this role or
-            all subroles of this role. Adding users directly to ``_users``
-            is not recommended.
 
-        """
-        if isinstance(user_or_iterable, User):
-            user_or_iterable = [user_or_iterable]
-        users_add = []
-        existing_users = self.users
-        for user in user_or_iterable:
-            if not existing_users.filter(pk=user.pk).exists():
-                users_add.append(user)
-        if len(users_add) > 0:
-            self._users.add(*users_add)
-
-    def remove_users(self, *user_or_iterable):
-        """remove users if the users have belong to this role
-        
-        .. Note::
-            Removing user doesn't remove the user who have not belong to this
-            role. All users who belongs to the subroles of this roles are
-            protected from removing by ``remove_users``.
-
-        """
-        if isinstance(user_or_iterable, User):
-            user_or_iterable = [user_or_iterable]
-        users_remove = []
-        existing_users = self._users
-        for user in user_or_iterable:
-            if existing_users.filter(pk=user.pk).exists():
-                users_remove.append(user)
-        if len(users_remove) > 0:
-            self._users.remove(*users_remove)
-
-    def add_permissions(self, *perm_or_iterable):
-        """add permissions if the permissions have not belong to this role or subroles
-        
-        .. Note::
-            Adding permissions doesn't add the permission which belongs to this role or
-            all subroles of this role. Adding permissions directly to ``_permissions``
-            is not recommended.
-
-        """
-        if isinstance(perm_or_iterable, (basestring, Permission)):
-            perm_or_iterable = [perm_or_iterable]
-        existing_perms = self.permissions
-        for perm in perm_or_iterable:
-            if isinstance(perm, basestring):
-                app_label, codename = perm.split('.', 1)
-                instance = Permission.objects.get(
-                        content_type__app_label=app_label,
-                        codename=codename
-                    )
-            else:
-                instance = perm
-                app_label = perm.content_type.app_label
-                codename = perm.codename
-            if not existing_perms.filter(content_type__app_label=app_label, codename=codename).exists():
-                self._permissions.add(instance)
-
-    def remove_permissions(self, *perm_or_iterable):
-        """remove permissions if the permissions have belong to this role
-        
-        .. Note::
-            Removing permission doesn't remove the permission who have not belong to this
-            role. All permissions who belongs to the subroles of this roles are
-            protected from removing by ``remove_permissions``.
-
-        """
-        if isinstance(perm_or_iterable, (basestring, Permission)):
-            perm_or_iterable = [perm_or_iterable]
-        existing_perms = self.permissions
-        for perm in perm_or_iterable:
-            if isinstance(perm, basestring):
-                app_label, codename = perm.split('.', 1)
-                instance = Permission.objects.get(
-                        content_type__app_label=app_label,
-                        codename=codename
-                    )
-            else:
-                instance = perm
-                app_label = perm.content_type.app_label
-                codename = perm.codename
-            if existing_perms.filter(content_type__app_label=app_label, codename=codename).exists():
-                self._permissions.remove(instance)
-
+def get_permission_instance(str_or_instance):
+    """get permission instance from string or instance"""
+    if isinstance(str_or_instance, basestring):
+        app_label, codename = str_or_instance.split('.', 1)
+        instance = Permission.objects.get(
+                content_type__app_label=app_label,
+                codename=codename
+            )
+    else:
+        instance = str_or_instance
+    return instance
