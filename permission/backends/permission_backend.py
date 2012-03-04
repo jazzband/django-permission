@@ -73,8 +73,10 @@ class PermissionBackend(object):
         # get permission handlers fot this perm
         handlers = registry.get_handlers(perm)
         for handler in handlers:
-            if handler.has_perm(user_obj, perm, obj=obj):
-                return True
+            # check permissions of handler
+            if perm in handler.get_permissions():
+                if handler.has_perm(user_obj, perm, obj=obj):
+                    return True
         # do not touch this permission
         return False
 

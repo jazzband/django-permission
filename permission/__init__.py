@@ -16,6 +16,8 @@ def setconf(name, default_value):
     setattr(settings, name, value)
 
 setconf('PERMISSION_MODULE_NAME', 'permissions')
+setconf('PERMISSION_BUILTIN_TEMPLATETAGS', True)
+setconf('PERMISSION_REPLACE_BUILTIN_IF', True)
 
 # validate settings
 if installed:
@@ -28,10 +30,21 @@ if installed:
             )
     if 'permission.backends.PermissionBackend' \
             not in settings.AUTHENTICATION_BACKENDS:
-        raise ImproperlyConfigured(
+        warnings.warn(Warning,
                 '"permission.backends.PermissionBackend" is not found in '
                 '`AUTHENTICATION_BACKENDS`.'
             )
+    if 'permission.backends.RoleBackend' \
+            not in settings.AUTHENTICATION_BACKENDS:
+        warnings.warn(Warning,
+                '"permission.backends.RoleBackend" is not found in '
+                '`AUTHENTICATION_BACKENDS`.'
+            )
+
+# Register templatetags in builtin
+if settings.PERMISSION_BUILTIN_TEMPLATETAGS:
+    from django.template import add_to_builtins
+    add_to_builtins('permission.templatetags.permission_tags')
 
 # Auto-discover INSTALLED_APPS permissions.py modules
 if installed:
