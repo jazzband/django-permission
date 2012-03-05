@@ -86,6 +86,7 @@ class RoleBackend(object):
 #
 from django.contrib import auth
 from django.contrib.auth.models import User
+from django.contrib.auth.models import AnonymousUser
 def _user_has_role(user, role, obj):
     anon = user.is_anonymous()
     active = user.is_active
@@ -109,3 +110,5 @@ def _user_get_all_roles(user):
     return None
 User.has_role = _user_has_role
 User.roles = property(_user_get_all_roles)
+AnonymousUser.has_role = lambda user, role, obj: False
+AnonymousUser.roles = ()
