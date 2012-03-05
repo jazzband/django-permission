@@ -80,35 +80,3 @@ class RoleBackend(object):
             if perm[:perm.index('.')] == app_label:
                 return True
         return False
-
-#
-# Extend User class
-#
-from django.contrib import auth
-from django.contrib.auth.models import User
-from django.contrib.auth.models import AnonymousUser
-def _user_has_role(user, role, obj):
-    anon = user.is_anonymous()
-    active = user.is_active
-    for backend in auth.get_backends():
-        if anon or active or backend.supports_inactive_user:
-            if hasattr(backend, 'has_role'):
-                if obj is not None:
-                    if backend.has_role(user, role, obj):
-                        return True
-                else:
-                    if backend.has_role(user, role):
-                        return True
-    return False
-def _user_get_all_roles(user):
-    anon = user.is_anonymous()
-    active = user.is_active
-    for backend in auth.get_backends():
-        if anon or active or backend.supports_inactive_user:
-            if hasattr(backend, 'get_all_roles'):
-                return backend.get_all_roles(user)
-    return None
-User.has_role = _user_has_role
-User.roles = property(_user_get_all_roles)
-AnonymousUser.has_role = lambda user, role, obj: False
-AnonymousUser.roles = ()
