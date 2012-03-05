@@ -18,6 +18,7 @@ def setconf(name, default_value):
 setconf('PERMISSION_MODULE_NAME', 'permissions')
 setconf('PERMISSION_BUILTIN_TEMPLATETAGS', True)
 setconf('PERMISSION_REPLACE_BUILTIN_IF', True)
+setconf('PERMISSION_EXTEND_USER_CLASS', True)
 
 # validate settings
 if installed:
@@ -45,6 +46,33 @@ if installed:
 if settings.PERMISSION_BUILTIN_TEMPLATETAGS:
     from django.template import add_to_builtins
     add_to_builtins('permission.templatetags.permission_tags')
+
+# Extend User class
+if settings.PERMISSION_EXTEND_USER_CLASS:
+    from django.contrib import auth
+    from django.contrib.auth.models import User
+    from django.contrib.auth.models import AnonymousUser
+    def _user_has_role(user, role):
+        anon = user.is_anonymous()
+        active = user.is_active
+        for backend in auth.get_backends():
+            if anon or active or backend.supports_inactive_user:
+                if hasattr(backend, 'has_role'):
+                    if backend.has_role(user, role):
+                        return True
+        return False
+    def _user_get_all_roles(user):
+        anon = user.is_anonymous()
+        active = user.is_active
+        for backend in auth.get_backends():
+            if anon or active or backend.supports_inactive_user:
+                if hasattr(backend, 'get_all_roles'):
+                    return backend.get_all_roles(user)
+        return None
+    User.has_role = _user_has_role
+    User.roles = property(_user_get_all_roles)
+    AnonymousUser.has_role = lambda user, role: False
+    AnonymousUser.roles = ()
 
 # Auto-discover INSTALLED_APPS permissions.py modules
 if installed:
