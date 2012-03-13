@@ -116,7 +116,7 @@ def recall_syncdb():
     from django.db.models import loading
     from django.core.management import call_command
     loading.cache.loaded = False
-    call_command('syncdb', interactive=False, verbosity=0, migrate=False)
+    call_command('syncdb', interactive=False, verbosity=0, migrate=False, migrate_all=True)
 
 def clear_meta_caches(model):
     """clear model meta caches. it is required to refresh m2m relation"""
