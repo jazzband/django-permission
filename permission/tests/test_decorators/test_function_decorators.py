@@ -60,6 +60,10 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
         self.mock_handler = mock_handler
         self.mock_request = mock_request
 
+        # store original registry
+        self._original_registry = registry._registry
+        self._original_permissions = registry._permissions
+
         # clear registry and register mock handler
         registry._registry = {}
         registry._permissions = {}
@@ -69,6 +73,11 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
             )
         self.view_func = Mock(return_value=HttpResponse())
         self.decorated = permission_required('test_app.add_article')(self.view_func)
+
+    def tearDown(self):
+        # restore original reigstry
+        registry._registry = self._original_registry
+        registry._permissions = self._original_permissions
 
 
     def test_list_detail_object_id(self):

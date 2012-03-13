@@ -61,6 +61,10 @@ class PermissionClassDecoratorsTestCase(TestCase):
         self.mock_handler = mock_handler
         self.mock_request = mock_request
 
+        # store original registry
+        self._original_registry = registry._registry
+        self._original_permissions = registry._permissions
+
         # clear registry and register mock handler
         registry._registry = {}
         registry._permissions = {}
@@ -73,6 +77,11 @@ class PermissionClassDecoratorsTestCase(TestCase):
         view_class.dispatch = self.view_func
         view_class = permission_required('test_app.add_article')(view_class)
         self.view_class = view_class
+
+    def tearDown(self):
+        # restore original reigstry
+        registry._registry = self._original_registry
+        registry._permissions = self._original_permissions
 
     def test_with_object(self):
         from permission.tests.test_app.models import Article
