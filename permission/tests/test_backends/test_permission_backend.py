@@ -78,6 +78,17 @@ class PermissionBackendTestCase(TestCase):
         # author = user4
         self.article2 = Article.objects.get(title='permission_test_article2')
 
+        # backup original registry
+        self._original_registry = registry._registry
+        self._original_permissions = registry._permissions
+        registry._registry = {}
+        registry._permissions = {}
+
+    def tearDown(self):
+        # restore original registry
+        registry._registry = self._original_registry
+        registry._permissions = self._original_permissions
+
     def test_attributes_required(self):
         backend = PermissionBackend()
 
@@ -97,8 +108,6 @@ class PermissionBackendTestCase(TestCase):
 
     def test_has_perm(self):
         from permission.tests.test_app.models import Article
-        registry._registry = {}
-        registry._permissions = {}
         registry.register(Article, TestPermissionHandler)
 
         backend = PermissionBackend()
@@ -178,8 +187,6 @@ class PermissionBackendTestCase(TestCase):
                 'test_app.change_article', 
                 'test_app.delete_article',
             ]
-        registry._registry = {}
-        registry._permissions = {}
         registry.register(Article, TestPermissionHandler2)
 
         backend = PermissionBackend()
@@ -253,8 +260,6 @@ class PermissionBackendTestCase(TestCase):
             # for treating that permission.
             def get_permissions(self):
                 return set(['test_app.change_article', 'test_app.delete_article',])
-        registry._registry = {}
-        registry._permissions = {}
         registry.register(Article, TestPermissionHandler2)
 
         backend = PermissionBackend()
@@ -323,8 +328,6 @@ class PermissionBackendTestCase(TestCase):
 
     def test_auth_backend(self):
         from permission.tests.test_app.models import Article
-        registry._registry = {}
-        registry._permissions = {}
         registry.register(Article, TestPermissionHandler)
 
         with override_settings(AUTHENTICATION_BACKENDS=(
