@@ -31,25 +31,23 @@ License:
 
 """
 from __future__ import with_statement
+from mock import MagicMock as Mock
 from django.test import TestCase
 from django.http import HttpResponse
 from django.views.generic import View
 
 from permission import registry
 from permission.decorators.class_decorators import permission_required
-from permission.tests.mock import MagicMock as Mock
-from permission.tests.override_settings import with_apps
+from permission.tests.models import Article
 
-@with_apps('permission.tests.test_app')
 class PermissionClassDecoratorsTestCase(TestCase):
 
-    fixtures = ('permission_test_app.yaml',)
+    fixtures = ('django_permission_test_datas.yaml',)
 
     def setUp(self):
-        from permission.tests.test_app.models import Article
         mock_handler = Mock(**{
                 'has_perm.return_value': False,
-                'get_permissions.return_value': 'test_app.add_article',
+                'get_permissions.return_value': 'permission.add_article',
             })
         mock_request = Mock()
         mock_request.META = Mock()
@@ -75,7 +73,7 @@ class PermissionClassDecoratorsTestCase(TestCase):
         self.view_func = Mock(return_value=HttpResponse)
         view_class = type('MockView', (View,), {})
         view_class.dispatch = self.view_func
-        view_class = permission_required('test_app.add_article')(view_class)
+        view_class = permission_required('permission.add_article')(view_class)
         self.view_class = view_class
 
     def tearDown(self):
@@ -84,18 +82,17 @@ class PermissionClassDecoratorsTestCase(TestCase):
         registry._permissions = self._original_permissions
 
     def test_with_object(self):
-        from permission.tests.test_app.models import Article
         self.assertEqual(registry._registry[Article], self.mock_handler)
 
         self.view_class.object = Article.objects.get(pk=1)
         # has_perm always return False
         self.view_class.as_view()(self.mock_request, pk=1)
         self.mock_request.user.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.mock_handler.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.assertFalse(self.view_func.called)
@@ -103,29 +100,28 @@ class PermissionClassDecoratorsTestCase(TestCase):
         self.mock_handler.has_perm.return_value = True
         self.view_class.as_view()(self.mock_request, pk=1)
         self.mock_request.user.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.mock_handler.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.assertTrue(self.view_func.called)
         del self.view_class.object
 
     def test_with_get_object(self):
-        from permission.tests.test_app.models import Article
         self.assertEqual(registry._registry[Article], self.mock_handler)
 
         self.view_class.get_object = Mock(return_value=Article.objects.get(pk=1))
         # has_perm always return False
         self.view_class.as_view()(self.mock_request, pk=1)
         self.mock_request.user.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.mock_handler.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.view_class.get_object.assert_called_with(None)
@@ -134,18 +130,17 @@ class PermissionClassDecoratorsTestCase(TestCase):
         self.mock_handler.has_perm.return_value = True
         self.view_class.as_view()(self.mock_request, pk=1)
         self.mock_request.user.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.mock_handler.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.assertTrue(self.view_func.called)
         del self.view_class.get_object
 
     def test_with_queryset(self):
-        from permission.tests.test_app.models import Article
         self.assertEqual(registry._registry[Article], self.mock_handler)
 
         self.view_class.queryset = "mock queryset"
@@ -153,11 +148,11 @@ class PermissionClassDecoratorsTestCase(TestCase):
         # has_perm always return False
         self.view_class.as_view()(self.mock_request, pk=1)
         self.mock_request.user.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.mock_handler.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.view_class.get_object.assert_called_with(
@@ -168,11 +163,11 @@ class PermissionClassDecoratorsTestCase(TestCase):
         self.mock_handler.has_perm.return_value = True
         self.view_class.as_view()(self.mock_request, pk=1)
         self.mock_request.user.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.mock_handler.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.assertTrue(self.view_func.called)
@@ -180,7 +175,6 @@ class PermissionClassDecoratorsTestCase(TestCase):
         del self.view_class.queryset
 
     def test_with_get_queryset(self):
-        from permission.tests.test_app.models import Article
         self.assertEqual(registry._registry[Article], self.mock_handler)
 
         self.view_class.get_queryset = Mock(return_value="mock queryset")
@@ -188,11 +182,11 @@ class PermissionClassDecoratorsTestCase(TestCase):
         # has_perm always return False
         self.view_class.as_view()(self.mock_request, pk=1)
         self.mock_request.user.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.mock_handler.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.view_class.get_object.assert_called_with(
@@ -203,11 +197,11 @@ class PermissionClassDecoratorsTestCase(TestCase):
         self.mock_handler.has_perm.return_value = True
         self.view_class.as_view()(self.mock_request, pk=1)
         self.mock_request.user.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.mock_handler.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.assertTrue(self.view_func.called)

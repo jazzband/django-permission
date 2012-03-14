@@ -36,8 +36,12 @@ from django.test import TestCase
 from permission.handlers import registry
 from permission.handlers import PermissionHandler
 from permission.backends import PermissionBackend
-from permission.tests.override_settings import with_apps
-from permission.tests.override_settings import override_settings
+from permission.tests.models import Article
+
+try:
+    from django.test.utils import override_settings
+except ImportError:
+    from override_settings import override_settings
 
 class TestPermissionHandler(PermissionHandler):
     called = False
@@ -56,15 +60,13 @@ class TestPermissionHandler(PermissionHandler):
         # Others doesn't
         return False
 
-@with_apps('permission.tests.test_app')
 class PermissionBackendTestCase(TestCase):
 
-    fixtures = ('permission_test_app.yaml',)
+    fixtures = ('django_permission_test_datas.yaml',)
 
     def setUp(self):
         from django.contrib.auth.models import User
         from django.contrib.auth.models import AnonymousUser
-        from permission.tests.test_app.models import Article
         self.anonymous = AnonymousUser()
         # superuser
         self.user1 = User.objects.get(username='permission_test_user1')
@@ -107,85 +109,83 @@ class PermissionBackendTestCase(TestCase):
         self.assertTrue(hasattr(backend, 'has_perm'))
 
     def test_has_perm(self):
-        from permission.tests.test_app.models import Article
         registry.register(Article, TestPermissionHandler)
 
         backend = PermissionBackend()
 
         # the registered handler is used
-        backend.has_perm(self.anonymous, 'test_app.add_article')
+        backend.has_perm(self.anonymous, 'permission.add_article')
         self.assertTrue(registry._registry[Article].called)
 
         # the handler treat 'add', 'chage', 'delete' permissions
         permissions = registry._registry[Article].get_permissions()
-        self.assertTrue('test_app.add_article' in permissions)
-        self.assertTrue('test_app.change_article' in permissions)
-        self.assertTrue('test_app.delete_article' in permissions)
+        self.assertTrue('permission.add_article' in permissions)
+        self.assertTrue('permission.change_article' in permissions)
+        self.assertTrue('permission.delete_article' in permissions)
 
         # anonymous user have no permission
-        self.assertFalse(backend.has_perm(self.anonymous, 'test_app.add_article'))
+        self.assertFalse(backend.has_perm(self.anonymous, 'permission.add_article'))
         self.assertFalse(backend.has_perm(
-                self.anonymous, 'test_app.change_article', self.article1
+                self.anonymous, 'permission.change_article', self.article1
             ))
         self.assertFalse(backend.has_perm(
-                self.anonymous, 'test_app.delete_article', self.article1
+                self.anonymous, 'permission.delete_article', self.article1
             ))
         # superuser have all permission generally but in this backend, they 
         # don't. the permissions for superuser will handled by downstream.
-        self.assertTrue(backend.has_perm(self.user1, 'test_app.add_article'))
+        self.assertTrue(backend.has_perm(self.user1, 'permission.add_article'))
         self.assertFalse(backend.has_perm(
-                self.user1, 'test_app.change_article', self.article1
+                self.user1, 'permission.change_article', self.article1
             ))
         self.assertFalse(backend.has_perm(
-                self.user1, 'test_app.delete_article', self.article1
+                self.user1, 'permission.delete_article', self.article1
             ))
         # staff user
-        self.assertTrue(backend.has_perm(self.user2, 'test_app.add_article'))
+        self.assertTrue(backend.has_perm(self.user2, 'permission.add_article'))
         self.assertFalse(backend.has_perm(
-                self.user2, 'test_app.change_article', self.article1
+                self.user2, 'permission.change_article', self.article1
             ))
         self.assertFalse(backend.has_perm(
-                self.user2, 'test_app.delete_article', self.article1
+                self.user2, 'permission.delete_article', self.article1
             ))
         # user3 is an author of the article1 so have all permissions
         # but for article2
-        self.assertTrue(backend.has_perm(self.user3, 'test_app.add_article'))
+        self.assertTrue(backend.has_perm(self.user3, 'permission.add_article'))
         self.assertTrue(backend.has_perm(
-                self.user3, 'test_app.change_article', self.article1
+                self.user3, 'permission.change_article', self.article1
             ))
         self.assertTrue(backend.has_perm(
-                self.user3, 'test_app.delete_article', self.article1
+                self.user3, 'permission.delete_article', self.article1
             ))
         self.assertFalse(backend.has_perm(
-                self.user3, 'test_app.change_article', self.article2
+                self.user3, 'permission.change_article', self.article2
             ))
         self.assertFalse(backend.has_perm(
-                self.user3, 'test_app.delete_article', self.article2
+                self.user3, 'permission.delete_article', self.article2
             ))
         # user4 is an author of the article2 so have all permissions
         # but for article1
-        self.assertTrue(backend.has_perm(self.user4, 'test_app.add_article'))
+        self.assertTrue(backend.has_perm(self.user4, 'permission.add_article'))
         self.assertFalse(backend.has_perm(
-                self.user4, 'test_app.change_article', self.article1
+                self.user4, 'permission.change_article', self.article1
             ))
         self.assertFalse(backend.has_perm(
-                self.user4, 'test_app.delete_article', self.article1
+                self.user4, 'permission.delete_article', self.article1
             ))
         self.assertTrue(backend.has_perm(
-                self.user4, 'test_app.change_article', self.article2
+                self.user4, 'permission.change_article', self.article2
             ))
         self.assertTrue(backend.has_perm(
-                self.user4, 'test_app.delete_article', self.article2
+                self.user4, 'permission.delete_article', self.article2
             ))
 
     def test_has_perm_permissions(self):
-        from permission.tests.test_app.models import Article
         class TestPermissionHandler2(TestPermissionHandler):
-            # 'test_app.add_article' is removed so the handler is not used
+            # 'permission.add_article' is removed so the handler is not used
             # for treating that permission.
             permissions = [
-                'test_app.change_article', 
-                'test_app.delete_article',
+                'permission.change_article', 
+                'permission.delete_article',
             ]
         registry.register(Article, TestPermissionHandler2)
 
@@ -193,141 +193,139 @@ class PermissionBackendTestCase(TestCase):
 
         # the handler treat 'chage', 'delete' permissions
         permissions = registry._registry[Article].get_permissions()
-        self.assertFalse('test_app.add_article' in permissions)
-        self.assertTrue('test_app.change_article' in permissions)
-        self.assertTrue('test_app.delete_article' in permissions)
+        self.assertFalse('permission.add_article' in permissions)
+        self.assertTrue('permission.change_article' in permissions)
+        self.assertTrue('permission.delete_article' in permissions)
 
         # anonymous user have no permission
-        self.assertFalse(backend.has_perm(self.anonymous, 'test_app.add_article'))
+        self.assertFalse(backend.has_perm(self.anonymous, 'permission.add_article'))
         self.assertFalse(backend.has_perm(
-                self.anonymous, 'test_app.change_article', self.article1
+                self.anonymous, 'permission.change_article', self.article1
             ))
         self.assertFalse(backend.has_perm(
-                self.anonymous, 'test_app.delete_article', self.article1
+                self.anonymous, 'permission.delete_article', self.article1
             ))
         # superuser have all permission generally but in this backend, they 
         # don't. the permissions for superuser will handled by downstream.
-        self.assertFalse(backend.has_perm(self.user1, 'test_app.add_article'))
+        self.assertFalse(backend.has_perm(self.user1, 'permission.add_article'))
         self.assertFalse(backend.has_perm(
-                self.user1, 'test_app.change_article', self.article1
+                self.user1, 'permission.change_article', self.article1
             ))
         self.assertFalse(backend.has_perm(
-                self.user1, 'test_app.delete_article', self.article1
+                self.user1, 'permission.delete_article', self.article1
             ))
         # staff user
-        self.assertFalse(backend.has_perm(self.user2, 'test_app.add_article'))
+        self.assertFalse(backend.has_perm(self.user2, 'permission.add_article'))
         self.assertFalse(backend.has_perm(
-                self.user2, 'test_app.change_article', self.article1
+                self.user2, 'permission.change_article', self.article1
             ))
         self.assertFalse(backend.has_perm(
-                self.user2, 'test_app.delete_article', self.article1
+                self.user2, 'permission.delete_article', self.article1
             ))
         # user3 is an author of the article1 so have all permissions
         # but for article2
-        self.assertFalse(backend.has_perm(self.user3, 'test_app.add_article'))
+        self.assertFalse(backend.has_perm(self.user3, 'permission.add_article'))
         self.assertTrue(backend.has_perm(
-                self.user3, 'test_app.change_article', self.article1
+                self.user3, 'permission.change_article', self.article1
             ))
         self.assertTrue(backend.has_perm(
-                self.user3, 'test_app.delete_article', self.article1
+                self.user3, 'permission.delete_article', self.article1
             ))
         self.assertFalse(backend.has_perm(
-                self.user3, 'test_app.change_article', self.article2
+                self.user3, 'permission.change_article', self.article2
             ))
         self.assertFalse(backend.has_perm(
-                self.user3, 'test_app.delete_article', self.article2
+                self.user3, 'permission.delete_article', self.article2
             ))
         # user4 is an author of the article2 so have all permissions
         # but for article1
-        self.assertFalse(backend.has_perm(self.user4, 'test_app.add_article'))
+        self.assertFalse(backend.has_perm(self.user4, 'permission.add_article'))
         self.assertFalse(backend.has_perm(
-                self.user4, 'test_app.change_article', self.article1
+                self.user4, 'permission.change_article', self.article1
             ))
         self.assertFalse(backend.has_perm(
-                self.user4, 'test_app.delete_article', self.article1
+                self.user4, 'permission.delete_article', self.article1
             ))
         self.assertTrue(backend.has_perm(
-                self.user4, 'test_app.change_article', self.article2
+                self.user4, 'permission.change_article', self.article2
             ))
         self.assertTrue(backend.has_perm(
-                self.user4, 'test_app.delete_article', self.article2
+                self.user4, 'permission.delete_article', self.article2
             ))
 
     def test_has_perm_get_permissions(self):
-        from permission.tests.test_app.models import Article
         class TestPermissionHandler2(TestPermissionHandler):
-            # 'test_app.add_article' is removed so the handler is not used
+            # 'permission.add_article' is removed so the handler is not used
             # for treating that permission.
             def get_permissions(self):
-                return set(['test_app.change_article', 'test_app.delete_article',])
+                return set(['permission.change_article', 'permission.delete_article',])
         registry.register(Article, TestPermissionHandler2)
 
         backend = PermissionBackend()
 
         # the handler treat 'chage', 'delete' permissions
         permissions = registry._registry[Article].get_permissions()
-        self.assertFalse('test_app.add_article' in permissions)
-        self.assertTrue('test_app.change_article' in permissions)
-        self.assertTrue('test_app.delete_article' in permissions)
+        self.assertFalse('permission.add_article' in permissions)
+        self.assertTrue('permission.change_article' in permissions)
+        self.assertTrue('permission.delete_article' in permissions)
 
         # anonymous user have no permission
-        self.assertFalse(backend.has_perm(self.anonymous, 'test_app.add_article'))
+        self.assertFalse(backend.has_perm(self.anonymous, 'permission.add_article'))
         self.assertFalse(backend.has_perm(
-                self.anonymous, 'test_app.change_article', self.article1
+                self.anonymous, 'permission.change_article', self.article1
             ))
         self.assertFalse(backend.has_perm(
-                self.anonymous, 'test_app.delete_article', self.article1
+                self.anonymous, 'permission.delete_article', self.article1
             ))
         # superuser have all permission generally but in this backend, they 
         # don't. the permissions for superuser will handled by downstream.
-        self.assertFalse(backend.has_perm(self.user1, 'test_app.add_article'))
+        self.assertFalse(backend.has_perm(self.user1, 'permission.add_article'))
         self.assertFalse(backend.has_perm(
-                self.user1, 'test_app.change_article', self.article1
+                self.user1, 'permission.change_article', self.article1
             ))
         self.assertFalse(backend.has_perm(
-                self.user1, 'test_app.delete_article', self.article1
+                self.user1, 'permission.delete_article', self.article1
             ))
         # staff user
-        self.assertFalse(backend.has_perm(self.user2, 'test_app.add_article'))
+        self.assertFalse(backend.has_perm(self.user2, 'permission.add_article'))
         self.assertFalse(backend.has_perm(
-                self.user2, 'test_app.change_article', self.article1
+                self.user2, 'permission.change_article', self.article1
             ))
         self.assertFalse(backend.has_perm(
-                self.user2, 'test_app.delete_article', self.article1
+                self.user2, 'permission.delete_article', self.article1
             ))
         # user3 is an author of the article1 so have all permissions
         # but for article2
-        self.assertFalse(backend.has_perm(self.user3, 'test_app.add_article'))
+        self.assertFalse(backend.has_perm(self.user3, 'permission.add_article'))
         self.assertTrue(backend.has_perm(
-                self.user3, 'test_app.change_article', self.article1
+                self.user3, 'permission.change_article', self.article1
             ))
         self.assertTrue(backend.has_perm(
-                self.user3, 'test_app.delete_article', self.article1
+                self.user3, 'permission.delete_article', self.article1
             ))
         self.assertFalse(backend.has_perm(
-                self.user3, 'test_app.change_article', self.article2
+                self.user3, 'permission.change_article', self.article2
             ))
         self.assertFalse(backend.has_perm(
-                self.user3, 'test_app.delete_article', self.article2
+                self.user3, 'permission.delete_article', self.article2
             ))
         # user4 is an author of the article2 so have all permissions
         # but for article1
-        self.assertFalse(backend.has_perm(self.user4, 'test_app.add_article'))
+        self.assertFalse(backend.has_perm(self.user4, 'permission.add_article'))
         self.assertFalse(backend.has_perm(
-                self.user4, 'test_app.change_article', self.article1
+                self.user4, 'permission.change_article', self.article1
             ))
         self.assertFalse(backend.has_perm(
-                self.user4, 'test_app.delete_article', self.article1
+                self.user4, 'permission.delete_article', self.article1
             ))
         self.assertTrue(backend.has_perm(
-                self.user4, 'test_app.change_article', self.article2
+                self.user4, 'permission.change_article', self.article2
             ))
         self.assertTrue(backend.has_perm(
-                self.user4, 'test_app.delete_article', self.article2
+                self.user4, 'permission.delete_article', self.article2
             ))
 
     def test_auth_backend(self):
-        from permission.tests.test_app.models import Article
         registry.register(Article, TestPermissionHandler)
 
         with override_settings(AUTHENTICATION_BACKENDS=(
@@ -346,58 +344,58 @@ class PermissionBackendTestCase(TestCase):
 
             # the handler treat 'add', 'chage', 'delete' permissions
             permissions = registry._registry[Article].get_permissions()
-            self.assertTrue('test_app.add_article' in permissions)
-            self.assertTrue('test_app.change_article' in permissions)
-            self.assertTrue('test_app.delete_article' in permissions)
+            self.assertTrue('permission.add_article' in permissions)
+            self.assertTrue('permission.change_article' in permissions)
+            self.assertTrue('permission.delete_article' in permissions)
 
             # the registered handler is used (user1 is superuser so cannot be
             # used for this)
-            self.user2.has_perm('test_app.add_article')
+            self.user2.has_perm('permission.add_article')
             self.assertTrue(registry._registry[Article].called)
 
             # superuser have all permission with ModelBackend
-            self.assertTrue(self.user1.has_perm('test_app.add_article'))
+            self.assertTrue(self.user1.has_perm('permission.add_article'))
             self.assertTrue(self.user1.has_perm(
-                    'test_app.change_article', self.article1
+                    'permission.change_article', self.article1
                 ))
             self.assertTrue(self.user1.has_perm(
-                    'test_app.delete_article', self.article1
+                    'permission.delete_article', self.article1
                 ))
             # staff
-            self.assertTrue(self.user2.has_perm('test_app.add_article'))
+            self.assertTrue(self.user2.has_perm('permission.add_article'))
             self.assertFalse(self.user2.has_perm(
-                    'test_app.change_article', self.article1
+                    'permission.change_article', self.article1
                 ))
             self.assertFalse(self.user2.has_perm(
-                    'test_app.delete_article', self.article1
+                    'permission.delete_article', self.article1
                 ))
             # user3 have all permissions for article1 but article2
-            self.assertTrue(self.user3.has_perm('test_app.add_article'))
+            self.assertTrue(self.user3.has_perm('permission.add_article'))
             self.assertTrue(self.user3.has_perm(
-                    'test_app.change_article', self.article1
+                    'permission.change_article', self.article1
                 ))
             self.assertTrue(self.user3.has_perm(
-                    'test_app.delete_article', self.article1
+                    'permission.delete_article', self.article1
                 ))
             self.assertFalse(self.user3.has_perm(
-                    'test_app.change_article', self.article2
+                    'permission.change_article', self.article2
                 ))
             self.assertFalse(self.user3.has_perm(
-                    'test_app.delete_article', self.article2
+                    'permission.delete_article', self.article2
                 ))
             # user4 have all permissions for article2 but article1
-            self.assertTrue(self.user4.has_perm('test_app.add_article'))
+            self.assertTrue(self.user4.has_perm('permission.add_article'))
             self.assertFalse(self.user4.has_perm(
-                    'test_app.change_article', self.article1
+                    'permission.change_article', self.article1
                 ))
             self.assertFalse(self.user4.has_perm(
-                    'test_app.delete_article', self.article1
+                    'permission.delete_article', self.article1
                 ))
             self.assertTrue(self.user4.has_perm(
-                    'test_app.change_article', self.article2
+                    'permission.change_article', self.article2
                 ))
             self.assertTrue(self.user4.has_perm(
-                    'test_app.delete_article', self.article2
+                    'permission.delete_article', self.article2
                 ))
 
         # without AUTH backend, handler wount called
@@ -415,44 +413,44 @@ class PermissionBackendTestCase(TestCase):
             self.assertFalse(is_permission_backend_used())
 
             # superuser have all permission with ModelBackend
-            self.assertTrue(self.user1.has_perm('test_app.add_article'))
+            self.assertTrue(self.user1.has_perm('permission.add_article'))
             self.assertTrue(self.user1.has_perm(
-                    'test_app.change_article', self.article1
+                    'permission.change_article', self.article1
                 ))
             self.assertTrue(self.user1.has_perm(
-                    'test_app.delete_article', self.article1
+                    'permission.delete_article', self.article1
                 ))
             # users have no permissions
-            self.assertFalse(self.user2.has_perm('test_app.add_article'))
+            self.assertFalse(self.user2.has_perm('permission.add_article'))
             self.assertFalse(self.user2.has_perm(
-                    'test_app.change_article', self.article1
+                    'permission.change_article', self.article1
                 ))
             self.assertFalse(self.user2.has_perm(
-                    'test_app.delete_article', self.article1
+                    'permission.delete_article', self.article1
                 ))
-            self.assertFalse(self.user3.has_perm('test_app.add_article'))
+            self.assertFalse(self.user3.has_perm('permission.add_article'))
             self.assertFalse(self.user3.has_perm(
-                    'test_app.change_article', self.article1
-                ))
-            self.assertFalse(self.user3.has_perm(
-                    'test_app.delete_article', self.article1
+                    'permission.change_article', self.article1
                 ))
             self.assertFalse(self.user3.has_perm(
-                    'test_app.change_article', self.article2
+                    'permission.delete_article', self.article1
                 ))
             self.assertFalse(self.user3.has_perm(
-                    'test_app.delete_article', self.article2
+                    'permission.change_article', self.article2
                 ))
-            self.assertFalse(self.user4.has_perm('test_app.add_article'))
-            self.assertFalse(self.user4.has_perm(
-                    'test_app.change_article', self.article1
+            self.assertFalse(self.user3.has_perm(
+                    'permission.delete_article', self.article2
                 ))
+            self.assertFalse(self.user4.has_perm('permission.add_article'))
             self.assertFalse(self.user4.has_perm(
-                    'test_app.delete_article', self.article1
-                ))
-            self.assertFalse(self.user4.has_perm(
-                    'test_app.change_article', self.article2
+                    'permission.change_article', self.article1
                 ))
             self.assertFalse(self.user4.has_perm(
-                    'test_app.delete_article', self.article2
+                    'permission.delete_article', self.article1
+                ))
+            self.assertFalse(self.user4.has_perm(
+                    'permission.change_article', self.article2
+                ))
+            self.assertFalse(self.user4.has_perm(
+                    'permission.delete_article', self.article2
                 ))
