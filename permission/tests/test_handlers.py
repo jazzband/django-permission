@@ -36,10 +36,12 @@ from django.contrib.auth.models import Permission
 
 from permission import PermissionHandler
 from permission.exceptions import ValidationError
-from permission.tests.override_settings import with_apps
-from permission.tests.override_settings import override_settings
+from permission.tests.models import Article
+try:
+    from django.test.utils import override_settings
+except ImportError:
+    from override_settings import override_settings
 
-@with_apps('permission.tests.test_app')
 class PermissionHandlerTestCase(TestCase):
 
     def test_registry_instance(self):
@@ -51,7 +53,6 @@ class PermissionHandlerTestCase(TestCase):
     def test_registry_register(self):
         from permission.handlers import Registry
         from permission.exceptions import AlreadyRegistered
-        from permission.tests.test_app.models import Article
         registry = Registry()
         registry.register(Article, PermissionHandler)
 
@@ -72,7 +73,6 @@ class PermissionHandlerTestCase(TestCase):
         class Mock(object):
             pass
         from permission.handlers import Registry
-        from permission.tests.test_app.models import Article
         registry = Registry()
 
         with override_settings(DEBUG=True):
@@ -109,7 +109,6 @@ class PermissionHandlerTestCase(TestCase):
     def test_registry_unregister(self):
         from permission.handlers import Registry
         from permission.exceptions import NotRegistered
-        from permission.tests.test_app.models import Article
         registry = Registry()
         registry.register(Article, PermissionHandler)
 
@@ -121,11 +120,10 @@ class PermissionHandlerTestCase(TestCase):
 
     def test_registry_get_handlers(self):
         from permission.handlers import Registry
-        from permission.tests.test_app.models import Article
         registry = Registry()
         registry.register(Article, PermissionHandler)
 
-        handlers = registry.get_handlers('test_app.add_article')
+        handlers = registry.get_handlers('permission.add_article')
         self.assertTrue(isinstance(handlers, tuple))
         self.assertEqual(len(handlers), 1)
         self.assertEqual(handlers[0].__class__, PermissionHandler)
@@ -142,34 +140,31 @@ class PermissionHandlerTestCase(TestCase):
 
 
     def test_get_app_permissions(self):
-        from permission.tests.test_app.models import Article
         instance = PermissionHandler(model=Article)
 
-        # get all permissions related to 'test_app'
+        # get all permissions related to 'permission'
         app_permissions = Permission.objects.filter(
-                content_type__app_label='test_app'
+                content_type__app_label='permission'
             )
-        app_permissions = set([u"test_app.%s" % p.codename for p in app_permissions.all()])
+        app_permissions = set([u"permission.%s" % p.codename for p in app_permissions.all()])
 
         self.assertEqual(instance.get_app_permissions(), app_permissions)
 
     def test_get_model_permissions(self):
-        from permission.tests.test_app.models import Article
         instance = PermissionHandler(model=Article)
 
         # get all permissions related to Article
         model_permissions = Permission.objects.filter(
-                content_type__app_label='test_app',
+                content_type__app_label='permission',
                 content_type__model='article'
             )
-        model_permissions = set([u"test_app.%s" % p.codename for p in model_permissions.all()])
+        model_permissions = set([u"permission.%s" % p.codename for p in model_permissions.all()])
 
         self.assertEqual(instance.get_model_permissions(), model_permissions)
 
     def test_get_permissions(self):
         class TestPermissionHandler(PermissionHandler):
             pass
-        from permission.tests.test_app.models import Article
         instance = TestPermissionHandler(model=Article)
 
         # get_permissions should return same value as
@@ -184,7 +179,6 @@ class PermissionHandlerTestCase(TestCase):
             permissions = (
                     'auth.add_user', 'auth.change_user', 'auth.delete_user'
                 )
-        from permission.tests.test_app.models import Article
         instance = TestPermissionHandler(model=Article)
 
         # get_permissions should return the value specified
@@ -200,7 +194,6 @@ class PermissionHandlerTestCase(TestCase):
                     'auth.add_user', 'auth.change_user', 'auth.delete_user'
                 ])
 
-        from permission.tests.test_app.models import Article
         instance = TestPermissionHandler(model=Article)
 
         # get_permissions should return the value specified
@@ -210,7 +203,6 @@ class PermissionHandlerTestCase(TestCase):
             )
 
     def test_get_permission_codename(self):
-        from permission.tests.test_app.models import Article
         instance = PermissionHandler(model=Article)
 
         perm = 'app_label.name_model'
@@ -231,7 +223,6 @@ class PermissionHandlerTestCase(TestCase):
 
 
     def test_has_perm_raise_exception(self):
-        from permission.tests.test_app.models import Article
         instance = PermissionHandler(model=Article)
 
         self.assertRaises(

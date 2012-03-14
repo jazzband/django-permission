@@ -31,24 +31,22 @@ License:
 
 """
 from __future__ import with_statement
+from mock import MagicMock as Mock
 from django.test import TestCase
 from django.http import HttpResponse
 
 from permission import registry
 from permission.decorators.function_decorators import permission_required
-from permission.tests.mock import MagicMock as Mock
-from permission.tests.override_settings import with_apps
+from permission.tests.models import Article
 
-@with_apps('permission.tests.test_app')
 class PermissionFunctionDecoratorsTestCase(TestCase):
 
-    fixtures = ('permission_test_app.yaml',)
+    fixtures = ('django_permission_test_datas.yaml',)
 
     def setUp(self):
-        from permission.tests.test_app.models import Article
         mock_handler = Mock(**{
                 'has_perm.return_value': False,
-                'get_permissions.return_value': 'test_app.add_article',
+                'get_permissions.return_value': 'permission.add_article',
             })
         mock_request = Mock()
         mock_request.META = Mock()
@@ -72,7 +70,7 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
                 Mock(return_value=self.mock_handler)
             )
         self.view_func = Mock(return_value=HttpResponse())
-        self.decorated = permission_required('test_app.add_article')(self.view_func)
+        self.decorated = permission_required('permission.add_article')(self.view_func)
 
     def tearDown(self):
         # restore original reigstry
@@ -81,7 +79,6 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
 
 
     def test_list_detail_object_id(self):
-        from permission.tests.test_app.models import Article
         self.assertEqual(registry._registry[Article], self.mock_handler)
 
         # has_perm always return False
@@ -90,11 +87,11 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
                 queryset=Article.objects.all(), 
                 object_id=1)
         self.mock_request.user.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.mock_handler.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.assertFalse(self.view_func.called)
@@ -105,17 +102,16 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
                 queryset=Article.objects.all(), 
                 object_id=1)
         self.mock_request.user.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.mock_handler.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.assertTrue(self.view_func.called)
 
     def test_list_detail_slug(self):
-        from permission.tests.test_app.models import Article
         self.assertEqual(registry._registry[Article], self.mock_handler)
 
         # has_perm always return False
@@ -125,11 +121,11 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
                 slug='permission_test_article1',
                 slug_field='title')
         self.mock_request.user.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.mock_handler.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.assertFalse(self.view_func.called)
@@ -141,17 +137,16 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
                 slug='permission_test_article1',
                 slug_field='title')
         self.mock_request.user.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.mock_handler.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.assertTrue(self.view_func.called)
 
     def test_date_based_object_id(self):
-        from permission.tests.test_app.models import Article
         self.assertEqual(registry._registry[Article], self.mock_handler)
 
         # has_perm always return False
@@ -163,11 +158,11 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
                 month_format='%m',
                 object_id=1)
         self.mock_request.user.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.mock_handler.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.assertFalse(self.view_func.called)
@@ -181,17 +176,16 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
                 month_format='%m',
                 object_id=1)
         self.mock_request.user.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.mock_handler.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.assertTrue(self.view_func.called)
 
     def test_date_based_slug(self):
-        from permission.tests.test_app.models import Article
         self.assertEqual(registry._registry[Article], self.mock_handler)
 
         # has_perm always return False
@@ -204,11 +198,11 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
                 slug='permission_test_article1',
                 slug_field='title')
         self.mock_request.user.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.mock_handler.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.assertFalse(self.view_func.called)
@@ -223,11 +217,11 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
                 slug='permission_test_article1',
                 slug_field='title')
         self.mock_request.user.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.mock_handler.has_perm.assert_called_with(
-                'test_app.add_article',
+                'permission.add_article',
                 obj=Article.objects.get(pk=1)
             )
         self.assertTrue(self.view_func.called)

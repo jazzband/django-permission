@@ -35,9 +35,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import AnonymousUser
 
 from permission.tests.utils import mock_request
+from permission.tests.models import Article
 
 def prepare_with_anonymous_user():
-    from ..test_app.models import Article
     request = mock_request()
     setattr(request, 'user',  AnonymousUser())
     queryset = Article.objects.all()
