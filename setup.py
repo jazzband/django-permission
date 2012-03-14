@@ -10,7 +10,7 @@ def read(filename):
 setup(
     name="django-permission",
     version=version,
-    description = "A enhanced permission system which enable object permission",
+    description = "A enhanced permission system which enable object/role permission",
     long_description=read('README.rst'),
     classifiers = [
         # http://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -23,7 +23,7 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
 
     ],
-    keywords = "django permisssion auth",
+    keywords = "django object role permisssion auth",
     author = "Alisue",
     author_email = "lambdalisue@hashnote.net",
     url=r"https://github.com/lambdalisue/django-permission",
@@ -35,14 +35,14 @@ setup(
     install_requires=[
         'distribute',
         'setuptools-git',
+        'mock',
+        'PyYAML',
         'django>=1.3',
         'django-mptt',
-        'mock',
         'django-override-settings',
     ],
     test_suite='runtests.runtests',
     tests_require=[
-        'PyYAML',
         'feincms',
     ],
 )
