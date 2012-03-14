@@ -37,6 +37,8 @@ setup(
         'setuptools-git',
         'django>=1.3',
         'django-mptt',
+        'mock',
+        'django-override-settings',
     ],
     test_suite='runtests.runtests',
     tests_require=[

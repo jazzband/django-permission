@@ -1,6 +1,6 @@
 # vim: set fileencoding=utf-8 :
 """
-An extra models for using unittest
+Models for just testing
 
 
 AUTHOR:
@@ -29,16 +29,29 @@ License:
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
     IN THE SOFTWARE.
 
-"""   
+"""
 from __future__ import with_statement
 from django.db import models
 from django.contrib.auth.models import User
+from permission import registry
+from permission.handlers import PermissionHandler
 
 class Article(models.Model):
     title = models.CharField('title', max_length=200, default='No title')
     body = models.TextField('body', blank=True, default='')
-    author = models.ForeignKey(User, verbose_name='user', related_name='articles')
+    author = models.ForeignKey(User, verbose_name='user', 
+            related_name='articles')
     created_at = models.DateTimeField('created_at', auto_now_add=True)
+
+    class Meta:
+        app_label = 'permission'
 
     def __unicode__(self):
         return self.title
+
+class ArticlePermissionHandler(PermissionHandler):
+    def has_perm(self, user_obj, perm, obj=None):
+        if user_obj.is_authenticated():
+            return True
+        return False
+registry.register(Article, ArticlePermissionHandler)
