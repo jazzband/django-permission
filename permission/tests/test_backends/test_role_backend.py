@@ -110,6 +110,13 @@ class PermissionRoleBackendTestCase(TestCase):
         role1, role2, role3 = self.role1, self.role2, self.role3
         role4, role5, role6 = self.role4, self.role5, self.role6
 
+        role1 = role1.codename
+        role2 = role2.codename
+        role3 = role3.codename
+        role4 = role4.codename
+        role5 = role5.codename
+        role6 = role6.codename
+
         self.assertItemsEqual(backend.get_all_roles(user1), [
                 role1,
             ])

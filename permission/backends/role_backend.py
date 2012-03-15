@@ -49,7 +49,12 @@ class RoleBackend(object):
         return None
 
     def get_all_roles(self, user_obj):
-        return Role.objects.filter_by_user(user_obj)
+        if hasattr(user_obj, '_role_cache'):
+            return user_obj._role_cache
+        roles = Role.objects.filter_by_user(user_obj)
+        roles = set([r.codename for r in roles])
+        user_obj._role_cache = roles
+        return user_obj._role_cache
 
     def get_all_permissions(self, user_obj, obj=None):
         if obj is not None:
@@ -66,7 +71,8 @@ class RoleBackend(object):
     def has_role(self, user_obj, role):
         if user_obj.is_anonymous() or not user_obj.is_active:
             return False
-        return self.get_all_roles(user_obj).filter(codename=role).exists()
+        roles = self.get_all_roles(user_obj)
+        return role in roles
 
     def has_perm(self, user_obj, perm, obj=None):
         if user_obj.is_anonymous() or not user_obj.is_active:
