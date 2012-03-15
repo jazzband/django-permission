@@ -148,7 +148,7 @@ class PermissionHandlerTestCase(TestCase):
             )
         app_permissions = set([u"permission.%s" % p.codename for p in app_permissions.all()])
 
-        self.assertEqual(instance.get_app_permissions(), app_permissions)
+        self.assertItemsEqual(instance.get_app_permissions(), app_permissions)
 
     def test_get_model_permissions(self):
         instance = PermissionHandler(model=Article)
@@ -160,7 +160,7 @@ class PermissionHandlerTestCase(TestCase):
             )
         model_permissions = set([u"permission.%s" % p.codename for p in model_permissions.all()])
 
-        self.assertEqual(instance.get_model_permissions(), model_permissions)
+        self.assertItemsEqual(instance.get_model_permissions(), model_permissions)
 
     def test_get_permissions(self):
         class TestPermissionHandler(PermissionHandler):
@@ -169,12 +169,16 @@ class PermissionHandlerTestCase(TestCase):
 
         # get_permissions should return same value as
         # get_model_permissions in default
-        self.assertEqual(
+        self.assertItemsEqual(
                 instance.get_permissions(),
                 instance.get_model_permissions()
             )
 
     def test_get_permissions_with_permissions(self):
+        #################################################
+        # Deprecated. Will be removed in Beta release   #
+        # Use ``includes`` and ``excludes`` insted      #
+        #################################################
         class TestPermissionHandler(PermissionHandler):
             permissions = (
                     'auth.add_user', 'auth.change_user', 'auth.delete_user'
@@ -182,10 +186,68 @@ class PermissionHandlerTestCase(TestCase):
         instance = TestPermissionHandler(model=Article)
 
         # get_permissions should return the value specified
-        self.assertEqual(
-                instance.get_permissions(),
-                set(['auth.add_user', 'auth.change_user', 'auth.delete_user'])
-            )
+        self.assertItemsEqual(instance.get_permissions(), [
+                'auth.add_user', 'auth.change_user', 'auth.delete_user'
+            ])
+
+    def test_get_permissions_with_includes_list(self):
+        class TestPermissionHandler(PermissionHandler):
+            includes =  (
+                    'auth.add_user', 'auth.change_user', 'auth.delete_user'
+                )          
+
+        instance = TestPermissionHandler(model=Article)
+
+        # get_permissions should return the value specified
+        self.assertItemsEqual(instance.get_permissions(), [
+                'auth.add_user', 'auth.change_user', 'auth.delete_user'
+            ])
+
+    def test_get_permissions_with_includes_function(self):
+        class TestPermissionHandler(PermissionHandler):
+            includes =  lambda self: (
+                    'auth.add_user', 'auth.change_user', 'auth.delete_user'
+                )          
+
+        instance = TestPermissionHandler(model=Article)
+
+        # get_permissions should return the value specified
+        self.assertItemsEqual(instance.get_permissions(), [
+                'auth.add_user', 'auth.change_user', 'auth.delete_user'
+            ])
+
+    def test_get_permissions_with_excludes_list(self):
+        class TestPermissionHandler(PermissionHandler):
+            includes =  (
+                    'auth.add_user', 'auth.change_user', 'auth.delete_user'
+                )          
+            excludes = (
+                    'auth.add_user', 'auth.change_user',
+                )
+
+        instance = TestPermissionHandler(model=Article)
+
+        # get_permissions should return the value specified
+        self.assertItemsEqual(instance.get_permissions(), [
+                'auth.delete_user',
+            ])
+
+    def test_get_permissions_with_excludes_function(self):
+        class TestPermissionHandler(PermissionHandler):
+            includes =  (
+                    'auth.add_user', 'auth.change_user', 'auth.delete_user'
+                )          
+            excludes =  lambda self: (
+                    'auth.add_user', 'auth.change_user',
+                )          
+
+        instance = TestPermissionHandler(model=Article)
+
+        # get_permissions should return the value specified
+        self.assertItemsEqual(instance.get_permissions(), [
+                'auth.delete_user',
+            ])
+
 
     def test_get_permissions_with_get_permissions(self):
         class TestPermissionHandler(PermissionHandler):
@@ -197,10 +259,9 @@ class PermissionHandlerTestCase(TestCase):
         instance = TestPermissionHandler(model=Article)
 
         # get_permissions should return the value specified
-        self.assertEqual(
-                instance.get_permissions(),
-                set(['auth.add_user', 'auth.change_user', 'auth.delete_user'])
-            )
+        self.assertItemsEqual(instance.get_permissions(), [
+                'auth.add_user', 'auth.change_user', 'auth.delete_user'
+            ])
 
     def test_get_permission_codename(self):
         instance = PermissionHandler(model=Article)
