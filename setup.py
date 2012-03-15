@@ -10,7 +10,7 @@ def read(filename):
 setup(
     name="django-permission",
     version=version,
-    description = "A enhanced permission system which enable object/role permission",
+    description = "A enhanced permission system which enable object permission and role based permission",
     long_description=read('README.rst'),
     classifiers = [
         # http://pypi.python.org/pypi?%3Aaction=list_classifiers
