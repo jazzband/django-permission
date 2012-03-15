@@ -101,9 +101,16 @@ class Role(MPTTModel):
         role_pks = self.get_descendants(True).values_list('id', flat=True)
         qs = User.objects.only('id', '_roles').filter(_roles__pk__in=role_pks).distinct()
         qs = qs.defer(None)
+        def remove_role_perm_cache_before(fn):
+            def inner(manager, *objs):
+                for obj in objs:
+                    if hasattr(obj, '_role_perm_cache'):
+                        delattr(obj, '_role_perm_cache')
+                return fn(manager, *objs)
+            return inner
         # add methods
-        qs.add = self._users.add
-        qs.remove = self._users.remove
+        qs.add = remove_role_perm_cache_before(self._users.add)
+        qs.remove = remove_role_perm_cache_before(self._users.remove)
         qs.clear = self._users.clear
         return qs
 
