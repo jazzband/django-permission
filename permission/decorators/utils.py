@@ -40,6 +40,7 @@ from django.http import Http404
 from django.db.models.fields import DateTimeField
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.views.generic.edit import BaseCreateView
 from permission.exceptions import ValidationError
 
 try:
@@ -80,7 +81,16 @@ def get_object_from_classbased_instance(instance, queryset, request, *args, **kw
         
     # get object
     if hasattr(instance, 'get_object'):
-        obj = instance.get_object(queryset)
+        try:
+            obj = instance.get_object(queryset)
+        except AttributeError, e:
+            # CreateView has ``get_object`` method but CreateView
+            # should not have any object before thus simply set
+            # None
+            if isinstance(instance, BaseCreateView):
+                obj = None
+            else:
+                raise e
     elif hasattr(instance, 'object'):
         obj = instance.object
     else:
