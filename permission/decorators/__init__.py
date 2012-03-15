@@ -1,5 +1,5 @@
 import inspect
-from django.db.models.base import ModelBase
+from django.db.models import Model
 
 from class_decorators import permission_required as class_permission_required
 from method_decorators import permission_required as method_permission_required
@@ -52,7 +52,7 @@ def permission_required(perm, queryset_or_model=None, login_url=None, raise_exce
 
     """
     # convert model to queryset
-    if queryset_or_model and issubclass(queryset_or_model, ModelBase):
+    if queryset_or_model and issubclass(queryset_or_model, Model):
         queryset_or_model = queryset_or_model._default_manager.all()
 
     def wrapper(class_or_method):
