@@ -78,10 +78,7 @@ class RoleBackend(object):
         if user_obj.is_anonymous() or not user_obj.is_active:
             return False
         permissions = self.get_all_permissions(user_obj, obj)
-        if perm in permissions:
-            return True
-        # do not touch this permission
-        return False
+        return perm in permissions
 
     def has_module_perms(self, user_obj, app_label):
         if not user_obj.is_active:
