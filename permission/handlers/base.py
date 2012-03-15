@@ -31,9 +31,29 @@ License:
 
 """
 from __future__ import with_statement
+import warnings
 from django.contrib.auth.models import Permission
 
 __all__ = ('PermissionHandler',)
+
+
+def get_app_permissions(handler):
+    """get permissions associated with app of the model"""
+    app_label = handler.model._meta.app_label
+    qs = Permission.objects.filter(content_type__app_label=app_label)
+    app_perms = set([u"%s.%s" % (app_label, p.codename) for p in qs.iterator()])
+    return app_perms
+
+def get_model_permissions(handler):
+    """get permissions associated with the model"""
+    app_label = handler.model._meta.app_label
+    model = handler.model._meta.object_name.lower()
+    qs = Permission.objects.filter(
+                content_type__app_label=app_label,
+                content_type__model=model
+            )
+    model_perms = set([u"%s.%s" % (app_label, p.codename) for p in qs.iterator()])
+    return model_perms
 
 
 class PermissionHandler(object):
@@ -44,9 +64,12 @@ class PermissionHandler(object):
     the permission of passed ``user_obj``
 
     ``get_permissions()`` method is used to determine which permission strings are
-    should be handled with this handler. In default, this method return the value
-    of ``permissions`` attribute if defined. Otherwise it return the same value as
-    ``get_model_permissions()`` method which described below.
+    should be handled with this handler. In default, this method return the 
+    combination value of ``includes`` and ``excludes`` attributes. These attributes
+    are can be list/tuple or function. This handler instance will be passed to the
+    function as first argument. In default, ``includes`` are set to 
+    ``permission.handlers.base.get_model_permissions`` method thus the default
+    handler will treat all permissions which related to the ``model``.
 
     ``get_model_permissions()`` method return permission strings which is related
     to the ``model`` registered with this handler instance. ``get_app_permissions()``
@@ -56,37 +79,48 @@ class PermissionHandler(object):
     ``get_permission_codename(perm)`` method return codename of ``perm``.
 
     """
+    includes = get_model_permissions
+    excludes = None
+
     def __init__(self, model):
         self.model = model
 
     def get_app_permissions(self):
         """get permissions associated with app of this model"""
         if not hasattr(self, '_app_perm_cache'):
-            app_label = self.model._meta.app_label
-            qs = Permission.objects.filter(content_type__app_label=app_label)
-            app_perms = set([u"%s.%s" % (app_label, p.codename) for p in qs.iterator()])
-            self._app_perm_cache = app_perms
-        return set(self._app_perm_cache)
+            self._app_perm_cache = get_app_permissions(self)
+        return self._app_perm_cache
 
     def get_model_permissions(self):
         """get permissions associated with this model"""
         if not hasattr(self, '_model_perm_cache'):
-            app_label = self.model._meta.app_label
-            model = self.model._meta.object_name.lower()
-            qs = Permission.objects.filter(
-                        content_type__app_label=app_label,
-                        content_type__model=model
-                    )
-            model_perms = set([u"%s.%s" % (app_label, p.codename) for p in qs.iterator()])
-            self._model_perm_cache = model_perms
-        return set(self._model_perm_cache)
+            self._model_perm_cache = get_model_permissions(self)
+        return self._model_perm_cache
 
     def get_permissions(self):
         """get permissions which this handler will handle"""
-        if not hasattr(self, 'permissions'):
-            # build permission list associated with the model
-            self.permissions = self.get_model_permissions()
-        return set(self.permissions)
+        if not hasattr(self, '_perm_cache'):
+            if getattr(self, 'permissions', None):
+                warnings.warn(
+                        "``permissions`` attribute of PermissionHandler is "
+                        "deprecated and will be removed beta release. use "
+                        "``includes`` and ``excludes`` insted.",
+                        DeprecationWarning
+                    )
+                self._perm_cache = set(self.permissions)
+            else:
+                if callable(self.includes):
+                    includes = set(self.includes())
+                else:
+                    includes = set(self.includes)
+                if self.excludes:
+                    if callable(self.excludes):
+                        excludes = set(self.excludes())
+                    else:
+                        excludes = set(self.excludes)
+                    includes = includes.difference(excludes)
+                self._perm_cache = includes
+        return self._perm_cache
 
     def get_permission_codename(self, perm):
         """get permission codename from permission string"""

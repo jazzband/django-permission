@@ -1,7 +1,7 @@
 # vim: set fileencoding=utf-8 :
 from setuptools import setup, find_packages
 
-version = '0.3.8'
+version = '0.4.0'
 
 def read(filename):
     import os.path
@@ -10,7 +10,7 @@ def read(filename):
 setup(
     name="django-permission",
     version=version,
-    description = "A enhanced permission system which enable object/role permission",
+    description = "A enhanced permission system which enable object permission and role based permission",
     long_description=read('README.rst'),
     classifiers = [
         # http://pypi.python.org/pypi?%3Aaction=list_classifiers

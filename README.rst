@@ -33,8 +33,8 @@ Quick tutorial
 
         AUTHENTICATION_BACKENDS = (
             'django.contrib.auth.backends.ModelBackend',
-            'permission.backends.PermissionBackend',
             'permission.backends.RoleBackend',
+            'permission.backends.PermissionBackend',
         )
 
 3.  Add ``permissions.py`` to the directory which contains ``models.py``. And
@@ -105,26 +105,32 @@ The role permissions are handled with ``permission.backends.RoleBackend``.
 .. image:: http://s1-04.twitpicproxy.com/photos/full/528601385.png?key=9431458
     :align: center
 
-This role system is under development. This system might not work correctly yet.
-
 .. Note::
     Role based permission system does not support object permission and anonymous permission. 
     However these permissions are handled with Individual handler based permission backend
     (``permission.backends.PermissionBackend``)
 
 
-How to regulate permissions used in the handler
-==============================================================================================
+Regulate permissions treated in PermissionHandler
+==================================================================================================
 
-``PermissionHandler`` care permissions related with registered model only in default. To change
-this behavior, you must define ``permissions`` attribute or ``get_permissions`` methods which
-return a permission string (like 'auth.add_user') list.
+``PermissionHandler`` treat all permissions related to the model registered
+with in default. But sometime you may want to exclude some permissions or
+include some permissions. To regulate permissions treated, use ``includes``
+and ``excludes`` attributes.
 
-``get_permissions`` return the value of ``permissions`` if the attribute is defined. Otherwise it
-return all permissions related to the model in default used ``get_model_permissions`` method.
+``includes`` attribute is set to
+``permissions.handlers.base.get_model_permissions`` function in default. That's mean
+your newly created ``PermissionHandler`` will treat all permissions which related
+to the model. If you want to specify permissions, set a list/tuple or a
+function which have one argument. The ``PermissionHandler`` instance will be
+given as first argument.
 
-The sample code below show how to handle all permissions of the app of the model in one
-``PermissionHandler``::
+``excludes`` attribute is set to ``None`` in default. If you want to exclude
+some permissions from ``includes``, set a list/tuple or a function which
+treated same as the function used in ``includes``.
+
+Example usage::
 
     from permission import registry
     from permission import PermissionHandler
@@ -134,12 +140,22 @@ The sample code below show how to handle all permissions of the app of the model
     from models import HerModel
 
     class AppPermissionHandler(PermissionHandler):
-        def get_permissions(self):
-            # ``get_app_permissions()`` method return all permissions related
-            # to the app of the model.
-            return self.get_app_permissions()
+        # this handler treat all permissions related to this app (myapp)
+        includes = lambda self: self.get_all_permissions()
+
+        # except permissions for adding models.
+        excludes = (
+            'myapp.add_yourmodel',
+            'myapp.add_hismodel',
+            'myapp.add_hermodel',
+        )
 
         def has_perm(self, user_obj, perm, obj=None):
+            codename = self.get_permission_codename()
+            # permissions for adding models are excluded with
+            # ``excludes`` attribute thus the code below never
+            # fail.
+            assert codename.startswith('add_')
             if perm.endswith('_yourmodel'):
                 # All user has all permissions for ``YourModel``
                 return True
@@ -161,5 +177,6 @@ The sample code below show how to handle all permissions of the app of the model
     
 
 .. Note::
-    DO NOT call ``user.has_perm()`` in ``has_perm()`` method unless the checking permissions are
-    excluded by ``permissions`` attribute or ``get_permissions()`` method.
+    If you use ``user.has_perm()`` method in ``has_perm()`` method of
+    ``PermissionHandler``, make sure the permission is not treated with the
+    handler.
