@@ -31,23 +31,24 @@ License:
 
 """
 from __future__ import with_statement
+from converters import *
 
-__all__ = ('get_permission_codename', 'autodiscover',)
 
 def get_permission_codename(perm):
     """get permission codename from permission string
 
-    Usage:
-        >>> get_permission_codename(u"app_label.codename_model")
-        u"codename_model"
-        >>> get_permission_codename(u"app_label.codename")
-        u"codename"
-        >>> get_permission_codename(u"codename_model")
-        u"codename_model"
-        >>> get_permission_codename(u"codename")
-        u"codename"
-        >>> get_permission_codename(u"app_label.app_label.codename_model")
-        u"app_label.codename_model"
+    Usage::
+
+        >>> get_permission_codename(u'app_label.codename_model')
+        u'codename_model'
+        >>> get_permission_codename(u'app_label.codename')
+        u'codename'
+        >>> get_permission_codename(u'codename_model')
+        u'codename_model'
+        >>> get_permission_codename(u'codename')
+        u'codename'
+        >>> get_permission_codename(u'app_label.app_label.codename_model')
+        u'app_label.codename_model'
 
     """
     try:
