@@ -50,7 +50,6 @@ class Registry(object):
     """
     def __init__(self):
         self._registry = {}
-        self._permissions = {}
 
     def register(self, model_or_iterable, handler_class):
         """register new permission handler for the model(s)
@@ -82,12 +81,6 @@ class Registry(object):
             # Instantiate the handler to save in the registry
             instance = handler_class(model)
             self._registry[model] = instance
-            # Save instance in permission dictionary
-            for perm in instance.get_permissions():
-                if perm in self._permissions:
-                    self._permissions[perm].append(instance)
-                else:
-                    self._permissions[perm] = [instance]
 
     def unregister(self, model_or_iterable):
         if isinstance(model_or_iterable, ModelBase):
@@ -95,17 +88,11 @@ class Registry(object):
         for model in model_or_iterable:
             if model not in self._registry:
                 raise NotRegistered(model)
-            instance = self._registry[model]
-            # remove instance from permission dictionary
-            for perm in instance.get_permissions():
-                self._permissions[perm].remove(instance)
             # remove from registry
             del self._registry[model]
 
-    def get_handlers(self, perm):
-        if perm in self._permissions:
-            return tuple(self._permissions[perm])
-        return tuple()
+    def get_handlers(self):
+        return tuple(self._registry.values())
 
     def get_module_handlers(self, app_label):
         return tuple()

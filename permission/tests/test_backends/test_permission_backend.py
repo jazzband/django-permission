@@ -82,14 +82,11 @@ class PermissionBackendTestCase(TestCase):
 
         # backup original registry
         self._original_registry = registry._registry
-        self._original_permissions = registry._permissions
         registry._registry = {}
-        registry._permissions = {}
 
     def tearDown(self):
         # restore original registry
         registry._registry = self._original_registry
-        registry._permissions = self._original_permissions
 
     def test_attributes_required(self):
         backend = PermissionBackend()

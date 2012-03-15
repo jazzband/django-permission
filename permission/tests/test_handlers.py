@@ -118,26 +118,6 @@ class PermissionHandlerTestCase(TestCase):
         # non registered entry should raise NotRegistered
         self.assertRaises(NotRegistered, registry.unregister, Article)
 
-    def test_registry_get_handlers(self):
-        from permission.handlers import Registry
-        registry = Registry()
-        registry.register(Article, PermissionHandler)
-
-        handlers = registry.get_handlers('permission.add_article')
-        self.assertTrue(isinstance(handlers, tuple))
-        self.assertEqual(len(handlers), 1)
-        self.assertEqual(handlers[0].__class__, PermissionHandler)
-
-        # not registered
-        handlers = registry.get_handlers('auth.add_user')
-        self.assertTrue(isinstance(handlers, tuple))
-        self.assertEqual(len(handlers), 0)
-
-        # unknown
-        handlers = registry.get_handlers('not_registered_app.unknown_model')
-        self.assertTrue(isinstance(handlers, tuple))
-        self.assertEqual(len(handlers), 0)
-
 
     def test_get_app_permissions(self):
         instance = PermissionHandler(model=Article)
