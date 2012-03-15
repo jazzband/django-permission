@@ -71,12 +71,15 @@ class PermissionBackend(object):
     def has_perm(self, user_obj, perm, obj=None):
         """check permission"""
         # get permission handlers fot this perm
-        handlers = registry.get_handlers(perm)
+        cache_name = '_%s_cache' % perm
+        if hasattr(self, cache_name):
+            handlers = getattr(self, cache_name)
+        else:
+            handlers = [h for h in registry.get_handlers() if perm in h.get_permissions()]
+            setattr(self, cache_name, handlers)
         for handler in handlers:
-            # check permissions of handler
-            if perm in handler.get_permissions():
-                if handler.has_perm(user_obj, perm, obj=obj):
-                    return True
+            if handler.has_perm(user_obj, perm, obj=obj):
+                return True
         # do not touch this permission
         return False
 

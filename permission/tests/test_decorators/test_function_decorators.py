@@ -60,11 +60,9 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
 
         # store original registry
         self._original_registry = registry._registry
-        self._original_permissions = registry._permissions
 
         # clear registry and register mock handler
         registry._registry = {}
-        registry._permissions = {}
         registry.register(
                 Article,
                 Mock(return_value=self.mock_handler)
@@ -75,7 +73,6 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
     def tearDown(self):
         # restore original reigstry
         registry._registry = self._original_registry
-        registry._permissions = self._original_permissions
 
 
     def test_list_detail_object_id(self):
