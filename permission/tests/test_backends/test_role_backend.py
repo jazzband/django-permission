@@ -34,6 +34,7 @@ from __future__ import with_statement
 from django.test import TestCase
 
 from permission.backends import RoleBackend
+from permission.utils import permission_to_perm
 from permission.tests import create_user
 from permission.tests import create_role
 from permission.tests import create_permission
@@ -141,6 +142,15 @@ class PermissionRoleBackendTestCase(TestCase):
         user5, user6, user7, user8 = self.user5, self.user6, self.user7, self.user8
         perm1, perm2, perm3, perm4 = self.perm1, self.perm2, self.perm3, self.perm4
         perm5, perm6, perm7, perm8 = self.perm5, self.perm6, self.perm7, self.perm8
+
+        perm1 = permission_to_perm(perm1)
+        perm2 = permission_to_perm(perm2)
+        perm3 = permission_to_perm(perm3)
+        perm4 = permission_to_perm(perm4)
+        perm5 = permission_to_perm(perm5)
+        perm6 = permission_to_perm(perm6)
+        perm7 = permission_to_perm(perm7)
+        perm8 = permission_to_perm(perm8)
 
         self.assertItemsEqual(backend.get_all_permissions(user1), [
                 perm1, perm2,

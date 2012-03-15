@@ -33,6 +33,7 @@ License:
 from __future__ import with_statement
 
 from permission.models import Role
+from permission.utils import permission_to_perm
 
 __all__ = ('RoleBackend',)
 
@@ -54,10 +55,11 @@ class RoleBackend(object):
         if obj is not None:
             # role permission system doesn't handle
             # object permission
-            return Role.objects.none()
+            return set()
         if hasattr(user_obj, '_role_perm_cache'):
             return user_obj._role_perm_cache
         perms = Role.objects.get_all_permissions_of_user(user_obj)
+        perms = set([permission_to_perm(p) for p in perms])
         user_obj._role_perm_cache = perms
         return user_obj._role_perm_cache
 
@@ -70,7 +72,6 @@ class RoleBackend(object):
         if user_obj.is_anonymous() or not user_obj.is_active:
             return False
         permissions = self.get_all_permissions(user_obj, obj)
-        permissions = set(["%s.%s" % (p.content_type.app_label, p.codename) for p in permissions])
         if perm in permissions:
             return True
         # do not touch this permission
@@ -80,7 +81,6 @@ class RoleBackend(object):
         if not user_obj.is_active:
             return False
         permissions = self.get_all_permissions(user_obj)
-        permissions = set(["%s.%s" % (p.content_type.app_label, p.codename) for p in permissions])
         for perm in permissions:
             if perm[:perm.index('.')] == app_label:
                 return True
