@@ -92,6 +92,31 @@ Quick tutorial
         ``{% permission %}`` tag is exactuly same as ``{% if %}`` thus you can use
         ``{% elpermission %}`` for ``{% elif %}`` and ``{% else %}``.
 
+5.  ``permission_required`` decorator is used for object permission checking.
+    You can use the decorator as::
+
+        from permission.decorators import permission_required
+
+        # As class decorator
+        @permission_required('auth.change_user')
+        class UpdateAuthUserView(UpdateView):
+            # ...
+
+        # As method decorator
+        class UpdateAuthUserView(UpdateView):
+            @permission_required('auth.change_user')
+            def dispatch(self, request, *args, **kwargs):
+                # ...
+        
+        # As function decorator
+        @permission_required('auth.change_user')
+        def update_auth_user(request, *args, **kwargs):
+            # ...
+
+    see more details in document comments on
+    ``permission/decorators/__init__.py``
+
+
 
 Role?
 ==========
