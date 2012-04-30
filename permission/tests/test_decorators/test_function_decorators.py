@@ -34,6 +34,7 @@ from __future__ import with_statement
 from mock import MagicMock as Mock
 from django.test import TestCase
 from django.http import HttpResponse
+from django.core.exceptions import PermissionDenied
 
 from permission import registry
 from permission.decorators.function_decorators import permission_required
@@ -69,6 +70,8 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
             )
         self.view_func = Mock(return_value=HttpResponse())
         self.decorated = permission_required('permission.add_article')(self.view_func)
+        self.decorated_exc = permission_required('permission.add_article',
+                                                 raise_exception=True)(self.view_func)
 
     def tearDown(self):
         # restore original reigstry
@@ -92,6 +95,12 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
                 obj=Article.objects.get(pk=1)
             )
         self.assertFalse(self.view_func.called)
+
+        self.assertRaises(PermissionDenied, self.decorated_exc,
+                          self.mock_request, queryset=Article.objects.all(),
+                          object_id=1)
+        self.assertFalse(self.view_func.called)
+
         # has_perm always return True
         self.mock_handler.has_perm.return_value = True
         self.decorated(
