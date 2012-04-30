@@ -35,6 +35,7 @@ from mock import MagicMock as Mock
 from django.test import TestCase
 from django.http import HttpResponse
 from django.views.generic import View
+from django.core.exceptions import PermissionDenied
 
 from permission import registry
 from permission.decorators.class_decorators import permission_required
@@ -72,7 +73,15 @@ class PermissionClassDecoratorsTestCase(TestCase):
         view_class = type('MockView', (View,), {})
         view_class.dispatch = self.view_func
         view_class = permission_required('permission.add_article')(view_class)
+
+        view_class_exc = type('MockView', (View,), {})
+        view_class_exc.dispatch = self.view_func
+        view_class_exc = \
+            permission_required('permission.add_article',
+                                raise_exception=True)(view_class_exc)
+
         self.view_class = view_class
+        self.view_class_exc = view_class_exc
 
     def tearDown(self):
         # restore original reigstry
@@ -93,6 +102,12 @@ class PermissionClassDecoratorsTestCase(TestCase):
                 obj=Article.objects.get(pk=1)
             )
         self.assertFalse(self.view_func.called)
+
+        self.view_class_exc.object = Article.objects.get(pk=1)
+        self.assertRaises(PermissionDenied, self.view_class_exc.as_view(),
+                          self.mock_request, pk=1)
+        self.assertFalse(self.view_func.called)
+
         # has_perm always return True
         self.mock_handler.has_perm.return_value = True
         self.view_class.as_view()(self.mock_request, pk=1)

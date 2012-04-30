@@ -36,6 +36,7 @@ from __future__ import with_statement
 from functools import wraps
 from django.http import HttpRequest
 from django.utils.decorators import available_attrs
+from django.core.exceptions import PermissionDenied
 
 from utils import redirect_to_login
 from utils import get_object_from_classbased_instance
@@ -63,7 +64,10 @@ def permission_required(perm, queryset=None, login_url=None, raise_exception=Fal
                     )
                 
                 if not request.user.has_perm(perm, obj=obj):
-                    return redirect_to_login(request, login_url, raise_exception)
+                    if raise_exception:
+                        raise PermissionDenied
+                    else:
+                        return redirect_to_login(request, login_url)
                 return view_method(self, request, *args, **kwargs)
         return inner
     return wrapper
