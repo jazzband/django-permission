@@ -1,5 +1,5 @@
 **********************************
- djagno-permission
+ django-permission
 **********************************
 
 django-permission is an enhanced permission system which support object permission and role based permission system.
@@ -28,7 +28,7 @@ Quick tutorial
         your ``INSTALLED_APPS`` to enable AJAX sorting, adding, expanding features.
 
 2.  Add ``'permission.backends.PermissionBackend'`` to ``AUTHENTICATION_BACKENDS``
-    of your ``settings.py``. If you cannot existing settings, simply add 
+    of your ``settings.py``. If you cannot existing settings, simply add
     following code::
 
         AUTHENTICATION_BACKENDS = (
@@ -107,7 +107,7 @@ Quick tutorial
             @permission_required('auth.change_user')
             def dispatch(self, request, *args, **kwargs):
                 # ...
-        
+
         # As function decorator
         @permission_required('auth.change_user')
         def update_auth_user(request, *args, **kwargs):
@@ -131,7 +131,7 @@ The role permissions are handled with ``permission.backends.RoleBackend``.
     :align: center
 
 .. Note::
-    Role based permission system does not support object permission and anonymous permission. 
+    Role based permission system does not support object permission and anonymous permission.
     However these permissions are handled with Individual handler based permission backend
     (``permission.backends.PermissionBackend``)
 
@@ -199,7 +199,7 @@ Example usage::
     registry.register(YourModel, AppPermissionHandler)
     # registry.register(HisModel, AppPermissionHandler) # or you can register with HisModel
     # registry.register(HerModel, AppPermissionHandler) # or you can register with HerModel
-    
+
 
 .. Note::
     If you use ``user.has_perm()`` method in ``has_perm()`` method of
