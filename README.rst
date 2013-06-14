@@ -6,6 +6,8 @@ django-permission is an enhanced permission system which support object permissi
 
 **This is under development. The codes below may not works in the future**
 
+**User who are using django version less than 1.5 should check this issue (https://github.com/lambdalisue/django-permission/issues/4)**
+
 Install
 ==============
 django-permission is in PyPI_ so::
