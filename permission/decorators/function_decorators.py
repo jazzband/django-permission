@@ -56,12 +56,12 @@ def permission_required(perm, queryset=None, login_url=None, raise_exception=Fal
                 _kwargs['queryset'] = queryset
 
             # get object from view
-            if 'date_field' in kwargs:
+            if 'date_field' in _kwargs:
                 fn = get_object_from_date_based_view
             else:
                 fn = get_object_from_list_detail_view
-            if fn.validate(request, *args, **kwargs):
-                obj = fn(request, *args, **kwargs)
+            if fn.validate(request, *args, **_kwargs):
+                obj = fn(request, *args, **_kwargs)
             else:
                 # required arguments is not passed
                 obj = None
@@ -71,7 +71,7 @@ def permission_required(perm, queryset=None, login_url=None, raise_exception=Fal
                     raise PermissionDenied
                 else:
                     return redirect_to_login(request, login_url)
-            return view_func(request, *args, **kwargs)
+            return view_func(request, *args, **_kwargs)
         return inner
     return wrapper
 
