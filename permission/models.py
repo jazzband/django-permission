@@ -31,14 +31,20 @@ License:
 
 """
 from __future__ import with_statement
+import django
 from django.db import models
-from django.contrib.auth.models import User
+
 from django.contrib.auth.models import Permission
 from django.utils.translation import ugettext_lazy as _
 
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 from mptt.models import TreeManager
+
+if django.VERSION[1] > 4:
+    User = django.contrib.auth.get_user_model()
+else:
+    from django.contrib.auth.models import User
 
 class RoleManager(TreeManager):
     def get_by_natural_key(self, codename):
