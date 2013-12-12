@@ -4,6 +4,8 @@
 
 django-permission is an enhanced permission system which support object permission and role based permission system.
 
+**Need maintainer, let me know if you are interested in**
+
 **This is under development. The codes below may not works in the future**
 
 **User who are using django version less than 1.5 should check this issue (https://github.com/lambdalisue/django-permission/issues/4)**
@@ -126,10 +128,10 @@ Role?
 django-permission has role based permission system. visit your django admin page to create/modify roles (See the screenshots below).
 The role permissions are handled with ``permission.backends.RoleBackend``.
 
-.. image:: http://s1-01.twitpicproxy.com/photos/full/528601159.png?key=943727
+.. image:: ./res/Screenshot_from_2013-12-12\ 16:16:16.png
     :align: center
 
-.. image:: http://s1-04.twitpicproxy.com/photos/full/528601385.png?key=9431458
+.. image:: ./res/Screenshot_from_2013-12-12\ 16:16:23.png
     :align: center
 
 .. Note::
