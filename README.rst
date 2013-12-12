@@ -128,10 +128,10 @@ Role?
 django-permission has role based permission system. visit your django admin page to create/modify roles (See the screenshots below).
 The role permissions are handled with ``permission.backends.RoleBackend``.
 
-.. image:: res/Screenshot_from_2013-12-12\ 16:16:16.png
+.. image:: https://raw.github.com/lambdalisue/django-permission/master/res/Screenshot_from_2013-12-12%2016:16:16.png
     :align: center
 
-.. image:: res/Screenshot_from_2013-12-12\ 16:16:23.png
+.. image:: https://raw.github.com/lambdalisue/django-permission/master/res/Screenshot_from_2013-12-12%2016:16:23.png
     :align: center
 
 .. Note::
