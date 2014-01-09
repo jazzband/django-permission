@@ -111,11 +111,7 @@ Quick tutorial
             @permission_required('auth.change_user')
             def dispatch(self, request, *args, **kwargs):
                 # ...
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> Add documentation of decorator
         # As function decorator
         @permission_required('auth.change_user')
         def update_auth_user(request, *args, **kwargs):
@@ -123,7 +119,6 @@ Quick tutorial
 
     see more details in document comments on
     ``permission/decorators/__init__.py``
-
 
 
 Role?
