@@ -31,15 +31,17 @@ if installed:
             )
     if 'permission.backends.PermissionBackend' \
             not in settings.AUTHENTICATION_BACKENDS:
-        warnings.warn(Warning,
+        warnings.warn(
                 '"permission.backends.PermissionBackend" is not found in '
-                '`AUTHENTICATION_BACKENDS`.'
+                '`AUTHENTICATION_BACKENDS`.',
+                Warning
             )
     if 'permission.backends.RoleBackend' \
             not in settings.AUTHENTICATION_BACKENDS:
-        warnings.warn(Warning,
+        warnings.warn(
                 '"permission.backends.RoleBackend" is not found in '
-                '`AUTHENTICATION_BACKENDS`.'
+                '`AUTHENTICATION_BACKENDS`.',
+                Warning
             )
 
 # Register templatetags in builtin
