@@ -31,7 +31,12 @@ License:
 
 """   
 from __future__ import with_statement
-from django.conf.urls.defaults import patterns, url
+try:
+    from django.conf.urls import patterns, include, url
+except ImportError:
+    # django.conf.urls.defaults were used below Django 1.6
+    from django.conf.urls.defaults import patterns, include, url
+
 
 import views
 

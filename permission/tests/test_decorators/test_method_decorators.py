@@ -74,6 +74,8 @@ class PermissionMethodDecoratorsTestCase(TestCase):
         view_class.dispatch = self.view_func
         view_class.dispatch = permission_required('permission.add_article')(view_class.dispatch)
 
+        self.view_class = view_class
+
         view_class_exc = type('MockView', (View,), {})
         view_class_exc.dispatch = self.view_func
         view_class_exc.dispatch = permission_required('permission.add_article',

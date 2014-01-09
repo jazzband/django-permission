@@ -12,7 +12,7 @@ django-permission is an enhanced permission system which support object permissi
 
 Install
 ==============
-django-permission is in PyPI_ so::
+django-permission is in PyPI so::
 
     $ pip install django-permission
 
@@ -119,7 +119,6 @@ Quick tutorial
 
     see more details in document comments on
     ``permission/decorators/__init__.py``
-
 
 
 Role?
