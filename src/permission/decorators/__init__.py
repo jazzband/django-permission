@@ -59,11 +59,13 @@ def permission_required(perm, queryset_or_model=None,
 
     def wrapper(class_or_method):
         if inspect.isclass(class_or_method):
-            from classbased import permission_required as decorator
+            from permission.decorators.classbased import \
+                    permission_required as decorator
         else:
             # method_permission_required can handle method or function
             # correctly.
-            from methodbased import permission_required as decorator
+            from permission.decorators.methodbased import \
+                    permission_required as decorator
         return decorator(perm, queryset_or_model,
                          login_url, raise_exception)(class_or_method)
     return wrapper

@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.decorators import available_attrs
 from django.core.exceptions import PermissionDenied
 
-from utils import redirect_to_login
+from permission.decorators.utils import redirect_to_login
 
 
 def permission_required(perm, queryset=None,
