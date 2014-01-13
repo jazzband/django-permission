@@ -2,9 +2,11 @@ django-permissions
 ==========================
 .. image:: https://secure.travis-ci.org/lambdalisue/django-permission.png?branch=master
     :target: http://travis-ci.org/lambdalisue/django-permission
+    :alt: Build status
 
 .. image:: https://coveralls.io/repos/lambdalisue/django-permission/badge.png?branch=master
-   :target: https://coveralls.io/r/lambdalisue/django-permission/
+    :target: https://coveralls.io/r/lambdalisue/django-permission/
+    :alt: Coverage
 
 .. image:: https://pypip.in/d/django-permission/badge.png
     :target: https://pypi.python.org/pypi/django-permission/
