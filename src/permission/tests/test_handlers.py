@@ -173,6 +173,38 @@ class PermissionLogicalPermissionHandlerTestCase(TestCase):
         self.perm3 = 'permission.delete_article'
         self.article = create_article('test')
 
+        from permission.logics import PermissionLogic
+        from permission import add_permission_logic
+        self.mock_logic1 = MagicMock(spec=PermissionLogic)
+        self.mock_logic1.has_perm = MagicMock(return_value=False)
+        self.mock_logic2 = MagicMock(spec=PermissionLogic)
+        self.mock_logic2.has_perm = MagicMock(return_value=False)
+        add_permission_logic(Article, self.mock_logic1)
+        add_permission_logic(Article, self.mock_logic2)
+
     def test_constructor_with_app_label(self):
         self.assertRaises(AttributeError,
                           self.handler, 'permission')
+
+    def test_has_perm_non_related_permission(self):
+        instance = self.handler(Article)
+        instance.get_permissions = MagicMock(return_value=[
+            'permission.add_article',
+            'permission.change_article',
+            'permission.delete_article',
+        ])
+        self.assertFalse(instance.has_perm(self.user, 'unknown'))
+        self.assertFalse(instance.has_perm(self.user, 'unknown', self.article))
+
+    def test_has_perm_permission_logics_called(self):
+        instance = self.handler(Article)
+        instance.get_permissions = MagicMock(return_value=[
+            'permission.add_article',
+            'permission.change_article',
+            'permission.delete_article',
+        ])
+        self.assertFalse(self.mock_logic1.has_perm.called)
+        self.assertFalse(self.mock_logic2.has_perm.called)
+        self.assertFalse(instance.has_perm(self.user, 'permission.add_article'))
+        self.assertTrue(self.mock_logic1.has_perm.called)
+        self.assertTrue(self.mock_logic2.has_perm.called)
