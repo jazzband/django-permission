@@ -22,19 +22,19 @@ Configuration
 1.  Put ``permission`` into your ``INSTALLED_APPS`` at settings
     module
 
-    ```python
-    INSTALLED_APPS = (
-        # ...
-        'permission',
-    )
-    ```
+    .. code:: python
+
+        INSTALLED_APPS = (
+            # ...
+            'permission',
+        )
 
 2.  Add extra authorization backend
 
-    ```python
-    AUTHENTICATION_BACKENDS = (
-        'django.contrib.auth.backends.ModelBackend', # default
-        'permission.backends.PermissionBackend',
-    )
-    ```
+    .. code:: python
+
+        AUTHENTICATION_BACKENDS = (
+            'django.contrib.auth.backends.ModelBackend', # default
+            'permission.backends.PermissionBackend',
+        )
 
