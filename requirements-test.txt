@@ -1,0 +1,4 @@
+django-appconf
+django>=1.2
+mock
+override-settings

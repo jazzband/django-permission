@@ -1,0 +1,26 @@
+# coding=utf-8
+"""
+django-permission application configure
+"""
+__author__ = 'Alisue <lambdalisue@hashnote.net>'
+__all__ = ('settings',)
+from django.conf import settings
+from appconf import AppConf
+from permission.handlers import LogicalPermissionHandler
+
+class PermissionConf(AppConf):
+    DEFAULT_PERMISSION_HANDLER = LogicalPermissionHandler
+    """Default permission handler class"""
+
+    REPLACE_BUILTIN_IF = True
+    """Whether replace builtin if templatetag"""
+
+    DEFAULT_APL_FIELD_NAME = 'author'
+    DEFAULT_APL_ANY_PERMISSION = False
+    DEFAULT_APL_CHANGE_PERMISSION = True
+    DEFAULT_APL_DELETE_PERMISSION = True
+
+    DEFAULT_CPL_FIELD_NAME = 'collaborators'
+    DEFAULT_CPL_ANY_PERMISSION = False
+    DEFAULT_CPL_CHANGE_PERMISSION = True
+    DEFAULT_CPL_DELETE_PERMISSION = False
