@@ -9,6 +9,12 @@ to handle complex permissions in Django.
 It is developed based on authentication backend system introduced from django
 1.2.
 
+.. note::
+    I decied to focus on the *logic based permission system* more than
+    *role based permission system*.
+    That's why I remove all obsolute codes and create new version.
+    This new version does not have compatibility to old version.
+
 Documentation
 -------------
 http://django-permission.readthedocs.org/en/latest/
@@ -111,5 +117,80 @@ Now the following codes will work as expected
     assert user2.has_perm('permission.delete_article', art1) == False
     assert user2.has_perm('permission.delete_article', art2) == True
 
-See `source code<http://django-permission.readthedocs.org/en/latest/_modules/permission/logics/author.html#AuthorPermissionLogic>`_
+See http://django-permission.readthedocs.org/en/latest/_modules/permission/logics/author.html#AuthorPermissionLogic
 to learn how this logic works.
+
+Now, assume you add ``collaborators`` attribute to store collaborators
+of the article and you want to give them a change permission.
+
+What you need to do is quite simple.
+Apply ``permission.logics.CollaboratorsPermissionLogic``
+to the ``Article`` model like
+
+.. code:: python
+
+    from django.db import models
+    from django.contrib.auth.models import User
+
+
+    class Article(models.Model):
+        title = models.CharField('title', max_length=120)
+        body = models.TextField('body')
+        author = models.ForeignKey(User)
+        collaborators = models.ManyToManyField(User)
+
+        # this is just required for easy explanation
+        class Meta:
+            app_label='permission'
+
+    # apply AuthorPermissionLogic and CollaboratorsPermissionLogic
+    from permission import add_permission_logic
+    from permission.logics import AuthorPermissionLogic
+    from permission.logics import CollaboratorsPermissionLogic
+    add_permission_logic(Article, AuthorPermissionLogic())
+    add_permission_logic(Article, CollaboratorsPermissionLogic(
+        field_name='collaborators',
+        any_permission=False,
+        change_permission=True,
+        delete_permission=False,
+    ))
+
+That's it.
+Now the following codes will work as expected
+
+.. code:: python
+
+    user1 = User.objects.create_user(
+        username='john',
+        email='john@test.com',
+        password='password',
+    )
+    user2 = User.objects.create_user(
+        username='alice',
+        email='alice@test.com',
+        password='password',
+    )
+
+    art1 = Article.objects.create(
+        title="Article 1",
+        body="foobar hogehoge",
+        author=user1
+    )
+    art1.collaborators.add(user2)
+
+    assert user1.has_perm('permission.change_article') == False
+    assert user1.has_perm('permission.change_article', art1) == True
+    assert user1.has_perm('permission.delete_article', art1) == True
+
+    assert user2.has_perm('permission.change_article') == False
+    assert user2.has_perm('permission.change_article', art1) == True
+    assert user2.has_perm('permission.delete_article', art1) == False
+
+See http://django-permission.readthedocs.org/en/latest/_modules/permission/logics/collaborators.html#CollaboratorsPermissionLogic
+to learn how this logic works.
+
+Customize logical permission
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Your own permission logic class must be a subclass of
+``permission.logics.PermissionLogic`` and must override
+``has_perm(user_obj, perm, obj=None)`` method which return boolean value.
