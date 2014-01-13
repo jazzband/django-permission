@@ -3,7 +3,7 @@
 Logical permission backends module
 """
 __author__ = 'Alisue <lambdalisue@hashnote.net>'
-__all__ = ('LogicalPermissionBackend',)
+__all__ = ('PermissionBackend',)
 from permission.utils.handlers import registry
 
 
