@@ -3,6 +3,29 @@ django-permissions
 .. image:: https://secure.travis-ci.org/lambdalisue/django-permission.png?branch=master
     :target: http://travis-ci.org/lambdalisue/django-permission
 
+.. image:: https://coveralls.io/repos/lambdalisue/django-permission/badge.png?branch=master
+   :target: https://coveralls.io/r/lambdalisue/django-permission/
+
+.. image:: https://pypip.in/d/django-permission/badge.png
+    :target: https://pypi.python.org/pypi/django-permission/
+    :alt: Downloads
+
+.. image:: https://pypip.in/v/django-permission/badge.png
+    :target: https://pypi.python.org/pypi/django-permission/
+    :alt: Latest version
+
+.. image:: https://pypip.in/wheel/django-permission/badge.png
+    :target: https://pypi.python.org/pypi/django-permission/
+    :alt: Wheel Status
+
+.. image:: https://pypip.in/egg/django-permission/badge.png
+    :target: https://pypi.python.org/pypi/django-permission/
+    :alt: Egg Status
+
+.. image:: https://pypip.in/license/django-permission/badge.png
+    :target: https://pypi.python.org/pypi/django-permission/
+    :alt: License
+
 An enhanced permission library which enable *handler based permission system*
 to handle complex permissions in Django.
 

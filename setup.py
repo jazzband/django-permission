@@ -5,8 +5,10 @@ NAME = 'django-permission'
 VERSION = '0.5.0'
 
 def read(filename, strip=False):
+    import os
     import string
-    fi = open(filename, 'r')
+    BASE_DIR = os.path.dirname(__file__)
+    fi = open(os.path.join(BASE_DIR, filename), 'r')
     bu = fi.readlines()
     if strip:
         bu = [x for x in map(string.strip, bu) if x]
