@@ -1,2 +1,0 @@
-distribute
-django-mptt

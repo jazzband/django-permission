@@ -1,12 +1,4 @@
-.ropeproject
-.project
 coverage
 profile
-*.pyc
-*.egg
-*.egg-info
-/dist
-/sdist
-/tests/*.db
-/tests/static/collection
-/tests/media
+database.db
+docs/_build

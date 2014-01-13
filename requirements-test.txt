@@ -1,7 +1,0 @@
-distribute
-django>=1.3
-django-mptt
-django-override-settings
-mock
-PyYAML
-feincms
