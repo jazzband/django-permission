@@ -9,6 +9,10 @@ to handle complex permissions in Django.
 It is developed based on authentication backend system introduced from django
 1.2.
 
+Documentation
+-------------
+http://django-permission.readthedocs.org/en/latest/
+
 Installation
 ------------
 Use pip_ like::
@@ -106,3 +110,6 @@ Now the following codes will work as expected
     assert user2.has_perm('permission.delete_article') == False
     assert user2.has_perm('permission.delete_article', art1) == False
     assert user2.has_perm('permission.delete_article', art2) == True
+
+See `source code<http://django-permission.readthedocs.org/en/latest/_modules/permission/logics/author.html#AuthorPermissionLogic>`_
+to learn how this logic works.
