@@ -1,6 +1,6 @@
 django-permissions
 ==========================
-.. image:: https://secure.travis-ci.org/lambdalisue/django-permission.png?branch=develop
+.. image:: https://secure.travis-ci.org/lambdalisue/django-permission.png?branch=master
     :target: http://travis-ci.org/lambdalisue/django-permission
 
 An enhanced permission library which enable *handler based permission system*
