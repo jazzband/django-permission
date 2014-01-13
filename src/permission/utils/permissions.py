@@ -28,7 +28,7 @@ def get_perm_codename(perm, fail_silently=True):
     """
     try:
         perm = perm.split('.', 1)[1]
-    except IndexError, e:
+    except IndexError as e:
         if not fail_silently:
             raise e
     return perm
@@ -49,7 +49,7 @@ def permission_to_perm(permission):
     """
     app_label = permission.content_type.app_label
     codename = permission.codename
-    return u"%s.%s" % (app_label, codename)
+    return "%s.%s" % (app_label, codename)
 
 def perm_to_permission(perm):
     """
@@ -101,13 +101,13 @@ def get_app_perms(model_or_app_label):
     >>> perms1 == perms2
     True
     """
-    if not isinstance(model_or_app_label, basestring):
+    if not isinstance(model_or_app_label, str):
         # assume model_or_app_label is model class
         app_label = model_or_app_label._meta.app_label
     else:
         app_label = model_or_app_label
     qs = Permission.objects.filter(content_type__app_label=app_label)
-    perms = [u"%s.%s" % (app_label, p.codename) for p in qs.iterator()]
+    perms = ["%s.%s" % (app_label, p.codename) for p in qs.iterator()]
     return set(perms)
 
 def get_model_perms(model):
@@ -134,6 +134,6 @@ def get_model_perms(model):
     model_name = model._meta.object_name.lower()
     qs = Permission.objects.filter(content_type__app_label=app_label,
                                    content_type__model=model_name)
-    perms = [u"%s.%s" % (app_label, p.codename) for p in qs.iterator()]
+    perms = ["%s.%s" % (app_label, p.codename) for p in qs.iterator()]
     return set(perms)
 

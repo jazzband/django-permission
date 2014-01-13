@@ -1,4 +1,5 @@
 # coding=utf-8
+import sys
 from setuptools import setup, find_packages
 
 NAME = 'django-permission'
@@ -13,9 +14,17 @@ def read(filename):
 
 def readlist(filename):
     rows = read(filename).split("\n")
-    rows = [x.strip() for x in rows]
-    rows = filter(lambda x: x, rows)
-    return rows
+    rows = [x.strip() for x in rows if x.strip()]
+    return list(rows)
+
+# if we are running on python 3, enable 2to3 and
+# let it use the custom fixers from the custom_fixers
+# package.
+extra = {}
+if sys.version_info >= (3, 0):
+    extra.update(
+        use_2to3=True,
+    )
 
 setup(
     name = NAME,
@@ -30,21 +39,22 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
         'Topic :: Internet :: WWW/HTTP',
     ),
     keywords = 'django object logical permission auth authentication',
     author = 'Alisue',
     author_email = 'lambdalisue@hashnote.net',
     url = 'https://github.com/lambdalisue/%s' % NAME,
-    download_url = ('https://github.com/lambdalisue/%s/'
-                    'tarball/master') % NAME,
+    download_url = 'https://github.com/lambdalisue/%s/tarball/master' % NAME,
     license = 'MIT',
     packages = find_packages('src'),
     package_dir = {'': 'src'},
     include_package_data = True,
-    exclude_package_data = {'': 'README.rst'},
+    exclude_package_data = {'': ['README.rst']},
     zip_safe=True,
     install_requires=readlist('requirements.txt'),
     test_suite='runtests.runtests',
     tests_require=readlist('requirements-test.txt'),
+    **extra
 )

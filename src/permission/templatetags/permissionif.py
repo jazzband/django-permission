@@ -46,7 +46,7 @@ EXTRA_OPERATORS = {
     'has': infix(10, has_operator),
 }
 EXTRA_OPERATORS.update(OPERATORS)
-for key, op in EXTRA_OPERATORS.items():
+for key, op in list(EXTRA_OPERATORS.items()):
     op.id = key
 
 class PermissionIfParser(IfParser):

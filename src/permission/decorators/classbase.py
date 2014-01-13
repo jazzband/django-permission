@@ -98,7 +98,7 @@ def get_object_from_classbased_instance(
     if hasattr(instance, 'get_object'):
         try:
             obj = instance.get_object(queryset)
-        except AttributeError, e:
+        except AttributeError as e:
             # CreateView has ``get_object`` method but CreateView
             # should not have any object before thus simply set
             # None

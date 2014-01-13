@@ -14,6 +14,7 @@ env:
 install:
   - pip install -qr requirements-test.txt
   - pip install -q coverage coveralls
+  - pip install .
 
 script:
   - coverage run --source=src/permission setup.py test

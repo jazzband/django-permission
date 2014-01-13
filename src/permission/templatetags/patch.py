@@ -74,7 +74,7 @@ if StrictVersion(get_version()) < '1.4':
                     self.invalid_block_tag(token, command, parse_until)
                 try:
                     compiled_result = compile_func(self, token)
-                except TemplateSyntaxError, e:
+                except TemplateSyntaxError as e:
                     if not self.compile_function_error(token, e):
                         raise
                 self.extend_nodelist(nodelist, compiled_result, token)

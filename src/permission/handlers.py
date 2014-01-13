@@ -4,6 +4,7 @@
 __author__ = 'Alisue <lambdalisue@hashnote.net>'
 from permission.utils.permissions import get_app_perms
 from permission.utils.permissions import get_model_perms
+import collections
 
 
 class PermissionHandler(object):
@@ -45,7 +46,7 @@ class PermissionHandler(object):
             Use django model class for model level permission and application
             label for application level permission.
         """
-        if isinstance(model_or_app_label, basestring):
+        if isinstance(model_or_app_label, str):
             self.app_label = model_or_app_label
             self.model = None
             if self.includes is None:
@@ -106,11 +107,11 @@ class PermissionHandler(object):
             A set instance of `app_label.codename` formatted permission strings
         """
         if not hasattr(self, '_perms_cache'):
-            if self.includes and callable(self.includes):
+            if self.includes and isinstance(self.includes, collections.Callable):
                 includes = self.includes(self)
             else:
                 includes = self.includes or []
-            if self.excludes and callable(self.excludes):
+            if self.excludes and isinstance(self.excludes, collections.Callable):
                 excludes = self.excludes(self)
             else:
                 excludes = self.excludes or []
@@ -165,7 +166,7 @@ class LogicalPermissionHandler(PermissionHandler):
             LogicalPermissionHandler cannot treat application level permission
         """
         # logical permission handler cannot treat application level permission
-        if isinstance(model, basestring):
+        if isinstance(model, str):
             raise AttributeError(
                     "'%s' cannot treat application level permission." %
                     self.__class__)

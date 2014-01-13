@@ -40,36 +40,36 @@ class PermissionPermissionHandlersTestCase(TestCase):
         instance = self.handler('permission')
         perms = instance._get_app_perms()
         self.assertEquals(perms, set([
-            u'permission.add_article',
-            u'permission.change_article',
-            u'permission.delete_article',
+            'permission.add_article',
+            'permission.change_article',
+            'permission.delete_article',
         ]))
 
     def test__get_app_perms_with_model(self):
         instance = self.handler(Article)
         perms = instance._get_app_perms()
         self.assertEquals(perms, set([
-            u'permission.add_article',
-            u'permission.change_article',
-            u'permission.delete_article',
+            'permission.add_article',
+            'permission.change_article',
+            'permission.delete_article',
         ]))
 
     def test__get_model_perms(self):
         instance = self.handler(Article)
         perms = instance._get_model_perms()
         self.assertEquals(perms, set([
-            u'permission.add_article',
-            u'permission.change_article',
-            u'permission.delete_article',
+            'permission.add_article',
+            'permission.change_article',
+            'permission.delete_article',
         ]))
 
     def test_get_permissions(self):
         instance = self.handler(Article)
         perms = instance.get_permissions(None, None)
         self.assertEquals(perms, set([
-            u'permission.add_article',
-            u'permission.change_article',
-            u'permission.delete_article',
+            'permission.add_article',
+            'permission.change_article',
+            'permission.delete_article',
         ]))
 
     def test_get_permissions_with_includes(self):
@@ -80,8 +80,8 @@ class PermissionPermissionHandlersTestCase(TestCase):
             ]
         perms = instance.get_permissions(None, None)
         self.assertEquals(perms, set([
-            u'permission.add_article',
-            u'permission.change_article',
+            'permission.add_article',
+            'permission.change_article',
         ]))
 
     def test_get_permissions_with_includes_change(self):
@@ -96,7 +96,7 @@ class PermissionPermissionHandlersTestCase(TestCase):
             ]
         perms = instance.get_permissions(None, None)
         self.assertEquals(perms, set([
-            u'permission.change_article',
+            'permission.change_article',
         ]))
 
 
@@ -107,8 +107,8 @@ class PermissionPermissionHandlersTestCase(TestCase):
             ]
         perms = instance.get_permissions(None, None)
         self.assertEquals(perms, set([
-            u'permission.change_article',
-            u'permission.delete_article',
+            'permission.change_article',
+            'permission.delete_article',
         ]))
 
     def test_get_permissions_with_excludes_change(self):
@@ -120,9 +120,9 @@ class PermissionPermissionHandlersTestCase(TestCase):
         instance.excludes = []
         perms = instance.get_permissions(None, None)
         self.assertEquals(perms, set([
-            u'permission.add_article',
-            u'permission.change_article',
-            u'permission.delete_article',
+            'permission.add_article',
+            'permission.change_article',
+            'permission.delete_article',
         ]))
 
     def test_has_perm_add_wihtout_obj(self):
