@@ -20,7 +20,7 @@ script:
   - coverage run --source=src/permission setup.py test
 
 after_success:
-  - coverage report --omit "src/permission/tests/compatibility.py,src/permission/conf.py" -m src/permission/*.py
+  - coverage report --omit "src/permission/tests/compatibility.py,src/permission/conf.py"
   - coveralls
 
 matrix:
