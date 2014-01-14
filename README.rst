@@ -1,4 +1,4 @@
-django-permissions
+django-permission
 ==========================
 .. image:: https://secure.travis-ci.org/lambdalisue/django-permission.png?branch=master
     :target: http://travis-ci.org/lambdalisue/django-permission
@@ -28,11 +28,12 @@ django-permissions
     :target: https://pypi.python.org/pypi/django-permission/
     :alt: License
 
-An enhanced permission library which enable *handler based permission system*
+An enhanced permission library which enable *logic based permission system*
 to handle complex permissions in Django.
 
 It is developed based on authentication backend system introduced from django
 1.2.
+This library support Django 1.2 and later.
 
 .. note::
     I decied to focus on the *logic based permission system* more than
@@ -78,7 +79,7 @@ Configuration
 
 3.  Follow the instruction below to apply logical permissions to django models
 
-Apply logical permission
+Apply permission logic
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 Assume you have an article model which has ``author`` attribute to store who
 creat the article and you want to give the author full controll permissions
@@ -214,7 +215,7 @@ Now the following codes will work as expected
 See http://django-permission.readthedocs.org/en/latest/_modules/permission/logics/collaborators.html#CollaboratorsPermissionLogic
 to learn how this logic works.
 
-Customize logical permission
+Customize permission logic
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Your own permission logic class must be a subclass of
 ``permission.logics.PermissionLogic`` and must override
