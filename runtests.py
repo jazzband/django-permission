@@ -32,7 +32,7 @@ def runtests(verbosity=1, interactive=True):
     p.runctx('test_runner.run_tests(app_tests)',{
         'test_runner': test_runner, 
         'app_tests': app_tests}, None)
-    p.dump_stats('profile')
+    p.dump_stats('.profile')
     sys.exit(None)
 
 if __name__ == '__main__':
