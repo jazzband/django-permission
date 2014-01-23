@@ -22,6 +22,7 @@ list_of_unittests = [
     'permission.tests.test_logics.test_author',
     'permission.tests.test_logics.test_collaborators',
     'permission.tests.test_templatetags.test_permissionif',
+    'permission.tests.test_decorators.test_functionbase',
     'permission.tests.test_backends',
     'permission.tests.test_handlers',
 ]

@@ -3,37 +3,41 @@
 """
 Run Django Test with Python setuptools test command
 
-References
-----------
--   http://gremu.net/blog/2010/enable-setuppy-test-your-django-apps/
-"""   
-import os, sys
-try:
-    import cProfile as profile
-except ImportError:
-    import profile
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-test_dir = os.path.join(os.path.dirname(__file__), 'tests')
-sys.path.insert(0, test_dir)
+REFERENCE:
+    http://gremu.net/blog/2010/enable-setuppy-test-your-django-apps/
 
-from django.test.utils import get_runner
-from django.conf import settings
+"""
+import os
+import sys
 
-def runtests(verbosity=1, interactive=True):
-    """Run Django Test"""
+def parse_args():
+    import optparse
+    parser = optparse.OptionParser()
+    parser.add_option('--where', default=None)
+    opts, args = parser.parse_args()
+    return opts, args
+
+def run_tests(base_dir=None, apps=None, verbosity=1, interactive=False):
+    base_dir = base_dir or os.path.dirname(__file__)
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+    sys.path.insert(0, os.path.join(base_dir, 'src'))
+    sys.path.insert(0, os.path.join(base_dir, 'tests'))
+
+    from django.conf import settings
+    from django.test.utils import get_runner
     TestRunner = get_runner(settings)
-    test_runner = TestRunner(
-            verbosity=verbosity, interactive=interactive, failfast=False)
-    app_tests = [
-            'permission'
+    test_runner = TestRunner(verbosity=verbosity,
+                             interactive=interactive, failfast=False)
+    if apps:
+        app_tests = [x.strip() for x in apps if x]
+    else:
+        app_tests = [
+            'permission',
         ]
-    p = profile.Profile()
-    p.runctx('test_runner.run_tests(app_tests)',{
-        'test_runner': test_runner, 
-        'app_tests': app_tests}, None)
-    p.dump_stats('.profile')
-    sys.exit(None)
+    failures = test_runner.run_tests(app_tests)
+    sys.exit(bool(failures))
 
 if __name__ == '__main__':
-    runtests()
+    opts, args = parse_args()
+    run_tests(opts.where, args)

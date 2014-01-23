@@ -1,0 +1,10 @@
+[report]
+include =
+    src/*.py
+    tests/*.py
+omit =
+    src/permission/__init__.py
+    src/permission/tests/compatatibility.py
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.:
