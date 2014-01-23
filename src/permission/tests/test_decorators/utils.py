@@ -9,17 +9,24 @@ from permission.handlers import PermissionHandler
 from permission.tests.compatibility import MagicMock
 
 
-def create_mock_permission_handler():
+def create_mock_class(name, base, instance=None):
+    instance = instance or MagicMock()
+    mock_class = MagicMock(name=name,
+                           return_value=instance)
+    mock_class.__bases__ = (type, base)
+    mock_class.__class__ = type
+    return mock_class
+
+def create_mock_handler():
     instance = MagicMock(**{
             'has_perm.return_value': False,
             'get_permissions.return_value': [
                 'permission.add_article',
             ],
         })
-    handler = MagicMock(name='MockPermissionHandler',
-                        return_value=instance)
-    handler.__bases__ = (type, PermissionHandler)
-    handler.__class__ = type
+    handler = create_mock_class('MockPermissionHandler',
+                                base=PermissionHandler,
+                                instance=instance)
     return handler
 
 
@@ -39,6 +46,13 @@ def create_mock_view_func():
     response = MagicMock(spec=HttpResponse)
     function = MagicMock(return_value=response)
     return function
+
+
+def create_mock_view_class(view_func):
+    from django.views.generic import View
+    view_class = type('MockView', (View,), {})
+    view_class.dispatch = view_func
+    return view_class
 
 
 def create_mock_model():
