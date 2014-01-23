@@ -10,7 +10,7 @@ API documentation
 .. toctree::
    :maxdepth: 4
 
-   modules
+   permission
 
 
 Indices and tables
