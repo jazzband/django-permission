@@ -28,18 +28,19 @@ django-permission
     :target: https://pypi.python.org/pypi/django-permission/
     :alt: License
 
+Author
+    Alisue <lambdalisue@hashnote.net>
+Supported python versions
+    Python 2.6, 2.7, 3.2, 3.3
+Supported django versions
+    Django 1.2 - 1.6
+
 An enhanced permission library which enable *logic based permission system*
 to handle complex permissions in Django.
 
 It is developed based on authentication backend system introduced from django
 1.2.
 This library support Django 1.2 and later.
-
-.. note::
-    I decied to focus on the *logic based permission system* more than
-    *role based permission system*.
-    That's why I remove all obsolute codes and create new version.
-    This new version does not have compatibility to old version.
 
 Documentation
 -------------
