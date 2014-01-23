@@ -161,6 +161,7 @@ class PermissionPermissionHandlersTestCase(TestCase):
                 instance.has_perm,
                 self.user, self.perm3, self.article)
 
+
 @override_settings(
     PERMISSION_DEFAULT_PERMISSION_HANDLER=PermissionHandler
 )

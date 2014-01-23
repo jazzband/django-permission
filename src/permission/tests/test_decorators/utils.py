@@ -25,6 +25,7 @@ def create_mock_permission_handler():
 
 def create_mock_request(mock_permission_handler):
     request = MagicMock(spec=HttpRequest)
+    request.build_absolute_uri = MagicMock(return_value="/")
     request.META = MagicMock()
     request.user = MagicMock(**{
             'is_active.return_value': True,

@@ -11,6 +11,7 @@ def create_user(username):
             email="%s@test.com" % username,
             password="password"
         )
+    user.save()
     return user
 
 def create_article(title, user=None):
@@ -21,6 +22,7 @@ def create_article(title, user=None):
             title=title,
             content=title*20,
             author=user)
+    article.save()
     return article
 
 def create_permission(name, model=None):
@@ -33,4 +35,5 @@ def create_permission(name, model=None):
             name=name, codename=name,
             content_type=ct
         )
+    permission.save()
     return permission

@@ -9,6 +9,7 @@ from permission.tests.models import Article
 from permission.tests.compatibility import MagicMock
 from permission.tests.compatibility import override_settings
 from permission.backends import PermissionBackend
+from permission.utils.handlers import registry
 
 @override_settings(
     AUTHENTICATION_BACKENDS=(
@@ -23,6 +24,10 @@ class PermissionPermissionBackendTestCase(TestCase):
         self.perm2 = 'permission.change_article'
         self.perm3 = 'permission.delete_article'
         self.article = create_article('test')
+        self.original_get_handlers = registry.get_handlers
+
+    def tearDown(self):
+        registry.get_handlers = self.original_get_handlers
 
     def test_constructor(self):
         backend = PermissionBackend()
@@ -32,8 +37,6 @@ class PermissionPermissionBackendTestCase(TestCase):
         self.assertEqual(backend.authenticate(None, None), None)
 
     def test_has_perm_without_obj(self):
-        from permission.utils.handlers import registry
-        _get_handlers = registry.get_handlers
         perms = [
             'permission.add_article',
             'permission.change_article',
@@ -62,8 +65,6 @@ class PermissionPermissionBackendTestCase(TestCase):
         self.assertTrue(registry.get_handlers()[1].has_perm.called)
 
     def test_has_perm_with_obj(self):
-        from permission.utils.handlers import registry
-        _get_handlers = registry.get_handlers
         perms = [
             'permission.add_article',
             'permission.change_article',
@@ -90,6 +91,4 @@ class PermissionPermissionBackendTestCase(TestCase):
         self.assertTrue(registry.get_handlers()[1].get_permissions.called)
         self.assertTrue(registry.get_handlers()[0].has_perm.called)
         self.assertTrue(registry.get_handlers()[1].has_perm.called)
-
-
 

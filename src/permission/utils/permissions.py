@@ -15,16 +15,16 @@ def get_perm_codename(perm, fail_silently=True):
 
     Examples
     --------
-    >>> get_perm_codename(u'app_label.codename_model')
-    u'codename_model'
-    >>> get_perm_codename(u'app_label.codename')
-    u'codename'
-    >>> get_perm_codename(u'codename_model')
-    u'codename_model'
-    >>> get_perm_codename(u'codename')
-    u'codename'
-    >>> get_perm_codename(u'app_label.app_label.codename_model')
-    u'app_label.codename_model'
+    >>> get_perm_codename(u'app_label.codename_model') == u'codename_model'
+    True
+    >>> get_perm_codename(u'app_label.codename') == u'codename'
+    True
+    >>> get_perm_codename(u'codename_model') == u'codename_model'
+    True
+    >>> get_perm_codename(u'codename') == u'codename'
+    True
+    >>> get_perm_codename(u'app_label.app_label.codename_model') == u'app_label.codename_model'
+    True
     """
     try:
         perm = perm.split('.', 1)[1]
@@ -44,12 +44,12 @@ def permission_to_perm(permission):
     ...     content_type__app_label='auth',
     ...     codename='add_user',
     ... )
-    >>> permission_to_perm(permission)
-    u'auth.add_user'
+    >>> permission_to_perm(permission) == u'auth.add_user'
+    True
     """
     app_label = permission.content_type.app_label
     codename = permission.codename
-    return "%s.%s" % (app_label, codename)
+    return u"%s.%s" % (app_label, codename)
 
 def perm_to_permission(perm):
     """
@@ -59,10 +59,10 @@ def perm_to_permission(perm):
     Examples
     --------
     >>> permission = perm_to_permission('auth.add_user')
-    >>> permission.content_type.app_label
-    u'auth'
-    >>> permission.codename
-    u'add_user'
+    >>> permission.content_type.app_label == u'auth'
+    True
+    >>> permission.codename == u'add_user'
+    True
     """
     try:
         app_label, codename = perm.split('.', 1)
@@ -127,8 +127,8 @@ def get_model_perms(model):
 
     Examples
     --------
-    >>> sorted(get_model_perms(Permission))
-    [u'auth.add_permission', u'auth.change_permission', u'auth.delete_permission']
+    >>> sorted(get_model_perms(Permission)) == [u'auth.add_permission', u'auth.change_permission', u'auth.delete_permission']
+    True
     """
     app_label = model._meta.app_label
     model_name = model._meta.object_name.lower()
