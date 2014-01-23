@@ -15,15 +15,15 @@ def get_perm_codename(perm, fail_silently=True):
 
     Examples
     --------
-    >>> get_perm_codename(u'app_label.codename_model') == u'codename_model'
+    >>> get_perm_codename('app_label.codename_model') == 'codename_model'
     True
-    >>> get_perm_codename(u'app_label.codename') == u'codename'
+    >>> get_perm_codename('app_label.codename') == 'codename'
     True
-    >>> get_perm_codename(u'codename_model') == u'codename_model'
+    >>> get_perm_codename('codename_model') == 'codename_model'
     True
-    >>> get_perm_codename(u'codename') == u'codename'
+    >>> get_perm_codename('codename') == 'codename'
     True
-    >>> get_perm_codename(u'app_label.app_label.codename_model') == u'app_label.codename_model'
+    >>> get_perm_codename('app_label.app_label.codename_model') == 'app_label.codename_model'
     True
     """
     try:
@@ -44,12 +44,12 @@ def permission_to_perm(permission):
     ...     content_type__app_label='auth',
     ...     codename='add_user',
     ... )
-    >>> permission_to_perm(permission) == u'auth.add_user'
+    >>> permission_to_perm(permission) == 'auth.add_user'
     True
     """
     app_label = permission.content_type.app_label
     codename = permission.codename
-    return u"%s.%s" % (app_label, codename)
+    return "%s.%s" % (app_label, codename)
 
 def perm_to_permission(perm):
     """
@@ -59,9 +59,9 @@ def perm_to_permission(perm):
     Examples
     --------
     >>> permission = perm_to_permission('auth.add_user')
-    >>> permission.content_type.app_label == u'auth'
+    >>> permission.content_type.app_label == 'auth'
     True
-    >>> permission.codename == u'add_user'
+    >>> permission.codename == 'add_user'
     True
     """
     try:
@@ -127,7 +127,7 @@ def get_model_perms(model):
 
     Examples
     --------
-    >>> sorted(get_model_perms(Permission)) == [u'auth.add_permission', u'auth.change_permission', u'auth.delete_permission']
+    >>> sorted(get_model_perms(Permission)) == ['auth.add_permission', 'auth.change_permission', 'auth.delete_permission']
     True
     """
     app_label = model._meta.app_label
