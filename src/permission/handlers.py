@@ -2,8 +2,10 @@
 """
 """
 __author__ = 'Alisue <lambdalisue@hashnote.net>'
+from permission.conf import settings
 from permission.utils.permissions import get_app_perms
 from permission.utils.permissions import get_model_perms
+from permission.utils.permissions import perm_to_permission
 import collections
 
 
@@ -177,6 +179,10 @@ class LogicalPermissionHandler(PermissionHandler):
         Check if user have permission (of object) based on
         specified models's ``_permission_logics`` attribute.
 
+        It will check the specified permission presence if
+        `PERMISSION_CHECK_PERMISSION_PRESENCE` is `True` in `settings`
+        module.
+
         Parameters
         ----------
         user_obj : django user model instance
@@ -192,6 +198,11 @@ class LogicalPermissionHandler(PermissionHandler):
             Wheter the specified user have specified permission (of specified
             object).
         """
+        if settings.PERMISSION_CHECK_PERMISSION_PRESENCE:
+            # get permission instance from string permission (perm)
+            # it raise ObjectDoesNotExists when the permission is not exists
+            perm_to_permission(perm)
+
         if perm not in self.get_permissions(user_obj, perm, obj=obj):
             return False
         for permission_logic in getattr(self.model, '_permission_logics', []):
