@@ -109,8 +109,10 @@ to the ``Article`` model like
     from permission.logics import AuthorPermissionLogic
     add_permission_logic(Article, AuthorPermissionLogic())
 
+
 That's it.
 Now the following codes will work as expected
+
 
 .. code:: python
 
@@ -180,6 +182,7 @@ Now the following codes will work as expected
             # to permission instance.
             instance.user_permissions.add(perm_to_permission(permission))
 
+
 See http://django-permission.readthedocs.org/en/latest/_modules/permission/logics/author.html#AuthorPermissionLogic
 to learn how this logic works.
 
@@ -189,6 +192,7 @@ of the article and you want to give them a change permission.
 What you need to do is quite simple.
 Apply ``permission.logics.CollaboratorsPermissionLogic``
 to the ``Article`` model like
+
 
 .. code:: python
 
@@ -218,8 +222,10 @@ to the ``Article`` model like
         delete_permission=False,
     ))
 
+
 That's it.
 Now the following codes will work as expected
+
 
 .. code:: python
 
@@ -249,6 +255,7 @@ Now the following codes will work as expected
     assert user2.has_perm('permission.change_article', art1) == True
     assert user2.has_perm('permission.delete_article', art1) == False
 
+
 See http://django-permission.readthedocs.org/en/latest/_modules/permission/logics/collaborators.html#CollaboratorsPermissionLogic
 to learn how this logic works.
 
@@ -267,6 +274,7 @@ This decorator automatically determined the object from request
 (so you cannnot use this decorator for non view class/method/function but you
 anyway use ``user.has_perm`` in that case).
 
+
 .. code:: python
 
     >>> from permission.decorators import permission_required
@@ -284,12 +292,14 @@ anyway use ``user.has_perm`` in that case).
     >>> def update_auth_user(request, *args, **kwargs):
     ...     pass
 
+
 Overwrite builtin ``if`` in template
 -------------------------------------
 django-permission overwrite builtin ``if`` tag to add two operator to handle
 permission in template.
 You can specify permission with ``has`` keyword and object with ``of`` keyword
 like the below.
+
 
 .. code:: html
 
