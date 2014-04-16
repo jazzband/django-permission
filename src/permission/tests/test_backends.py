@@ -3,6 +3,7 @@
 """
 __author__ = 'Alisue <lambdalisue@hashnote.net>'
 from django.test import TestCase
+from django.core.exceptions import ObjectDoesNotExist
 from permission.tests.utils import create_user
 from permission.tests.utils import create_article
 from permission.tests.models import Article
@@ -92,3 +93,64 @@ class PermissionPermissionBackendTestCase(TestCase):
         self.assertTrue(registry.get_handlers()[0].has_perm.called)
         self.assertTrue(registry.get_handlers()[1].has_perm.called)
 
+    @override_settings(
+        PERMISSION_CHECK_PERMISSION_PRESENCE=False,
+    )
+    def test_has_perm_with_nil_permission(self):
+        perms = [
+            'permission.add_article',
+            'permission.change_article',
+            'permission.delete_article',
+        ]
+        registry.get_handlers = MagicMock(return_value=[
+            MagicMock(get_permissions=MagicMock(return_value=perms),
+                      has_perm=MagicMock(return_value=False)),
+            MagicMock(get_permissions=MagicMock(return_value=perms),
+                      has_perm=MagicMock(return_value=True)),
+        ])
+
+        backend = PermissionBackend()
+        self.assertFalse(backend.has_perm(None, 'permissions.nil_permission'))
+
+    @override_settings(
+        PERMISSION_CHECK_PERMISSION_PRESENCE=True,
+    )
+    def test_has_perm_with_nil_permission_raise(self):
+        perms = [
+            'permission.add_article',
+            'permission.change_article',
+            'permission.delete_article',
+        ]
+        registry.get_handlers = MagicMock(return_value=[
+            MagicMock(get_permissions=MagicMock(return_value=perms),
+                      has_perm=MagicMock(return_value=False)),
+            MagicMock(get_permissions=MagicMock(return_value=perms),
+                      has_perm=MagicMock(return_value=True)),
+        ])
+
+        backend = PermissionBackend()
+        self.assertRaises(ObjectDoesNotExist,
+                backend.has_perm,
+                None, 'permissions.nil_permission')
+
+    @override_settings(
+        PERMISSION_CHECK_PERMISSION_PRESENCE=False,
+        AUTHENTICATION_BACKENDS = (
+            'django.contrib.auth.backends.ModelBackend',
+            'permission.backends.PermissionBackend',
+        ),
+    )
+    def test_has_perm_with_nil_permission_with_user(self):
+        self.assertFalse(self.user.has_perm('permissions.nil_permission'))
+
+    @override_settings(
+        PERMISSION_CHECK_PERMISSION_PRESENCE=True,
+        AUTHENTICATION_BACKENDS = (
+            'django.contrib.auth.backends.ModelBackend',
+            'permission.backends.PermissionBackend',
+        ),
+    )
+    def test_has_perm_with_nil_permission_raise_with_user(self):
+        self.assertRaises(ObjectDoesNotExist,
+                self.user.has_perm,
+                'permissions.nil_permission')
