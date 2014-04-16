@@ -163,7 +163,7 @@ class PermissionPermissionHandlersTestCase(TestCase):
 
 
 @override_settings(
-    PERMISSION_DEFAULT_PERMISSION_HANDLER=PermissionHandler
+    PERMISSION_DEFAULT_PERMISSION_HANDLER=LogicalPermissionHandler
 )
 class PermissionLogicalPermissionHandlerTestCase(TestCase):
     def setUp(self):
@@ -209,3 +209,22 @@ class PermissionLogicalPermissionHandlerTestCase(TestCase):
         self.assertFalse(instance.has_perm(self.user, 'permission.add_article'))
         self.assertTrue(self.mock_logic1.has_perm.called)
         self.assertTrue(self.mock_logic2.has_perm.called)
+
+    @override_settings(
+        PERMISSION_CHECK_PERMISSION_PRESENCE=False,
+    )
+    def test_has_perm_with_nil_permission(self):
+        instance = self.handler(Article)
+        # it just return False
+        instance.has_perm(None, 'permissions.nil_permission')
+
+    @override_settings(
+        PERMISSION_CHECK_PERMISSION_PRESENCE=True,
+    )
+    def test_has_perm_with_nil_permission_raise(self):
+        from django.core.exceptions import ObjectDoesNotExist
+        instance = self.handler(Article)
+        # it just return False
+        self.assertRaises(ObjectDoesNotExist,
+                instance.has_perm,
+                None, 'permissions.nil_permission')
