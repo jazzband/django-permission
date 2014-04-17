@@ -50,7 +50,7 @@ Installation
 ------------
 Use pip_ like::
 
-    $ pip install "django-permissions>=0.5.0"
+    $ pip install "django-permission>=0.5.0"
 
 .. _pip:  https://pypi.python.org/pypi/pip
 
