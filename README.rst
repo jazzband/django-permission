@@ -80,6 +80,31 @@ Configuration
 
 3.  Follow the instruction below to apply logical permissions to django models
 
+Autodiscover
+~~~~~~~~~~~~
+It is new feature from django-permission 0.6.0.
+If you have ``perms.py`` in your app, django-permission automatically load the module.
+If the loaded module have ``PERMISSION_LOGICS`` variable, django-permission automatically run the following codes to apply the permission logics.
+
+.. code:: python
+    for model, permission_logic_instance in PERMISSION_LOGICS:
+        if isinstance(model, str):
+            model = get_model(*model.split(".", 1))
+        add_permission_logic(model, permission_logic_instance)
+
+Thus, the sample shown in next section can be simplify with writing `perms.py` as:
+
+.. code:: python
+    from permission.logics import AuthorPermissionLogic
+    from permission.logics import CollaboratorsPermissionLogic
+
+    PERMISSION_LOGICS = (
+        ('your_app.Article', AuthorPermissionLogic()),
+        ('your_app.Article', CollaboratorsPermissionLogic()),
+    )
+
+To disable this feature, set ``PERMISSION_AUTODISCOVER_ENABLE = False`` in ``settings`` module and to use different module or variable name, use ``PERMISSION_AUTODISCOVER_MODULE_NAME`` or ``PERMISSION_AUTODISCOVER_VARIABLE_NAME`` respectively.
+
 Apply permission logic
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 Assume you have an article model which has ``author`` attribute to store who
