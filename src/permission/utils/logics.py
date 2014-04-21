@@ -37,6 +37,8 @@ def add_permission_logic(model, permission_logic):
         # register default permission handler
         registry.register(model, handler=None)
     model._permission_logics.add(permission_logic)
+    # store target model to the permission_logic instance
+    permission_logic.model = model
 
 def remove_permission_logic(model, permission_logic, fail_silently=True):
     """
