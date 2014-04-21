@@ -47,5 +47,6 @@ Subpackages
 .. toctree::
 
     permission.tests.test_logics
+    permission.tests.test_templatetags
     permission.tests.test_utils
 

@@ -3,8 +3,10 @@
 Logical permission backends module
 """
 __author__ = 'Alisue <lambdalisue@hashnote.net>'
-__all__ = ('LogicalPermissionBackend',)
+__all__ = ('PermissionBackend',)
+from permission.conf import settings
 from permission.utils.handlers import registry
+from permission.utils.permissions import perm_to_permission
 
 
 class PermissionBackend(object):
@@ -25,6 +27,11 @@ class PermissionBackend(object):
         """
         Check if user have permission (of object) based on registered handlers.
 
+        It will raise ``ObjectDoesNotExist`` exception when the specified
+        string permission does not exist and
+        ``PERMISSION_CHECK_PERMISSION_PRESENCE`` is ``True`` in ``settings``
+        module.
+
         Parameters
         ----------
         user_obj : django user model instance
@@ -39,7 +46,19 @@ class PermissionBackend(object):
         boolean
             Wheter the specified user have specified permission (of specified
             object).
+
+        Raises
+        ------
+        django.core.exceptions.ObjectDoesNotExist
+            If the specified string permission does not exist and
+            ``PERMISSION_CHECK_PERMISSION_PRESENCE`` is ``True`` in ``settings``
+            module.
         """
+        if settings.PERMISSION_CHECK_PERMISSION_PRESENCE:
+            # get permission instance from string permission (perm)
+            # it raise ObjectDoesNotExists when the permission is not exists
+            perm_to_permission(perm)
+
         # get permission handlers fot this perm
         cache_name = '_%s_cache' % perm
         if hasattr(self, cache_name):

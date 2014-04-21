@@ -1,4 +1,7 @@
-django-appconf
+app_version
 django>=1.2
+django-appconf
+django-override-settings
+mock
 sphinx
 numpydoc

@@ -11,6 +11,8 @@ from permission.tests.utils import create_user
 from permission.tests.utils import create_article
 from permission.tests.utils import create_permission
 from permission.tests.compatibility import override_settings
+from permission.utils.handlers import registry
+
 
 @override_settings(
     AUTHENTICATION_BACKENDS=(
@@ -19,6 +21,16 @@ from permission.tests.compatibility import override_settings
     ),
 )
 class PermissionTemplateTagsTestCase(TestCase):
+    def setUp(self):
+        # store original registry
+        self._original_registry = registry._registry
+        # clear registry and register mock handler
+        registry._registry = {}
+
+    def tearDown(self):
+        # restore original reigstry
+        registry._registry = self._original_registry
+
     def test_permissionif_tag(self):
         user = create_user('permission_templatetag_test_user1')
         perm = create_permission('permission_templatetag_test_perm1')
@@ -97,7 +109,6 @@ class PermissionTemplateTagsTestCase(TestCase):
     def test_permissionif_tag_with_obj(self):
         from permission.tests.models import Article
         from permission.handlers import PermissionHandler
-        from permission.utils.handlers import registry
 
         user = create_user('permission_templatetag_test_user1')
         art1 = create_article('permission_templatetag_test_article1')

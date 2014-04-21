@@ -1,38 +1,22 @@
-# coding=utf-8
-"""
-"""
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
-import doctest
-import unittest
+#import permission.conf
+#import permission.backends
+#import permission.handlers
+#import permission.logics.utils
+#import permission.logics.base
+#import permission.logics.author
+#import permission.logics.collaborators
+#import permission.utils.handlers
+#import permission.utils.logics
+#import permission.utils.permissions
+#import permission.templatetags.permissionif
+#import permission.decorators.functionbase
+#import permission.decorators.methodbased
+#import permission.decorators.classbase
 
-list_of_doctests = [
-    'permission.backends',
-    'permission.handlers',
-    'permission.logics.base',
-    'permission.logics.author',
-    'permission.logics.collaborators',
-    'permission.utils.handlers',
-    'permission.utils.logics',
-    'permission.utils.permissions',
-]
-list_of_unittests = [
-    'permission.tests.test_utils.test_logics',
-    'permission.tests.test_utils.test_handlers',
-    'permission.tests.test_logics.test_base',
-    'permission.tests.test_logics.test_author',
-    'permission.tests.test_logics.test_collaborators',
-    'permission.tests.test_templatetags.test_permissionif',
-    'permission.tests.test_handlers',
-]
+from permission.tests.test_backends import *
+from permission.tests.test_handlers import *
+from permission.tests.test_utils import *
+from permission.tests.test_logics import *
+from permission.tests.test_decorators import *
+from permission.tests.test_templatetags import *
 
-def suite():
-    suite = unittest.TestSuite()
-    for t in list_of_doctests:
-        suite.addTest(doctest.DocTestSuite(
-            __import__(t, globals(), locals(), fromlist=["*"])
-        ))
-    for t in list_of_unittests:
-        suite.addTest(unittest.TestLoader().loadTestsFromModule(
-            __import__(t, globals(), locals(), fromlist=["*"])
-        ))
-    return suite

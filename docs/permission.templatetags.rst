@@ -9,10 +9,10 @@ templatetags Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`permission_tags` Module
------------------------------
+:mod:`permissionif` Module
+--------------------------
 
-.. automodule:: permission.templatetags.permission_tags
+.. automodule:: permission.templatetags.permissionif
     :members:
     :undoc-members:
     :show-inheritance:

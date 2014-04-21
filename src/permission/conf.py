@@ -12,6 +12,9 @@ class PermissionConf(AppConf):
     DEFAULT_PERMISSION_HANDLER = LogicalPermissionHandler
     """Default permission handler class"""
 
+    CHECK_PERMISSION_PRESENCE = settings.DEBUG
+    """Check if the specified string permission exists"""
+
     REPLACE_BUILTIN_IF = True
     """Whether replace builtin if templatetag"""
 

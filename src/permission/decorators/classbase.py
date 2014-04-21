@@ -7,7 +7,7 @@ from functools import wraps
 from django.utils.decorators import available_attrs
 from django.core.exceptions import PermissionDenied
 
-from utils import redirect_to_login
+from permission.decorators.utils import redirect_to_login
 
 def permission_required(perm, queryset=None,
                         login_url=None, raise_exception=False):
@@ -98,7 +98,7 @@ def get_object_from_classbased_instance(
     if hasattr(instance, 'get_object'):
         try:
             obj = instance.get_object(queryset)
-        except AttributeError, e:
+        except AttributeError as e:
             # CreateView has ``get_object`` method but CreateView
             # should not have any object before thus simply set
             # None

@@ -1,5 +1,3 @@
-# coding=utf-8
-"""
-"""
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
-
+from test_logics import *
+from test_handlers import *
+from test_permissions import *

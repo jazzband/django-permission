@@ -1,4 +1,5 @@
-coverage
-profile
+.coverage
+.profile
+.tox
 database.db
 docs/_build

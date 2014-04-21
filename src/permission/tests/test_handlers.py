@@ -40,36 +40,36 @@ class PermissionPermissionHandlersTestCase(TestCase):
         instance = self.handler('permission')
         perms = instance._get_app_perms()
         self.assertEquals(perms, set([
-            u'permission.add_article',
-            u'permission.change_article',
-            u'permission.delete_article',
+            'permission.add_article',
+            'permission.change_article',
+            'permission.delete_article',
         ]))
 
     def test__get_app_perms_with_model(self):
         instance = self.handler(Article)
         perms = instance._get_app_perms()
         self.assertEquals(perms, set([
-            u'permission.add_article',
-            u'permission.change_article',
-            u'permission.delete_article',
+            'permission.add_article',
+            'permission.change_article',
+            'permission.delete_article',
         ]))
 
     def test__get_model_perms(self):
         instance = self.handler(Article)
         perms = instance._get_model_perms()
         self.assertEquals(perms, set([
-            u'permission.add_article',
-            u'permission.change_article',
-            u'permission.delete_article',
+            'permission.add_article',
+            'permission.change_article',
+            'permission.delete_article',
         ]))
 
     def test_get_permissions(self):
         instance = self.handler(Article)
         perms = instance.get_permissions(None, None)
         self.assertEquals(perms, set([
-            u'permission.add_article',
-            u'permission.change_article',
-            u'permission.delete_article',
+            'permission.add_article',
+            'permission.change_article',
+            'permission.delete_article',
         ]))
 
     def test_get_permissions_with_includes(self):
@@ -80,8 +80,8 @@ class PermissionPermissionHandlersTestCase(TestCase):
             ]
         perms = instance.get_permissions(None, None)
         self.assertEquals(perms, set([
-            u'permission.add_article',
-            u'permission.change_article',
+            'permission.add_article',
+            'permission.change_article',
         ]))
 
     def test_get_permissions_with_includes_change(self):
@@ -96,7 +96,7 @@ class PermissionPermissionHandlersTestCase(TestCase):
             ]
         perms = instance.get_permissions(None, None)
         self.assertEquals(perms, set([
-            u'permission.change_article',
+            'permission.change_article',
         ]))
 
 
@@ -107,8 +107,8 @@ class PermissionPermissionHandlersTestCase(TestCase):
             ]
         perms = instance.get_permissions(None, None)
         self.assertEquals(perms, set([
-            u'permission.change_article',
-            u'permission.delete_article',
+            'permission.change_article',
+            'permission.delete_article',
         ]))
 
     def test_get_permissions_with_excludes_change(self):
@@ -120,9 +120,9 @@ class PermissionPermissionHandlersTestCase(TestCase):
         instance.excludes = []
         perms = instance.get_permissions(None, None)
         self.assertEquals(perms, set([
-            u'permission.add_article',
-            u'permission.change_article',
-            u'permission.delete_article',
+            'permission.add_article',
+            'permission.change_article',
+            'permission.delete_article',
         ]))
 
     def test_has_perm_add_wihtout_obj(self):
@@ -161,8 +161,9 @@ class PermissionPermissionHandlersTestCase(TestCase):
                 instance.has_perm,
                 self.user, self.perm3, self.article)
 
+
 @override_settings(
-    PERMISSION_DEFAULT_PERMISSION_HANDLER=PermissionHandler
+    PERMISSION_DEFAULT_PERMISSION_HANDLER=LogicalPermissionHandler
 )
 class PermissionLogicalPermissionHandlerTestCase(TestCase):
     def setUp(self):
@@ -173,6 +174,38 @@ class PermissionLogicalPermissionHandlerTestCase(TestCase):
         self.perm3 = 'permission.delete_article'
         self.article = create_article('test')
 
+        from permission.logics import PermissionLogic
+        from permission import add_permission_logic
+        self.mock_logic1 = MagicMock(spec=PermissionLogic)
+        self.mock_logic1.has_perm = MagicMock(return_value=False)
+        self.mock_logic2 = MagicMock(spec=PermissionLogic)
+        self.mock_logic2.has_perm = MagicMock(return_value=False)
+        add_permission_logic(Article, self.mock_logic1)
+        add_permission_logic(Article, self.mock_logic2)
+
     def test_constructor_with_app_label(self):
         self.assertRaises(AttributeError,
                           self.handler, 'permission')
+
+    def test_has_perm_non_related_permission(self):
+        instance = self.handler(Article)
+        instance.get_permissions = MagicMock(return_value=[
+            'permission.add_article',
+            'permission.change_article',
+            'permission.delete_article',
+        ])
+        self.assertFalse(instance.has_perm(self.user, 'unknown'))
+        self.assertFalse(instance.has_perm(self.user, 'unknown', self.article))
+
+    def test_has_perm_permission_logics_called(self):
+        instance = self.handler(Article)
+        instance.get_permissions = MagicMock(return_value=[
+            'permission.add_article',
+            'permission.change_article',
+            'permission.delete_article',
+        ])
+        self.assertFalse(self.mock_logic1.has_perm.called)
+        self.assertFalse(self.mock_logic2.has_perm.called)
+        self.assertFalse(instance.has_perm(self.user, 'permission.add_article'))
+        self.assertTrue(self.mock_logic1.has_perm.called)
+        self.assertTrue(self.mock_logic2.has_perm.called)
