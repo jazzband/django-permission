@@ -14,6 +14,17 @@ def create_user(username):
     user.save()
     return user
 
+def create_group(name, user=None):
+    from django.contrib.auth.models import Group
+    group = Group.objects.create(
+            name=name,
+        )
+    if user is not None:
+        user.groups.add(group)
+        user.save()
+    group.save()
+    return group
+
 def create_article(title, user=None):
     import datetime
     from permission.tests.models import Article
