@@ -15,6 +15,7 @@ from permission.utils.logics import remove_permission_logic
 class PermissionUtilsLogicsTestCase(TestCase):
     def setUp(self):
         self.mock_logic = MagicMock(spec=PermissionLogic)
+        self.mock_logic2 = MagicMock(spec=PermissionLogic)
         # clear registry
         self.registry_backup = registry._registry
         registry._registry = {}
@@ -69,6 +70,22 @@ class PermissionUtilsLogicsTestCase(TestCase):
         # permission_logics should be changed but registry
         # should not be changed
         remove_permission_logic(Article, m)
+        self.assertEqual(Article._permission_logics, set())
+        self.assertTrue(isinstance(registry._registry[Article],
+                                   LogicalPermissionHandler))
+
+    def test_remove_permission_logic_registry_with_class(self):
+        m = self.mock_logic
+        m2 = self.mock_logic2
+        add_permission_logic(Article, m)
+        add_permission_logic(Article, m2)
+        self.assertEqual(Article._permission_logics, set([m, m2]))
+        self.assertTrue(isinstance(registry._registry[Article],
+                                   LogicalPermissionHandler))
+
+        # permission_logics should be changed but registry
+        # should not be changed
+        remove_permission_logic(Article, PermissionLogic)
         self.assertEqual(Article._permission_logics, set())
         self.assertTrue(isinstance(registry._registry[Article],
                                    LogicalPermissionHandler))

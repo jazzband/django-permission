@@ -15,9 +15,9 @@ def add_permission_logic(model, permission_logic):
     model : django model class
         A django model class which will be treated by the specified permission
         logic
-    permission_logic : permission logic class
-        A permission logic class with will be used to determine permission of
-        the model
+    permission_logic : permission logic instance
+        A permission logic instance which will be used to determine permission
+        of the model
 
     Examples
     --------
@@ -47,9 +47,9 @@ def remove_permission_logic(model, permission_logic, fail_silently=True):
     model : django model class
         A django model class which will be treated by the specified permission
         logic
-    permission_logic : permission logic class
-        A permission logic class with will be used to determine permission of
-        the model
+    permission_logic : permission logic class or instance
+        A permission logic class or instance which will be used to determine
+        permission of the model
     fail_silently : boolean
         If `True` then do not raise KeyError even the specified permission logic
         have not registered.
@@ -64,13 +64,19 @@ def remove_permission_logic(model, permission_logic, fail_silently=True):
     >>> add_permission_logic(Mock, logic)
     >>> remove_permission_logic(Mock, logic)
     """
-    if not isinstance(permission_logic, PermissionLogic):
-        raise AttributeError(
-        '`permission_logic` must be an instance of PermissionLogic')
     if not hasattr(model, '_permission_logics'):
         model._permission_logics = set()
-    if fail_silently and permission_logic not in model._permission_logics:
-        pass
+    if not isinstance(permission_logic, PermissionLogic):
+        # remove all permission logic of related
+        remove_set = set()
+        for _permission_logic in model._permission_logics:
+            if _permission_logic.__class__ == permission_logic:
+                remove_set.add(_permission_logic)
+        # difference
+        model._permission_logics = model._permission_logics.difference(remove_set)
     else:
-        model._permission_logics.remove(permission_logic)
+        if fail_silently and permission_logic not in model._permission_logics:
+            pass
+        else:
+            model._permission_logics.remove(permission_logic)
 
