@@ -3,7 +3,7 @@ import sys
 from setuptools import setup, find_packages
 
 NAME = 'django-permission'
-VERSION = '0.5.4'
+VERSION = '0.6.0'
 
 def read(filename):
     import os
@@ -33,7 +33,7 @@ setup(
                    'systems to complex permissions'),
     long_description = read('README.rst'),
     classifiers = (
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',
