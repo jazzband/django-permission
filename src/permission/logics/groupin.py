@@ -102,11 +102,10 @@ class GroupInPermissionLogic(PermissionLogic):
             Wheter the specified user have specified permission (of specified
             object).
         """
-        app_label = self.model._meta.app_label
-        model_name = self.model._meta.object_name.lower()
-        add_permission = "%s.add_%s" % (app_label, model_name)
-        change_permission = "%s.change_%s" % (app_label, model_name)
-        delete_permission = "%s.delete_%s" % (app_label, model_name)
+        # construct the permission full name
+        add_permission = self.get_full_permission_string('add')
+        change_permission = self.get_full_permission_string('change')
+        delete_permission = self.get_full_permission_string('delete')
         if obj is None:
             if user_obj.groups.filter(name__in=self.group_names):
                 if self.add_permission and perm == add_permission:
