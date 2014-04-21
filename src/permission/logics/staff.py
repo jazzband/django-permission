@@ -106,7 +106,7 @@ class StaffPermissionLogic(PermissionLogic):
         elif user_obj.is_active:
 
             if user_obj and user_obj.is_staff:
-                if self.any_permission and not perm == add_permission:
+                if self.any_permission:
                     # have any kind of permissions to the obj
                     return True
                 if (self.change_permission and
