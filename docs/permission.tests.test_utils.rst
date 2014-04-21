@@ -1,27 +1,38 @@
-test_utils Package
-==================
+permission.tests.test_utils package
+===================================
 
-:mod:`test_utils` Package
--------------------------
+Submodules
+----------
 
-.. automodule:: permission.tests.test_utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`test_handlers` Module
----------------------------
+permission.tests.test_utils.test_handlers module
+------------------------------------------------
 
 .. automodule:: permission.tests.test_utils.test_handlers
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`test_logics` Module
--------------------------
+permission.tests.test_utils.test_logics module
+----------------------------------------------
 
 .. automodule:: permission.tests.test_utils.test_logics
     :members:
     :undoc-members:
     :show-inheritance:
 
+permission.tests.test_utils.test_permissions module
+---------------------------------------------------
+
+.. automodule:: permission.tests.test_utils.test_permissions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: permission.tests.test_utils
+    :members:
+    :undoc-members:
+    :show-inheritance:

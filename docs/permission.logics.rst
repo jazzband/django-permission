@@ -1,35 +1,38 @@
-logics Package
-==============
+permission.logics package
+=========================
 
-:mod:`logics` Package
----------------------
+Submodules
+----------
 
-.. automodule:: permission.logics
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`author` Module
---------------------
+permission.logics.author module
+-------------------------------
 
 .. automodule:: permission.logics.author
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`base` Module
-------------------
+permission.logics.base module
+-----------------------------
 
 .. automodule:: permission.logics.base
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`collaborators` Module
----------------------------
+permission.logics.collaborators module
+--------------------------------------
 
 .. automodule:: permission.logics.collaborators
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: permission.logics
+    :members:
+    :undoc-members:
+    :show-inheritance:

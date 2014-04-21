@@ -1,27 +1,38 @@
-test_logics Package
-===================
+permission.tests.test_logics package
+====================================
 
-:mod:`test_author` Module
--------------------------
+Submodules
+----------
+
+permission.tests.test_logics.test_author module
+-----------------------------------------------
 
 .. automodule:: permission.tests.test_logics.test_author
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`test_base` Module
------------------------
+permission.tests.test_logics.test_base module
+---------------------------------------------
 
 .. automodule:: permission.tests.test_logics.test_base
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`test_collaborators` Module
---------------------------------
+permission.tests.test_logics.test_collaborators module
+------------------------------------------------------
 
 .. automodule:: permission.tests.test_logics.test_collaborators
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: permission.tests.test_logics
+    :members:
+    :undoc-members:
+    :show-inheritance:

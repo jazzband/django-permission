@@ -1,11 +1,22 @@
-test_templatetags Package
-=========================
+permission.tests.test_templatetags package
+==========================================
 
-:mod:`test_permissionif` Module
--------------------------------
+Submodules
+----------
+
+permission.tests.test_templatetags.test_permissionif module
+-----------------------------------------------------------
 
 .. automodule:: permission.tests.test_templatetags.test_permissionif
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: permission.tests.test_templatetags
+    :members:
+    :undoc-members:
+    :show-inheritance:

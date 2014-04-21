@@ -1,27 +1,46 @@
-utils Package
-=============
+permission.utils package
+========================
 
-:mod:`handlers` Module
-----------------------
+Submodules
+----------
+
+permission.utils.autodiscover module
+------------------------------------
+
+.. automodule:: permission.utils.autodiscover
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+permission.utils.handlers module
+--------------------------------
 
 .. automodule:: permission.utils.handlers
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`logics` Module
---------------------
+permission.utils.logics module
+------------------------------
 
 .. automodule:: permission.utils.logics
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`permissions` Module
--------------------------
+permission.utils.permissions module
+-----------------------------------
 
 .. automodule:: permission.utils.permissions
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: permission.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:

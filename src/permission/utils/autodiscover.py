@@ -36,18 +36,19 @@ def discover(app, module_name=None):
     Automatically apply the permission logics written in the specified
     module.
     
-    Example:
-        Assume if you have a `perms.py` in `your_app` as:
+    Examples
+    --------
+    Assume if you have a ``perms.py`` in ``your_app`` as::
 
-            from permission.logics import AuthorPermissionLogic
-            PERMISSION_LOGICS = (
-                ('your_app.your_model', AuthorPermissionLogic),
-            )
+        from permission.logics import AuthorPermissionLogic
+        PERMISSION_LOGICS = (
+            ('your_app.your_model', AuthorPermissionLogic),
+        )
 
-        Use this method to apply the permission logics enumerated in
-        `PERMISSION_LOGICS` variable like:
+    Use this method to apply the permission logics enumerated in
+    ``PERMISSION_LOGICS`` variable like:
 
-            >>> discover('your_app')
+        >>> discover('your_app')
     """
     from django.db.models.loading import get_model
     from django.utils.importlib import import_module

@@ -87,6 +87,7 @@ If you have ``perms.py`` in your app, django-permission automatically load the m
 If the loaded module have ``PERMISSION_LOGICS`` variable, django-permission automatically run the following codes to apply the permission logics.
 
 .. code:: python
+
     for model, permission_logic_instance in PERMISSION_LOGICS:
         if isinstance(model, str):
             model = get_model(*model.split(".", 1))
@@ -95,6 +96,7 @@ If the loaded module have ``PERMISSION_LOGICS`` variable, django-permission auto
 Thus, the sample shown in next section can be simplify with writing `perms.py` as:
 
 .. code:: python
+
     from permission.logics import AuthorPermissionLogic
     from permission.logics import CollaboratorsPermissionLogic
 

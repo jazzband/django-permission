@@ -1,19 +1,30 @@
-templatetags Package
-====================
+permission.templatetags package
+===============================
 
-:mod:`patch` Module
--------------------
+Submodules
+----------
+
+permission.templatetags.patch module
+------------------------------------
 
 .. automodule:: permission.templatetags.patch
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`permissionif` Module
---------------------------
+permission.templatetags.permissionif module
+-------------------------------------------
 
 .. automodule:: permission.templatetags.permissionif
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: permission.templatetags
+    :members:
+    :undoc-members:
+    :show-inheritance:
