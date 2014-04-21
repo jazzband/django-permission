@@ -286,6 +286,10 @@ Now the following codes will work as expected
 See http://django-permission.readthedocs.org/en/latest/_modules/permission/logics/collaborators.html#CollaboratorsPermissionLogic
 to learn how this logic works.
 
+There are `StaffPermissionLogic <http://django-permission.readthedocs.org/en/latest/_modules/permission/logics/staff.html#StaffPermissionLogic>`_
+and `GroupInPermissionLogic <http://django-permission.readthedocs.org/en/latest/_modules/permission/logics/groupin.html#GroupInPermissionLogic>`_ 
+for ``is_staff` or ``group`` based permission logic as well.
+
 Customize permission logic
 ............................
 Your own permission logic class must be a subclass of

@@ -28,6 +28,22 @@ permission.logics.collaborators module
     :undoc-members:
     :show-inheritance:
 
+permission.logics.groupin module
+--------------------------------
+
+.. automodule:: permission.logics.groupin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+permission.logics.staff module
+------------------------------
+
+.. automodule:: permission.logics.staff
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

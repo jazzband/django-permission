@@ -28,6 +28,22 @@ permission.tests.test_logics.test_collaborators module
     :undoc-members:
     :show-inheritance:
 
+permission.tests.test_logics.test_groupin module
+------------------------------------------------
+
+.. automodule:: permission.tests.test_logics.test_groupin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+permission.tests.test_logics.test_staff module
+----------------------------------------------
+
+.. automodule:: permission.tests.test_logics.test_staff
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
