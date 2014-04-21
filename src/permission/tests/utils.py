@@ -4,13 +4,16 @@
 __author__ = 'Alisue <lambdalisue@hashnote.net>'
 
 
-def create_user(username):
+def create_user(username, **kwargs):
     from django.contrib.auth.models import User
     user = User.objects.create_user(
             username=username,
             email="%s@test.com" % username,
-            password="password"
+            password="password",
         )
+    # attribute assignment
+    for key, value in kwargs.items():
+        user.__dict__[key] = value
     user.save()
     return user
 

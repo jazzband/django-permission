@@ -23,28 +23,28 @@ class StaffPermissionLogic(PermissionLogic):
         any_permission : boolean
             True for give any permission of the specified object to the staff user
             Default value will be taken from
-            ``PERMISSION_DEFAULT_APL_ANY_PERMISSION`` in
+            ``PERMISSION_DEFAULT_SPL_ANY_PERMISSION`` in
             settings.
         add_permission : boolean
             True for give change permission of the specified object to the
             staff user.
             It will be ignored if :attr:`any_permission` is True.
             Default value will be taken from
-            ``PERMISSION_DEFAULT_APL_ADD_PERMISSION`` in
+            ``PERMISSION_DEFAULT_SPL_ADD_PERMISSION`` in
             settings.
         change_permission : boolean
             True for give change permission of the specified object to the
             staff user.
             It will be ignored if :attr:`any_permission` is True.
             Default value will be taken from
-            ``PERMISSION_DEFAULT_APL_CHANGE_PERMISSION`` in
+            ``PERMISSION_DEFAULT_SPL_CHANGE_PERMISSION`` in
             settings.
         delete_permission : boolean
             True for give delete permission of the specified object to the
             staff user.
             It will be ignored if :attr:`any_permission` is True.
             Default value will be taken from
-            ``PERMISSION_DEFAULT_APL_DELETE_PERMISSION`` in
+            ``PERMISSION_DEFAULT_SPL_DELETE_PERMISSION`` in
             settings.
         """
         self.any_permission = any_permission
@@ -54,29 +54,30 @@ class StaffPermissionLogic(PermissionLogic):
 
         if self.any_permission is None:
             self.any_permission = \
-                settings.PERMISSION_DEFAULT_APL_ANY_PERMISSION
+                settings.PERMISSION_DEFAULT_SPL_ANY_PERMISSION
         if self.add_permission is None:
             self.add_permission = \
-                settings.PERMISSION_DEFAULT_APL_ADD_PERMISSION
+                settings.PERMISSION_DEFAULT_SPL_ADD_PERMISSION
         if self.change_permission is None:
             self.change_permission = \
-                settings.PERMISSION_DEFAULT_APL_CHANGE_PERMISSION
+                settings.PERMISSION_DEFAULT_SPL_CHANGE_PERMISSION
         if self.delete_permission is None:
             self.delete_permission = \
-                settings.PERMISSION_DEFAULT_APL_DELETE_PERMISSION
+                settings.PERMISSION_DEFAULT_SPL_DELETE_PERMISSION
 
 
     def has_perm(self, user_obj, perm, obj=None):
         """
         Check if user have permission (of object)
 
-        If no object is specified and permission is ``add_permission``. it return ``True``, permission is others it
-        always returns ``False``
+        If no object is specified and permission is ``add_permission`` then
+        it return ``True``. Otherwise it return ``False``
 
         If an object is specified, it will return ``True`` if the user is staff.
-        the staff can add, change or delete the object (you can change this behavior to set
-        ``any_permission``, ``add_permission``, ``change_permission`` or ``delete_permission``
-        attributes of this instance).
+        the staff can add, change or delete the object (you can change this
+        behavior to set ``any_permission``, ``add_permission``,
+        ``change_permission``, or ``delete_permission`` attributes of this
+        instance).
 
         Parameters
         ----------
@@ -94,20 +95,22 @@ class StaffPermissionLogic(PermissionLogic):
             object).
         """
         # construct the permission full name
-        app_label = obj._meta.app_label
-        model_name = obj._meta.object_name.lower()
-        add_permission = "%s.add_%s" % (app_label, model_name)
-        change_permission = "%s.change_%s" % (app_label, model_name)
-        delete_permission = "%s.delete_%s" % (app_label, model_name)
+        add_permission = self.get_full_permission_string('add')
+        change_permission = self.get_full_permission_string('change')
+        delete_permission = self.get_full_permission_string('delete')
         if obj is None:
-            if user_obj and user_obj.is_staff:
-                return (self.any_permission or self.add_permission) and perm == add_permission
+            if user_obj.is_staff:
+                if self.add_permission and perm == add_permission:
+                    return True
+                return self.any_permission
             return False
         elif user_obj.is_active:
-
-            if user_obj and user_obj.is_staff:
+            if user_obj.is_staff:
                 if self.any_permission:
                     # have any kind of permissions to the obj
+                    return True
+                if (self.add_permission and
+                    perm == add_permission):
                     return True
                 if (self.change_permission and
                     perm == change_permission):
