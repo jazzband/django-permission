@@ -97,19 +97,24 @@ class CollaboratorsPermissionLogic(PermissionLogic):
             Wheter the specified user have specified permission (of specified
             object).
         """
-        codename = get_perm_codename(perm)
         if obj is None:
             return False
         elif user_obj.is_active:
+            # construct the permission full name
+            app_label = obj._meta.app_label
+            model_name = obj._meta.object_name.lower()
+            change_permission = "%s.change_%s" % (app_label, model_name)
+            delete_permission = "%s.delete_%s" % (app_label, model_name)
+            # get collaborator queryset
             collaborators = getattr(obj, self.field_name, None)
             if collaborators and user_obj in collaborators.all():
                 if self.any_permission:
                     # have any kind of permissions to the obj
                     return True
                 if (self.change_permission and 
-                    codename.startswith('change_')):
+                    perm == change_permission):
                     return True
                 if (self.delete_permission and 
-                    codename.startswith('delete_')):
+                    perm == delete_permission):
                     return True
         return False
