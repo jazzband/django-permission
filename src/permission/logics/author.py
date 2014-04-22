@@ -69,8 +69,10 @@ class AuthorPermissionLogic(PermissionLogic):
         """
         Check if user have permission (of object)
 
-        If no object is specified, it always return ``False`` so you need to
-        add *add* permission to users in normal way.
+        If no object is specified, it return ``True`` when the corresponding
+        permission was specified to ``True`` (changed from v0.7.0).
+        This behavior is based on the django system.
+        https://code.djangoproject.com/wiki/RowLevelPermissions
 
         If an object is specified, it will return ``True`` if the user is
         specified in ``field_name`` of the object (e.g. ``obj.author``).
@@ -95,14 +97,20 @@ class AuthorPermissionLogic(PermissionLogic):
             Wheter the specified user have specified permission (of specified
             object).
         """
+        # construct the permission full name
+        change_permission = self.get_full_permission_string('change')
+        delete_permission = self.get_full_permission_string('delete')
         if obj is None:
+            # object permission without obj should return True
+            # Ref: https://code.djangoproject.com/wiki/RowLevelPermissions
+            if self.any_permission:
+                return True
+            if self.change_permission and perm == change_permission:
+                return True
+            if self.delete_permission and perm == delete_permission:
+                return True
             return False
         elif user_obj.is_active:
-            # construct the permission full name
-            app_label = obj._meta.app_label
-            model_name = obj._meta.object_name.lower()
-            change_permission = "%s.change_%s" % (app_label, model_name)
-            delete_permission = "%s.delete_%s" % (app_label, model_name)
             # get author instance
             author = getattr(obj, self.field_name, None)
             if author and author == user_obj:

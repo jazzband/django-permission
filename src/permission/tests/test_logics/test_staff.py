@@ -110,13 +110,13 @@ class PermissionLogicsStaffPermissionLogicTestCase(TestCase):
     def test_has_perm_change_without_obj_without_any(self):
         permission_logic = StaffPermissionLogic(any_permission=False)
         add_permission_logic(self.article.__class__, permission_logic)
-        self.assertFalse(permission_logic.has_perm(self.user1, self.perm2))
+        self.assertTrue(permission_logic.has_perm(self.user1, self.perm2))
         self.assertFalse(permission_logic.has_perm(self.user2, self.perm2))
 
     def test_has_perm_delete_without_obj_without_any(self):
         permission_logic = StaffPermissionLogic(any_permission=False)
         add_permission_logic(self.article.__class__, permission_logic)
-        self.assertFalse(permission_logic.has_perm(self.user1, self.perm3))
+        self.assertTrue(permission_logic.has_perm(self.user1, self.perm3))
         self.assertFalse(permission_logic.has_perm(self.user2, self.perm3))
 
     def test_has_perm_add_with_obj_without_any(self):

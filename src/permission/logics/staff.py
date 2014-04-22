@@ -70,8 +70,10 @@ class StaffPermissionLogic(PermissionLogic):
         """
         Check if user have permission (of object)
 
-        If no object is specified and permission is ``add_permission`` then
-        it return ``True``. Otherwise it return ``False``
+        If no object is specified, it return ``True`` when the corresponding
+        permission was specified to ``True`` (changed from v0.7.0).
+        This behavior is based on the django system.
+        https://code.djangoproject.com/wiki/RowLevelPermissions
 
         If an object is specified, it will return ``True`` if the user is staff.
         the staff can add, change or delete the object (you can change this
@@ -101,6 +103,10 @@ class StaffPermissionLogic(PermissionLogic):
         if obj is None:
             if user_obj.is_staff:
                 if self.add_permission and perm == add_permission:
+                    return True
+                if self.change_permission and perm == change_permission:
+                    return True
+                if self.delete_permission and perm == delete_permission:
                     return True
                 return self.any_permission
             return False

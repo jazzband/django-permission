@@ -76,8 +76,10 @@ class GroupInPermissionLogic(PermissionLogic):
         """
         Check if user have permission (of object)
 
-        If no object is specified, it return ``False`` except the specified
-        permission is *add* permission.
+        If no object is specified, it return ``True`` when the corresponding
+        permission was specified to ``True`` (changed from v0.7.0).
+        This behavior is based on the django system.
+        https://code.djangoproject.com/wiki/RowLevelPermissions
 
         If an object is specified, it will return ``True`` if the user is
         in group specified in ``group_names`` of this instance.
@@ -109,6 +111,10 @@ class GroupInPermissionLogic(PermissionLogic):
         if obj is None:
             if user_obj.groups.filter(name__in=self.group_names):
                 if self.add_permission and perm == add_permission:
+                    return True
+                if self.change_permission and perm == change_permission:
+                    return True
+                if self.delete_permission and perm == delete_permission:
                     return True
                 return self.any_permission
             return False
