@@ -82,9 +82,9 @@ Configuration
 
 Autodiscover
 ~~~~~~~~~~~~
-It is new feature from django-permission 0.6.0.
-If you have ``perms.py`` in your app, django-permission automatically load the module.
-If the loaded module have ``PERMISSION_LOGICS`` variable, django-permission automatically run the following codes to apply the permission logics.
+It is new feature from django-permission 0.6.0 and the behavior was changed in django-permission 0.6.3.
+Like django's admin package, django-permission automatically discover the ``perms.py`` in your application directory **with executing ``permission.autodiscover()``**.
+Additionally, if the ``perms.py`` module have ``PERMISSION_LOGICS`` variable, django-permission automatically run the following codes to apply the permission logics.
 
 .. code:: python
 
@@ -93,19 +93,38 @@ If the loaded module have ``PERMISSION_LOGICS`` variable, django-permission auto
             model = get_model(*model.split(".", 1))
         add_permission_logic(model, permission_logic_instance)
 
-Thus, the sample shown in next section can be simplify with writing `perms.py` as:
+Quick tutorial
+``````````````
 
-.. code:: python
+1.  Add ``import permission; permission.autodiscover()`` to your ``urls.py`` like:
 
-    from permission.logics import AuthorPermissionLogic
-    from permission.logics import CollaboratorsPermissionLogic
+    .. code:: python
 
-    PERMISSION_LOGICS = (
-        ('your_app.Article', AuthorPermissionLogic()),
-        ('your_app.Article', CollaboratorsPermissionLogic()),
-    )
+        from django.conf.urls import patterns, include, url
+        from django.contrib import admin
+        
+        admin.autodiscover()
+        # add this line
+        import permission; permission.autodiscover()
 
-To disable this feature, set ``PERMISSION_AUTODISCOVER_ENABLE = False`` in ``settings`` module and to use different module or variable name, use ``PERMISSION_AUTODISCOVER_MODULE_NAME`` or ``PERMISSION_AUTODISCOVER_VARIABLE_NAME`` respectively.
+        urlpatterns = patterns('',
+            url(r'^admin/', include(admin.site.urls)),
+            # ...
+        )
+
+2.  Write ``perms.py`` in your application directory like:
+
+    .. code:: python
+
+        from permission.logics import AuthorPermissionLogic
+        from permission.logics import CollaboratorsPermissionLogic
+
+        PERMISSION_LOGICS = (
+            ('your_app.Article', AuthorPermissionLogic()),
+            ('your_app.Article', CollaboratorsPermissionLogic()),
+        )
+
+You can specify the different module or variable name, with ``PERMISSION_AUTODISCOVER_MODULE_NAME`` or ``PERMISSION_AUTODISCOVER_VARIABLE_NAME`` respectively.
 
 Apply permission logic
 ~~~~~~~~~~~~~~~~~~~~~~~~~
