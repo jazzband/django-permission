@@ -88,19 +88,10 @@ class PermissionHandler(object):
                 self._model_perms_cache = get_model_perms(self.model)
         return self._model_perms_cache
 
-    def get_permissions(self, user_obj, perm, obj=None):
+    def get_supported_permissions(self):
         """
         Get permissions which this handler can treat.
         Specified with :attr:`includes` and :attr:`excludes` of this instance.
-
-        Parameters
-        ----------
-        user_obj : django user model instance
-            A django user model instance which be checked
-        perm : string
-            `app_label.codename` formatted permission string
-        obj : None or django model instance
-            None or django model instance for object permission
 
         Returns
         -------
@@ -121,6 +112,22 @@ class PermissionHandler(object):
             includes = includes.difference(excludes)
             self._perms_cache = includes
         return self._perms_cache
+
+    def get_supported_app_labels(self):
+        """
+        Get app labels which this handler can treat.
+        Specified with :attr:`includes` and :attr:`excludes` of this instance.
+
+        Returns
+        -------
+        set
+            A set instance of app_label
+        """
+        get_app_label = lambda x: x.split(".", 1)[0]
+        if not hasattr(self, '_app_labels_cache'):
+            perms = self.get_supported_permissions()
+            self._app_labels_cache = set([get_app_label(x) for x in perms])
+        return self._app_labels_cache
 
     def has_perm(self, user_obj, perm, obj=None):
         """
@@ -147,6 +154,37 @@ class PermissionHandler(object):
         raise NotImplementedError(
                 "'%s' does not override `has_perm(user_obj, perm, obj=None)` "
                 "method. Sub class must override this method." % self.__class__)
+
+    def has_module_perms(self, user_obj, app_label):
+        """
+        Check if user have permission of specified app
+
+        Parameters
+        ----------
+        user_obj : django user model instance
+            A django user model instance which be checked
+        app_label : string
+            Django application name
+
+        Returns
+        -------
+        boolean
+            Wheter the specified user have any permissions of specified app
+
+        """
+        cache_name = "_has_module_perms_%s_%s_cache" % (app_label, user_obj.pk)
+        if hasattr(self, cache_name):
+            return getattr(self, cache_name)
+        if self.app_label != app_label:
+            setattr(self, cache_name, False)
+        else:
+            for permission in self.get_supported_permissions():
+                if user_obj.has_perm(permission):
+                    setattr(self, cache_name, True)
+                    return True
+        setattr(self, cache_name, False)
+        return False
+
 
 class LogicalPermissionHandler(PermissionHandler):
     """
@@ -193,7 +231,7 @@ class LogicalPermissionHandler(PermissionHandler):
             Wheter the specified user have specified permission (of specified
             object).
         """
-        if perm not in self.get_permissions(user_obj, perm, obj=obj):
+        if perm not in self.get_supported_permissions():
             return False
         for permission_logic in getattr(self.model, '_permission_logics', []):
             if permission_logic.has_perm(user_obj, perm, obj):
