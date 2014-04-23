@@ -93,8 +93,7 @@ Additionally, if the ``perms.py`` module have ``PERMISSION_LOGICS`` variable, dj
             model = get_model(*model.split(".", 1))
         add_permission_logic(model, permission_logic_instance)
 
-Quick tutorial
-``````````````
+**Quick tutorial**
 
 1.  Add ``import permission; permission.autodiscover()`` to your ``urls.py`` like:
 
