@@ -4,6 +4,7 @@
 __author__ = 'Alisue <lambdalisue@hashnote.net>'
 from django.test import TestCase
 from permission.tests.utils import create_user
+from permission.tests.utils import create_anonymous
 from permission.tests.utils import create_article
 from permission.tests.compatibility import MagicMock
 from permission.tests.compatibility import override_settings
@@ -21,6 +22,7 @@ class PermissionLogicsAuthorPermissionLogicTestCase(TestCase):
     def setUp(self):
         self.user1 = create_user('john')
         self.user2 = create_user('tony')
+        self.anonymous = create_anonymous()
         self.perm1 = 'permission.add_article'
         self.perm2 = 'permission.change_article'
         self.perm3 = 'permission.delete_article'
@@ -74,6 +76,21 @@ class PermissionLogicsAuthorPermissionLogicTestCase(TestCase):
         add_permission_logic(self.article.__class__, permission_logic)
         self.assertTrue(permission_logic.has_perm(self.user1, self.perm3))
 
+    def test_has_perm_add_without_obj_with_anonymous(self):
+        permission_logic = AuthorPermissionLogic()
+        add_permission_logic(self.article.__class__, permission_logic)
+        self.assertFalse(permission_logic.has_perm(self.anonymous, self.perm1))
+
+    def test_has_perm_change_without_obj_with_anonymous(self):
+        permission_logic = AuthorPermissionLogic()
+        add_permission_logic(self.article.__class__, permission_logic)
+        self.assertFalse(permission_logic.has_perm(self.anonymous, self.perm2))
+
+    def test_has_perm_delete_without_obj_with_anonymous(self):
+        permission_logic = AuthorPermissionLogic()
+        add_permission_logic(self.article.__class__, permission_logic)
+        self.assertFalse(permission_logic.has_perm(self.anonymous, self.perm3))
+
     def test_has_perm_add_with_obj(self):
         permission_logic = AuthorPermissionLogic()
         add_permission_logic(self.article.__class__, permission_logic)
@@ -91,6 +108,24 @@ class PermissionLogicsAuthorPermissionLogicTestCase(TestCase):
         add_permission_logic(self.article.__class__, permission_logic)
         self.assertFalse(
                 permission_logic.has_perm(self.user1, self.perm3, self.article))
+
+    def test_has_perm_add_with_obj_with_anonymous(self):
+        permission_logic = AuthorPermissionLogic()
+        add_permission_logic(self.article.__class__, permission_logic)
+        self.assertFalse(
+            permission_logic.has_perm(self.anonymous, self.perm1, self.article))
+
+    def test_has_perm_change_with_obj_with_anonymous(self):
+        permission_logic = AuthorPermissionLogic()
+        add_permission_logic(self.article.__class__, permission_logic)
+        self.assertFalse(
+            permission_logic.has_perm(self.anonymous, self.perm2, self.article))
+
+    def test_has_perm_delete_with_obj_with_anonymous(self):
+        permission_logic = AuthorPermissionLogic()
+        add_permission_logic(self.article.__class__, permission_logic)
+        self.assertFalse(
+            permission_logic.has_perm(self.anonymous, self.perm3, self.article))
 
     def test_has_perm_add_with_obj_author(self):
         permission_logic = AuthorPermissionLogic()

@@ -17,6 +17,10 @@ def create_user(username, **kwargs):
     user.save()
     return user
 
+def create_anonymous(**kwargs):
+    from django.contrib.auth.models import AnonymousUser
+    return AnonymousUser(**kwargs)
+
 def create_group(name, user=None):
     from django.contrib.auth.models import Group
     group = Group.objects.create(

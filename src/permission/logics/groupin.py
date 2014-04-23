@@ -76,6 +76,8 @@ class GroupInPermissionLogic(PermissionLogic):
         """
         Check if user have permission (of object)
 
+        If the user_obj is not authenticated, it return ``False``.
+
         If no object is specified, it return ``True`` when the corresponding
         permission was specified to ``True`` (changed from v0.7.0).
         This behavior is based on the django system.
@@ -104,6 +106,8 @@ class GroupInPermissionLogic(PermissionLogic):
             Wheter the specified user have specified permission (of specified
             object).
         """
+        if not user_obj.is_authenticated():
+            return False
         # construct the permission full name
         add_permission = self.get_full_permission_string('add')
         change_permission = self.get_full_permission_string('change')
