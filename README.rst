@@ -35,12 +35,11 @@ Supported python versions
 Supported django versions
     Django 1.2 - 1.6
 
-An enhanced permission library which enable *logic based permission system*
+An enhanced permission library which enables a *logic-based permission system*
 to handle complex permissions in Django.
 
-It is developed based on authentication backend system introduced from django
-1.2.
-This library support Django 1.2 and later.
+It is developed based on the authentication backend system introduced in Django
+1.2. This library does support Django 1.2 and higher.
 
 Documentation
 -------------
@@ -59,7 +58,7 @@ Usage
 
 Configuration
 ~~~~~~~~~~~~~
-1.  Put ``permission`` into your ``INSTALLED_APPS`` at settings
+1.  Add ``permission`` to the ``INSTALLED_APPS`` in your settings
     module
 
     .. code:: python
@@ -69,7 +68,7 @@ Configuration
             'permission',
         )
 
-2.  Add extra authorization backend
+2.  Add our extra authorization/authentication backend
 
     .. code:: python
 
@@ -78,13 +77,13 @@ Configuration
             'permission.backends.PermissionBackend',
         )
 
-3.  Follow the instruction below to apply logical permissions to django models
+3.  Follow the instructions below to apply logical permissions to django models
 
-Autodiscover
-~~~~~~~~~~~~
-It is new feature from django-permission 0.6.0 and the behavior was changed in django-permission 0.6.3.
-Like django's admin package, django-permission automatically discover the ``perms.py`` in your application directory **with executing ``permission.autodiscover()``**.
-Additionally, if the ``perms.py`` module have ``PERMISSION_LOGICS`` variable, django-permission automatically run the following codes to apply the permission logics.
+Autodiscovery
+~~~~~~~~~~~~~
+This is a new feature, added in django-permission 0.6.0, and the behavior was changed in django-permission 0.6.3.
+Like django's admin package, django-permission automatically discovers the ``perms.py`` in your application directory **by running ``permission.autodiscover()``**.
+Additionally, if the ``perms.py`` module has a ``PERMISSION_LOGICS`` variable, django-permission automatically run the following functions to apply the permission logics.
 
 .. code:: python
 
@@ -123,13 +122,12 @@ Additionally, if the ``perms.py`` module have ``PERMISSION_LOGICS`` variable, dj
             ('your_app.Article', CollaboratorsPermissionLogic()),
         )
 
-You can specify the different module or variable name, with ``PERMISSION_AUTODISCOVER_MODULE_NAME`` or ``PERMISSION_AUTODISCOVER_VARIABLE_NAME`` respectively.
+You can specify a different module or variable name, with ``PERMISSION_AUTODISCOVER_MODULE_NAME`` or ``PERMISSION_AUTODISCOVER_VARIABLE_NAME`` respectively.
 
 Apply permission logic
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-Assume you have an article model which has ``author`` attribute to store who
-creat the article and you want to give the author full controll permissions
-(e.g. add, change, delete permissions).
+Let's assume you wrote an article model which has an ``author`` attribute to store the creator of the article, and you want to give that author full control permissions
+(e.g. add, change and delete permissions).
 
 What you need to do is just applying ``permission.logics.AuthorPermissionLogic``
 to the ``Article`` model like
@@ -184,7 +182,7 @@ Now the following codes will work as expected
     )
 
     # You have to apply 'permission.add_article' to users manually because it
-    # is not object permission.
+    # is not an object permission.
     from permission.utils.permissions import perm_to_permission
     user1.user_permissions.add(perm_to_permission('permission.add_article'))
 
@@ -199,7 +197,7 @@ Now the following codes will work as expected
     assert user2.has_perm('permission.delete_article', art2) == True
 
     #
-    # You may interested in django signals to apply 'add' permissions to the
+    # You may also be interested in django signals to apply 'add' permissions to the
     # newly created users.
     # https://docs.djangoproject.com/en/dev/ref/signals/#django.db.models.signals.post_save
     #
@@ -236,7 +234,7 @@ of the article and you want to give them a change permission.
 
 What you need to do is quite simple.
 Apply ``permission.logics.CollaboratorsPermissionLogic``
-to the ``Article`` model like
+to the ``Article`` model as follows
 
 
 .. code:: python
@@ -342,12 +340,11 @@ anyway use ``user.has_perm`` in that case).
     ...     pass
 
 
-Overwrite builtin ``if`` in template
--------------------------------------
-django-permission overwrite builtin ``if`` tag to add two operator to handle
-permission in template.
-You can specify permission with ``has`` keyword and object with ``of`` keyword
-like the below.
+Override the builtin ``if`` template tag
+----------------------------------------
+django-permission overrides the builtin ``if`` tag, adding two operators to handle
+permissions in templates.
+You can write a permission test by using ``has`` keyword, and a target object with ``of`` as below.
 
 
 .. code:: html
