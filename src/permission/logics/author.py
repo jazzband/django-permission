@@ -5,6 +5,7 @@ Permission logic module for author based permission system
 __author__ = 'Alisue <lambdalisue@hashnote.net>'
 from permission.conf import settings
 from permission.logics.base import PermissionLogic
+from permission.utils.field_lookup import field_lookup
 
 
 class AuthorPermissionLogic(PermissionLogic):
@@ -23,6 +24,8 @@ class AuthorPermissionLogic(PermissionLogic):
         ----------
         field_name : string
             A field name of object which store the author as django user model.
+            You can specify the related object with '__' like django queryset
+            filter.
             Default value will be taken from
             ``PERMISSION_DEFAULT_APL_FIELD_NAME`` in
             settings.
@@ -64,7 +67,6 @@ class AuthorPermissionLogic(PermissionLogic):
             self.delete_permission = \
                 settings.PERMISSION_DEFAULT_APL_DELETE_PERMISSION
 
-
     def has_perm(self, user_obj, perm, obj=None):
         """
         Check if user have permission (of object)
@@ -79,8 +81,8 @@ class AuthorPermissionLogic(PermissionLogic):
         If an object is specified, it will return ``True`` if the user is
         specified in ``field_name`` of the object (e.g. ``obj.author``).
         So once user create an object and the object store who is the author in
-        ``field_name`` attribute (default: ``author``), the author can change or
-        delete the object (you can change this behavior to set
+        ``field_name`` attribute (default: ``author``), the author can change
+        or delete the object (you can change this behavior to set
         ``any_permission``, ``change_permissino`` or ``delete_permission``
         attributes of this instance).
 
@@ -117,15 +119,15 @@ class AuthorPermissionLogic(PermissionLogic):
             return False
         elif user_obj.is_active:
             # get author instance
-            author = getattr(obj, self.field_name, None)
-            if author and author == user_obj:
+            author = field_lookup(obj, self.field_name)
+            if author == user_obj:
                 if self.any_permission:
                     # have any kind of permissions to the obj
                     return True
-                if (self.change_permission and 
-                    perm == change_permission):
+                if (self.change_permission and
+                        perm == change_permission):
                     return True
-                if (self.delete_permission and 
-                    perm == delete_permission):
+                if (self.delete_permission and
+                        perm == delete_permission):
                     return True
         return False

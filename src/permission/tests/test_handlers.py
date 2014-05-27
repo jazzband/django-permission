@@ -43,6 +43,9 @@ class PermissionPermissionHandlersTestCase(TestCase):
             'permission.add_article',
             'permission.change_article',
             'permission.delete_article',
+            'permission.add_bridge',
+            'permission.change_bridge',
+            'permission.delete_bridge',
         ]))
 
     def test__get_app_perms_with_model(self):
@@ -52,6 +55,9 @@ class PermissionPermissionHandlersTestCase(TestCase):
             'permission.add_article',
             'permission.change_article',
             'permission.delete_article',
+            'permission.add_bridge',
+            'permission.change_bridge',
+            'permission.delete_bridge',
         ]))
 
     def test__get_model_perms(self):

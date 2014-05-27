@@ -6,6 +6,7 @@ __author__ = 'Alisue <lambdalisue@hashnote.net>'
 from permission.conf import settings
 from permission.logics.base import PermissionLogic
 
+
 class StaffPermissionLogic(PermissionLogic):
     """
     Permission logic class for is_staff authority based permission system
@@ -21,8 +22,8 @@ class StaffPermissionLogic(PermissionLogic):
         Parameters
         ----------
         any_permission : boolean
-            True for give any permission of the specified object to the staff user
-            Default value will be taken from
+            True for give any permission of the specified object to the staff
+            user. Default value will be taken from
             ``PERMISSION_DEFAULT_SPL_ANY_PERMISSION`` in
             settings.
         add_permission : boolean
@@ -65,7 +66,6 @@ class StaffPermissionLogic(PermissionLogic):
             self.delete_permission = \
                 settings.PERMISSION_DEFAULT_SPL_DELETE_PERMISSION
 
-
     def has_perm(self, user_obj, perm, obj=None):
         """
         Check if user have permission (of object)
@@ -77,9 +77,9 @@ class StaffPermissionLogic(PermissionLogic):
         This behavior is based on the django system.
         https://code.djangoproject.com/wiki/RowLevelPermissions
 
-        If an object is specified, it will return ``True`` if the user is staff.
-        the staff can add, change or delete the object (you can change this
-        behavior to set ``any_permission``, ``add_permission``,
+        If an object is specified, it will return ``True`` if the user is
+        staff. The staff can add, change or delete the object (you can change
+        this behavior to set ``any_permission``, ``add_permission``,
         ``change_permission``, or ``delete_permission`` attributes of this
         instance).
 
@@ -120,12 +120,12 @@ class StaffPermissionLogic(PermissionLogic):
                     # have any kind of permissions to the obj
                     return True
                 if (self.add_permission and
-                    perm == add_permission):
+                        perm == add_permission):
                     return True
                 if (self.change_permission and
-                    perm == change_permission):
+                        perm == change_permission):
                     return True
                 if (self.delete_permission and
-                    perm == delete_permission):
+                        perm == delete_permission):
                     return True
         return False

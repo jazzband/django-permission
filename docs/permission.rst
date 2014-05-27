@@ -23,6 +23,14 @@ permission.backends module
     :undoc-members:
     :show-inheritance:
 
+permission.compat module
+------------------------
+
+.. automodule:: permission.compat
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 permission.conf module
 ----------------------
 

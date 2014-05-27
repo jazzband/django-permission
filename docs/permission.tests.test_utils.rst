@@ -4,6 +4,14 @@ permission.tests.test_utils package
 Submodules
 ----------
 
+permission.tests.test_utils.test_field_lookup module
+----------------------------------------------------
+
+.. automodule:: permission.tests.test_utils.test_field_lookup
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 permission.tests.test_utils.test_handlers module
 ------------------------------------------------
 

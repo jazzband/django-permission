@@ -71,7 +71,6 @@ class GroupInPermissionLogic(PermissionLogic):
             self.delete_permission = \
                 settings.PERMISSION_DEFAULT_GIPL_DELETE_PERMISSION
 
-
     def has_perm(self, user_obj, perm, obj=None):
         """
         Check if user have permission (of object)
@@ -127,13 +126,13 @@ class GroupInPermissionLogic(PermissionLogic):
                 if self.any_permission:
                     # have any kind of permissions to the obj
                     return True
-                if (self.add_permission and 
-                    perm == add_permission):
+                if (self.add_permission and
+                        perm == add_permission):
                     return True
-                if (self.change_permission and 
-                    perm == change_permission):
+                if (self.change_permission and
+                        perm == change_permission):
                     return True
-                if (self.delete_permission and 
-                    perm == delete_permission):
+                if (self.delete_permission and
+                        perm == delete_permission):
                     return True
         return False

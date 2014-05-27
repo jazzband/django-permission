@@ -12,6 +12,14 @@ permission.utils.autodiscover module
     :undoc-members:
     :show-inheritance:
 
+permission.utils.field_lookup module
+------------------------------------
+
+.. automodule:: permission.utils.field_lookup
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 permission.utils.handlers module
 --------------------------------
 

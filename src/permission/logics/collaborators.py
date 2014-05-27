@@ -5,7 +5,7 @@ Permission logic module for collaborators based permission system
 __author__ = 'Alisue <lambdalisue@hashnote.net>'
 from permission.conf import settings
 from permission.logics.base import PermissionLogic
-from permission.utils.permissions import get_perm_codename
+from permission.utils.field_lookup import field_lookup
 
 
 class CollaboratorsPermissionLogic(PermissionLogic):
@@ -24,7 +24,9 @@ class CollaboratorsPermissionLogic(PermissionLogic):
         ----------
         field_name : string
             A field name of object which store the collaborators as django
-            relational fields for django user model
+            relational fields for django user model.
+            You can specify the related object with '__' like django queryset
+            filter.
             Default value will be taken from
             ``PERMISSION_DEFAULT_COLLABORATORS_PERMISSION_LOGIC_FIELD_NAME`` in
             settings.
@@ -119,15 +121,17 @@ class CollaboratorsPermissionLogic(PermissionLogic):
             return False
         elif user_obj.is_active:
             # get collaborator queryset
-            collaborators = getattr(obj, self.field_name, None)
-            if collaborators and user_obj in collaborators.all():
+            collaborators = field_lookup(obj, self.field_name)
+            if hasattr(collaborators, 'all'):
+                collaborators = collaborators.all()
+            if user_obj in collaborators:
                 if self.any_permission:
                     # have any kind of permissions to the obj
                     return True
-                if (self.change_permission and 
-                    perm == change_permission):
+                if (self.change_permission and
+                        perm == change_permission):
                     return True
-                if (self.delete_permission and 
-                    perm == delete_permission):
+                if (self.delete_permission and
+                        perm == delete_permission):
                     return True
         return False

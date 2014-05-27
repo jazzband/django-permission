@@ -49,7 +49,7 @@ Installation
 ------------
 Use pip_ like::
 
-    $ pip install "django-permission>=0.5.0"
+    $ pip install django-permission
 
 .. _pip:  https://pypi.python.org/pypi/pip
 
@@ -152,10 +152,45 @@ to the ``Article`` model like
     from permission.logics import AuthorPermissionLogic
     add_permission_logic(Article, AuthorPermissionLogic())
 
+.. note::
+    From django-permission version 0.8.0, you can specify related object with
+    `field__name` attribute like
+    `django queryset lookup <https://docs.djangoproject.com/en/1.6/topics/db/queries/#lookups-that-span-relationships>`_.
+    See the working example below:
+
+    .. code:: python
+
+        from django.db import models
+        from django.contrib.auth.models import User
+
+
+        class Article(models.Model):
+            title = models.CharField('title', max_length=120)
+            body = models.TextField('body')
+            project = models.ForeignKey('permission.Project')
+
+            # this is just required for easy explanation
+            class Meta:
+                app_label='permission'
+
+        class Project(models.Model):
+            title = models.CharField('title', max_length=120)
+            body = models.TextField('body')
+            author = models.ForeignKey(User)
+
+            # this is just required for easy explanation
+            class Meta:
+                app_label='permission'
+
+        # apply AuthorPermissionLogic to Article
+        from permission import add_permission_logic
+        from permission.logics import AuthorPermissionLogic
+        add_permission_logic(Article, AuthorPermissionLogic(
+            field_name='project__author',
+        ))
 
 That's it.
 Now the following codes will work as expected
-
 
 .. code:: python
 
@@ -264,6 +299,43 @@ to the ``Article`` model as follows
         change_permission=True,
         delete_permission=False,
     ))
+
+.. note::
+    From django-permission version 0.8.0, you can specify related object with
+    `field_name` attribute like
+    `django queryset lookup <https://docs.djangoproject.com/en/1.6/topics/db/queries/#lookups-that-span-relationships>`_.
+    See the working example below:
+
+    .. code:: python
+
+        from django.db import models
+        from django.contrib.auth.models import User
+
+
+        class Article(models.Model):
+            title = models.CharField('title', max_length=120)
+            body = models.TextField('body')
+            project = models.ForeignKey('permission.Project')
+
+            # this is just required for easy explanation
+            class Meta:
+                app_label='permission'
+
+        class Project(models.Model):
+            title = models.CharField('title', max_length=120)
+            body = models.TextField('body')
+            collaborators = models.ManyToManyField(User)
+
+            # this is just required for easy explanation
+            class Meta:
+                app_label='permission'
+
+        # apply AuthorPermissionLogic to Article
+        from permission import add_permission_logic
+        from permission.logics import CollaboratorsPermissionLogic
+        add_permission_logic(Article, CollaboratorsPermissionLogic(
+            field_name='project__collaborators',
+        ))
 
 
 That's it.
