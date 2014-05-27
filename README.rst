@@ -152,6 +152,7 @@ to the ``Article`` model like
     from permission.logics import AuthorPermissionLogic
     add_permission_logic(Article, AuthorPermissionLogic())
 
+
 .. note::
     From django-permission version 0.8.0, you can specify related object with
     `field__name` attribute like
@@ -188,6 +189,7 @@ to the ``Article`` model like
         add_permission_logic(Article, AuthorPermissionLogic(
             field_name='project__author',
         ))
+
 
 That's it.
 Now the following codes will work as expected
@@ -299,6 +301,7 @@ to the ``Article`` model as follows
         change_permission=True,
         delete_permission=False,
     ))
+
 
 .. note::
     From django-permission version 0.8.0, you can specify related object with
