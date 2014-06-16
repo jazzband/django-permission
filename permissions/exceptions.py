@@ -1,3 +1,6 @@
 class Unauthorized(Exception):
-    def __init__(self, str):
-        super(Unauthorized, self).__init__(str)
+    def __init__(self, message):
+        self.message = message
+
+    def __str__(self):
+        return repr(self.message)
