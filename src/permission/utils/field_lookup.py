@@ -38,5 +38,5 @@ def field_lookup(obj, field_path):
     # split the path
     field_path = field_path.split("__", 1)
     if len(field_path) == 1:
-        return getattr(obj, field_path[0])
+        return getattr(obj, field_path[0], None)
     return field_lookup(field_lookup(obj, field_path[0]), field_path[1])
