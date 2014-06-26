@@ -214,7 +214,7 @@ def get_roles(user, obj=None):
 
     if groups_ids_str:
         prrs = PrincipalRoleRelation.objects.filter(
-            (Q(user_id=user.id) or Q(group_id__in=groups_ids_str)) and Q(content_id=None)
+            Q(user_id=user.id) | Q(group_id__in=groups_ids_str), content_id=None
         ).values("role_id")
     else:
         prrs = PrincipalRoleRelation.objects.filter(user_id=user.id, content_id=None).values("role_id")
@@ -228,7 +228,7 @@ def get_roles(user, obj=None):
 
         if groups_ids_str:
             prrs = PrincipalRoleRelation.objects.filter(
-                (Q(user_id=user.id) or Q(group_id__in=groups_ids_str)), content_id=obj.id, content_type_id=ctype.id
+                Q(user_id=user.id) | Q(group_id__in=groups_ids_str), content_id=obj.id, content_type_id=ctype.id
             ).values("role_id")
         else:
             prrs = PrincipalRoleRelation.objects.filter(
