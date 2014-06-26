@@ -212,22 +212,14 @@ def get_roles(user, obj=None):
     groups = user.groups.all()
     groups_ids_str = ", ".join([str(g.id) for g in groups])
 
-    # Gobal roles for user and the user's groups
-    cursor = connection.cursor()
-
     if groups_ids_str:
-        cursor.execute("""SELECT role_id
-                          FROM permissions_principalrolerelation
-                          WHERE (user_id=%s OR group_id IN (%s))
-                          AND content_id is Null""" % (user.id, groups_ids_str))
+        prrs = PrincipalRoleRelation.objects.filter(
+            (Q(user_id=user.id) or Q(group_id__in=groups_ids_str)) and Q(content_id=None)
+        ).values("role_id")
     else:
-        cursor.execute("""SELECT role_id
-                          FROM permissions_principalrolerelation
-                          WHERE user_id=%s
-                          AND content_id is Null""" % user.id)
+        prrs = PrincipalRoleRelation.objects.filter(user_id=user.id, content_id=None).values("role_id")
 
-    for row in cursor.fetchall():
-        role_ids.append(row[0])
+    role_ids = [ppr["role_id"] for ppr in prrs]
 
     # Local roles for user and the user's groups and all ancestors of the
     # passed object.
@@ -235,20 +227,16 @@ def get_roles(user, obj=None):
         ctype = ContentType.objects.get_for_model(obj)
 
         if groups_ids_str:
-            cursor.execute("""SELECT role_id
-                              FROM permissions_principalrolerelation
-                              WHERE (user_id='%s' OR group_id IN (%s))
-                              AND content_id='%s'
-                              AND content_type_id='%s'""" % (user.id, groups_ids_str, obj.id, ctype.id))
+            prrs = PrincipalRoleRelation.objects.filter(
+                (Q(user_id=user.id) or Q(group_id__in=groups_ids_str)), content_id=obj.id, content_type_id=ctype.id
+            ).values("role_id")
         else:
-            cursor.execute("""SELECT role_id
-                              FROM permissions_principalrolerelation
-                              WHERE user_id='%s'
-                              AND content_id='%s'
-                              AND content_type_id='%s'""" % (user.id, obj.id, ctype.id))
+            prrs = PrincipalRoleRelation.objects.filter(
+                user_id=user.id, content_id=obj.id, content_type_id=ctype.id
+            ).values("role_id")
 
-        for row in cursor.fetchall():
-            role_ids.append(row[0])
+        for prr in prrs:
+            role_ids.append(prr["role_id"])
 
         try:
             obj = obj.get_parent_for_permissions()

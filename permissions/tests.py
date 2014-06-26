@@ -25,12 +25,12 @@ class BackendTestCase(TestCase):
             'django.contrib.auth.backends.ModelBackend',
             'permissions.backend.ObjectPermissionsBackend',
         )
-        
-        self.role_1 = permissions.utils.register_role("Role 1")        
+
+        self.role_1 = permissions.utils.register_role("Role 1")
         self.user = User.objects.create(username="john")
         self.page_1 = FlatPage.objects.create(url="/page-1/", title="Page 1")
         self.view = permissions.utils.register_permission("View", "view")
-        
+
         # Add user to role
         self.role_1.add_principal(self.user)
 
@@ -39,16 +39,16 @@ class BackendTestCase(TestCase):
         """
         result = self.user.has_perm(self.view, self.page_1)
         self.assertEqual(result, False)
-        
+
         # assign view permission to role 1
         permissions.utils.grant_permission(self.page_1, self.role_1, self.view)
 
         result = self.user.has_perm("view", self.page_1)
         self.assertEqual(result, True)
-    
+
 class RoleTestCase(TestCase):
     """
-    """    
+    """
     def setUp(self):
         """
         """
@@ -62,7 +62,7 @@ class RoleTestCase(TestCase):
 
         self.page_1 = FlatPage.objects.create(url="/page-1/", title="Page 1")
         self.page_2 = FlatPage.objects.create(url="/page-1/", title="Page 2")
-        
+
     def test_getter(self):
         """
         """
@@ -122,6 +122,7 @@ class RoleTestCase(TestCase):
         result = permissions.utils.add_role(self.user, self.role_2)
         self.assertEqual(result, True)
 
+        delattr(self.user, "roles")
         result = permissions.utils.get_roles(self.user)
         self.assertEqual(list(result), [self.role_1, self.role_2])
 
@@ -133,6 +134,7 @@ class RoleTestCase(TestCase):
         result = permissions.utils.remove_role(self.user, self.role_1)
         self.assertEqual(result, False)
 
+        delattr(self.user, "roles")
         result = permissions.utils.get_roles(self.user)
         self.assertEqual(list(result), [self.role_2])
 
@@ -140,6 +142,7 @@ class RoleTestCase(TestCase):
         result = permissions.utils.remove_role(self.user, self.role_2)
         self.assertEqual(result, True)
 
+        delattr(self.user, "roles")
         result = permissions.utils.get_roles(self.user)
         self.assertEqual(list(result), [])
 
@@ -200,6 +203,7 @@ class RoleTestCase(TestCase):
         result = permissions.utils.remove_roles(self.user)
         self.assertEqual(result, True)
 
+        delattr(self.user, "roles")
         result = permissions.utils.get_roles(self.user)
         self.assertEqual(list(result), [])
 
@@ -484,14 +488,14 @@ class RoleTestCase(TestCase):
         self.assertEqual(result[0].username, "john")
         self.assertEqual(result[1].username, "jane")
         self.assertEqual(len(result), 2)
-        
+
     def test_get_users_3(self):
         """
         """
         self.role_1.add_principal(self.user)
         result = self.role_1.get_users()
         self.assertEqual(result, [self.user])
-        
+
         # Add same user again
         self.role_1.add_principal(self.user)
         result = self.role_1.get_users()
@@ -511,7 +515,7 @@ class PermissionTestCase(TestCase):
         self.user.save()
 
         self.page_1 = FlatPage.objects.create(url="/page-1/", title="Page 1")
-        self.page_2 = FlatPage.objects.create(url="/page-1/", title="Page 2")
+        self.page_2 = FlatPage.objects.create(url="/page-2/", title="Page 2")
 
         self.permission = permissions.utils.register_permission("View", "view")
 
@@ -585,6 +589,8 @@ class PermissionTestCase(TestCase):
 
         permissions.utils.grant_permission(self.page_1, self.role_2, self.permission)
         permissions.utils.add_local_role(self.page_1, self.user, self.role_2)
+        # Remove cache. This is done automatically by Django for every new request
+        delattr(self.user, "roles")
 
         result = permissions.utils.has_permission(self.page_1, self.user, "view")
         self.assertEqual(result, True)
