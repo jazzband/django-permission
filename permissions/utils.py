@@ -181,6 +181,7 @@ def remove_local_roles(obj, principal):
     else:
         return False
 
+
 def get_roles(user, obj=None):
     """Returns *all* roles of the passed user.
 
@@ -201,7 +202,13 @@ def get_roles(user, obj=None):
         The object for which local roles will returned.
 
     """
-    role_ids = []
+    # Cached roles
+    obj_id = str(obj.id) if obj else "0"
+    try:
+        return user.roles[obj_id]
+    except (AttributeError, KeyError):
+        pass
+
     groups = user.groups.all()
     groups_ids_str = ", ".join([str(g.id) for g in groups])
 
@@ -248,7 +255,15 @@ def get_roles(user, obj=None):
         except AttributeError:
             obj = None
 
-    return Role.objects.filter(pk__in=role_ids)
+    roles = Role.objects.filter(pk__in=role_ids)
+
+    # Cache roles per object
+    if not getattr(user, "roles", False):
+        user.roles = {}
+    user.roles[obj_id] = roles
+
+    return roles
+
 
 def get_global_roles(principal):
     """Returns *direct* global roles of passed principal (user or group).
@@ -261,6 +276,7 @@ def get_global_roles(principal):
             principal = (principal,)
         return [prr.role for prr in PrincipalRoleRelation.objects.filter(
             group__in=principal, content_id=None, content_type=None)]
+
 
 def get_local_roles(obj, principal):
     """Returns *direct* local roles for passed principal and content object.
