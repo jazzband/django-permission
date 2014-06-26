@@ -1,21 +1,28 @@
-What is it?
-===========
+Introduction
+============
 
 django-permissions provides per-object permissions for Django on roles: http://en.wikipedia.org/wiki/Role-based_access_control
 
 Code
 ====
 
-The code can be found on bitbucket: http://bitbucket.org/diefenbach/django-permissions/
+The code can be found on bitbucket: http://github.com/diefenbach/django-permissions
 
 Implementations
 ===============
 
-If you want to see a comprehensive implementation of django-permissions take 
+If you want to see a comprehensive implementation of django-permissions take
 a look at the CMS `LFC <http://pypi.python.org/pypi/django-lfc>`_
 
 Changes
 =======
+
+1.1 (2014-06-26)
+----------------
+
+* Fixes deprecation warning
+* Removes raw SQL statements
+* Caches calculated roles on user object
 
 1.0.3 (2011-04-30)
 ------------------
