@@ -11,3 +11,9 @@ from permission.utils.logics import remove_permission_logic
 
 # autodiscover
 from permission.utils.autodiscover import autodiscover
+
+# builtin
+from permission.conf import settings
+if settings.PERMISSION_REPLACE_BUILTIN_IF:
+    from django.template import add_to_builtins
+    add_to_builtins('permission.templatetags.permissionif')
