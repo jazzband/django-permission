@@ -2,10 +2,10 @@
 """
 django if templatetag patch
 """
-from distutils.version import StrictVersion
+from distutils.version import LooseVersion
 from django import get_version
 
-if StrictVersion(get_version()) < '1.4':
+if LooseVersion(get_version()) < '1.4':
     from django.template import Node
     from django.template import NodeList
     from django.template import VariableDoesNotExist
