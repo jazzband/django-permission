@@ -1,3 +1,4 @@
+django
 app_version
 django-appconf
 django-override-settings
