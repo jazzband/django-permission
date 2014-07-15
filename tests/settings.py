@@ -57,11 +57,6 @@ MEDIA_ROOT = ''
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = ''
 
-# URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
-# trailing slash.
-# Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/media/'
-
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'rbs62_^fuahxz!4k1!&yj$h8a=&-h_%do+3jk&%#v=o2%ep=7@'
 
@@ -97,4 +92,17 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     'permission',
+    'permission.tests',
 )
+
+
+import django
+
+if django.VERSION <= (1, 3):
+    # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
+    # trailing slash.
+    # Examples: "http://foo.com/media/", "/media/".
+    ADMIN_MEDIA_PREFIX = '/media/'
+
+if django.VERSION >= (1, 6):
+    TEST_RUNNER = 'django.test.runner.DiscoverRunner'

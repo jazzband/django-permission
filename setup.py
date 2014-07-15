@@ -5,12 +5,14 @@ from setuptools import setup, find_packages
 NAME = 'django-permission'
 VERSION = '0.8.1'
 
+
 def read(filename):
     import os
     BASE_DIR = os.path.dirname(__file__)
     filename = os.path.join(BASE_DIR, filename)
     with open(filename, 'r') as fi:
         return fi.read()
+
 
 def readlist(filename):
     rows = read(filename).split("\n")
@@ -27,10 +29,10 @@ if sys.version_info >= (3, 0):
     )
 
 setup(
-    name = NAME,
-    version = VERSION,
-    description = ('A enhanced permission system which enable logical permission'
-                   'systems to complex permissions'),
+    name=NAME,
+    version=VERSION,
+    description=('A enhanced permission system which enable logical permission'
+                 'systems to complex permissions'),
     long_description = read('README.rst'),
     classifiers = (
         'Development Status :: 5 - Production/Stable',
@@ -45,6 +47,7 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Software Development :: Libraries',
         'Topic :: Software Development :: Libraries :: Application Frameworks',

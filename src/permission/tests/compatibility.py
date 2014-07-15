@@ -3,13 +3,6 @@
 """
 __author__ = 'Alisue <lambdalisue@hashnote.net>'
 try:
-    # from django 1.5
-    from django.contrib.auth import get_user_model
-    User = get_user_model()
-except ImportError:
-    from django.contrib.auth.models import User
-
-try:
     # Python 3 have mock in unittest
     from unittest.mock import MagicMock
 except ImportError:
