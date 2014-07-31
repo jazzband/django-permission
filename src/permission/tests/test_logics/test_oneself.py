@@ -168,7 +168,7 @@ class PermissionLogicsOneselfPermissionLogicTestCase(TestCase):
         self.assertFalse(
                 permission_logic.has_perm(self.user1, self.perm2, self.user1))
 
-    def test_has_perm_delete_with_obj_non_any_no_change(self):
+    def test_has_perm_delete_with_himself_non_any_no_change(self):
         permission_logic = OneselfPermissionLogic(any_permission=False,
                                                  change_permission=False)
         add_permission_logic(self.user1.__class__, permission_logic)
@@ -189,7 +189,7 @@ class PermissionLogicsOneselfPermissionLogicTestCase(TestCase):
         self.assertTrue(
                 permission_logic.has_perm(self.user1, self.perm2, self.user1))
 
-    def test_has_perm_delete_with_obj_non_any_no_delete(self):
+    def test_has_perm_delete_with_himself_non_any_no_delete(self):
         permission_logic = OneselfPermissionLogic(any_permission=False,
                                                  delete_permission=False)
         add_permission_logic(self.user1.__class__, permission_logic)
