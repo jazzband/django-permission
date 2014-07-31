@@ -36,6 +36,14 @@ permission.logics.groupin module
     :undoc-members:
     :show-inheritance:
 
+permission.logics.oneself module
+------------------------------
+
+.. automodule:: permission.logics.oneself
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 permission.logics.staff module
 ------------------------------
 
