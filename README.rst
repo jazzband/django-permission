@@ -56,6 +56,11 @@ Use pip_ like::
 Usage
 -----
 
+The following might help you to understand as well.
+
+- Basic strategy or so on, `Issue #28 <https://github.com/lambdalisue/django-permission/issues/28>`_
+- Advanced usage and examples, `Issue #26 <https://github.com/lambdalisue/django-permission/issues/26>`_
+
 Configuration
 ~~~~~~~~~~~~~
 1.  Add ``permission`` to the ``INSTALLED_APPS`` in your settings
