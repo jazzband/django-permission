@@ -30,7 +30,10 @@ django-permission
 .. image:: https://requires.io/github/lambdalisue/django-permission/requirements.svg?branch=master
     :target: https://requires.io/github/lambdalisue/django-permission/requirements/?branch=master
     :alt: Requirements Status
- 
+.. image:: https://landscape.io/github/lambdalisue/django-permission/master/landscape.png
+    :target: https://landscape.io/github/lambdalisue/django-permission/master
+    :alt: Code Health
+   
 Author
     Alisue <lambdalisue@hashnote.net>
 Supported python versions
