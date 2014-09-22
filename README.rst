@@ -8,6 +8,14 @@ django-permission
     :target: https://coveralls.io/r/lambdalisue/django-permission/
     :alt: Coverage
 
+.. image:: https://pypip.in/py_versions/<PYPI_PKG_NAME>/badge.svg
+    :target: https://pypi.python.org/pypi/<PYPI_PKG_NAME>/
+    :alt: Supported Python versions
+    
+.. image:: https://pypip.in/status/<PYPI_PKG_NAME>/badge.svg
+    :target: https://pypi.python.org/pypi/<PYPI_PKG_NAME>/
+    :alt: Development Status
+    
 .. image:: https://pypip.in/d/django-permission/badge.png
     :target: https://pypi.python.org/pypi/django-permission/
     :alt: Downloads
