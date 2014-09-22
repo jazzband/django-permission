@@ -8,33 +8,34 @@ django-permission
     :target: https://coveralls.io/r/lambdalisue/django-permission/
     :alt: Coverage
 
-.. image:: https://pypip.in/py_versions/<PYPI_PKG_NAME>/badge.svg
-    :target: https://pypi.python.org/pypi/<PYPI_PKG_NAME>/
+.. image:: https://pypip.in/py_versions/django-permission/badge.svg
+    :target: https://pypi.python.org/pypi/django-permission/
     :alt: Supported Python versions
     
-.. image:: https://pypip.in/status/<PYPI_PKG_NAME>/badge.svg
-    :target: https://pypi.python.org/pypi/<PYPI_PKG_NAME>/
+.. image:: https://pypip.in/status/django-permission/badge.svg
+    :target: https://pypi.python.org/pypi/django-permission/
     :alt: Development Status
     
-.. image:: https://pypip.in/d/django-permission/badge.png
+.. image:: https://pypip.in/d/django-permission/badge.svg
     :target: https://pypi.python.org/pypi/django-permission/
     :alt: Downloads
 
-.. image:: https://pypip.in/v/django-permission/badge.png
+.. image:: https://pypip.in/v/django-permission/badge.svg
     :target: https://pypi.python.org/pypi/django-permission/
     :alt: Latest version
 
-.. image:: https://pypip.in/wheel/django-permission/badge.png
+.. image:: https://pypip.in/wheel/django-permission/badge.svg
     :target: https://pypi.python.org/pypi/django-permission/
     :alt: Wheel Status
 
-.. image:: https://pypip.in/egg/django-permission/badge.png
+.. image:: https://pypip.in/egg/django-permission/badge.svg
     :target: https://pypi.python.org/pypi/django-permission/
     :alt: Egg Status
 
-.. image:: https://pypip.in/license/django-permission/badge.png
+.. image:: https://pypip.in/license/django-permission/badge.svg
     :target: https://pypi.python.org/pypi/django-permission/
     :alt: License
+    
 .. image:: https://requires.io/github/lambdalisue/django-permission/requirements.svg?branch=master
     :target: https://requires.io/github/lambdalisue/django-permission/requirements/?branch=master
     :alt: Requirements Status
