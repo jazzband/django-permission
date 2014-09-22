@@ -27,7 +27,10 @@ django-permission
 .. image:: https://pypip.in/license/django-permission/badge.png
     :target: https://pypi.python.org/pypi/django-permission/
     :alt: License
-
+.. image:: https://requires.io/github/lambdalisue/django-permission/requirements.svg?branch=master
+    :target: https://requires.io/github/lambdalisue/django-permission/requirements/?branch=master
+    :alt: Requirements Status
+ 
 Author
     Alisue <lambdalisue@hashnote.net>
 Supported python versions
