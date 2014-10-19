@@ -37,7 +37,7 @@ permission.logics.groupin module
     :show-inheritance:
 
 permission.logics.oneself module
-------------------------------
+--------------------------------
 
 .. automodule:: permission.logics.oneself
     :members:

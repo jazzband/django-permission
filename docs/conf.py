@@ -173,6 +173,14 @@ html_static_path = ['_static']
 htmlhelp_basename = 'django-permissiondoc'
 
 
+# Use Read The Docs theme
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+if not on_rtd:
+    import sphinx_rtd_theme
+    html_theme = 'sphinx_rtd_theme'
+    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+
+
 # -- Options for LaTeX output --------------------------------------------------
 
 latex_elements = {

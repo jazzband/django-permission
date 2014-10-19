@@ -36,6 +36,14 @@ permission.tests.test_logics.test_groupin module
     :undoc-members:
     :show-inheritance:
 
+permission.tests.test_logics.test_oneself module
+------------------------------------------------
+
+.. automodule:: permission.tests.test_logics.test_oneself
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 permission.tests.test_logics.test_staff module
 ----------------------------------------------
 

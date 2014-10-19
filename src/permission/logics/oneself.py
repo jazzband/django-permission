@@ -9,6 +9,9 @@ from permission.logics.base import PermissionLogic
 class OneselfPermissionLogic(PermissionLogic):
     """
     Permission logic class to manage users' self-modifications
+
+    Written by quasiyoke.
+    https://github.com/lambdalisue/django-permission/pull/27
     """
     def __init__(self,
                  any_permission=None,

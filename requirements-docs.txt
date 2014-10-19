@@ -5,3 +5,4 @@ django-override-settings
 mock
 sphinx
 numpydoc
+sphinx_rtd_theme

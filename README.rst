@@ -48,7 +48,7 @@ Author
 Supported python versions
     Python 2.6, 2.7, 3.2, 3.3, 3.4
 Supported django versions
-    Django 1.2 - 1.6 and 1.7 rc1
+    Django 1.2 - 1.6 and 1.7
 
 An enhanced permission library which enables a *logic-based permission system*
 to handle complex permissions in Django.
@@ -179,40 +179,41 @@ to the ``Article`` model like
     `django queryset lookup <https://docs.djangoproject.com/en/1.6/topics/db/queries/#lookups-that-span-relationships>`_.
     See the working example below:
 
-    .. code:: python
+.. code:: python
 
-        from django.db import models
-        from django.contrib.auth.models import User
+    from django.db import models
+    from django.contrib.auth.models import User
 
 
-        class Article(models.Model):
-            title = models.CharField('title', max_length=120)
-            body = models.TextField('body')
-            project = models.ForeignKey('permission.Project')
+    class Article(models.Model):
+        title = models.CharField('title', max_length=120)
+        body = models.TextField('body')
+        project = models.ForeignKey('permission.Project')
 
-            # this is just required for easy explanation
-            class Meta:
-                app_label='permission'
+        # this is just required for easy explanation
+        class Meta:
+            app_label='permission'
 
-        class Project(models.Model):
-            title = models.CharField('title', max_length=120)
-            body = models.TextField('body')
-            author = models.ForeignKey(User)
+    class Project(models.Model):
+        title = models.CharField('title', max_length=120)
+        body = models.TextField('body')
+        author = models.ForeignKey(User)
 
-            # this is just required for easy explanation
-            class Meta:
-                app_label='permission'
+        # this is just required for easy explanation
+        class Meta:
+            app_label='permission'
 
-        # apply AuthorPermissionLogic to Article
-        from permission import add_permission_logic
-        from permission.logics import AuthorPermissionLogic
-        add_permission_logic(Article, AuthorPermissionLogic(
-            field_name='project__author',
-        ))
+    # apply AuthorPermissionLogic to Article
+    from permission import add_permission_logic
+    from permission.logics import AuthorPermissionLogic
+    add_permission_logic(Article, AuthorPermissionLogic(
+        field_name='project__author',
+    ))
 
 
 That's it.
-Now the following codes will work as expected
+Now the following codes will work as expected:
+
 
 .. code:: python
 
@@ -329,40 +330,41 @@ to the ``Article`` model as follows
     `django queryset lookup <https://docs.djangoproject.com/en/1.6/topics/db/queries/#lookups-that-span-relationships>`_.
     See the working example below:
 
-    .. code:: python
 
-        from django.db import models
-        from django.contrib.auth.models import User
+.. code:: python
+
+    from django.db import models
+    from django.contrib.auth.models import User
 
 
-        class Article(models.Model):
-            title = models.CharField('title', max_length=120)
-            body = models.TextField('body')
-            project = models.ForeignKey('permission.Project')
+    class Article(models.Model):
+        title = models.CharField('title', max_length=120)
+        body = models.TextField('body')
+        project = models.ForeignKey('permission.Project')
 
-            # this is just required for easy explanation
-            class Meta:
-                app_label='permission'
+        # this is just required for easy explanation
+        class Meta:
+            app_label='permission'
 
-        class Project(models.Model):
-            title = models.CharField('title', max_length=120)
-            body = models.TextField('body')
-            collaborators = models.ManyToManyField(User)
+    class Project(models.Model):
+        title = models.CharField('title', max_length=120)
+        body = models.TextField('body')
+        collaborators = models.ManyToManyField(User)
 
-            # this is just required for easy explanation
-            class Meta:
-                app_label='permission'
+        # this is just required for easy explanation
+        class Meta:
+            app_label='permission'
 
-        # apply AuthorPermissionLogic to Article
-        from permission import add_permission_logic
-        from permission.logics import CollaboratorsPermissionLogic
-        add_permission_logic(Article, CollaboratorsPermissionLogic(
-            field_name='project__collaborators',
-        ))
+    # apply AuthorPermissionLogic to Article
+    from permission import add_permission_logic
+    from permission.logics import CollaboratorsPermissionLogic
+    add_permission_logic(Article, CollaboratorsPermissionLogic(
+        field_name='project__collaborators',
+    ))
 
 
 That's it.
-Now the following codes will work as expected
+Now the following codes will work as expected:
 
 
 .. code:: python
