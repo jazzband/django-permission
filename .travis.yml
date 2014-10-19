@@ -1,11 +1,11 @@
 language: python
 
 install:
-  - pip install tox
+  - pip install "tox>=1.8"
   - pip install coverage coveralls
 
 script:
-  - tox
+  - tox -r
 
 after_success:
   - coverage report
