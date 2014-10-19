@@ -210,7 +210,7 @@ class PermissionPermissionHandlersTestCase(TestCase):
         self.assertRaises(NotImplementedError,
                 instance.has_perm,
                 self.user, self.perm1, self.article)
-        
+
     def test_has_perm_change_wiht_obj(self):
         instance = self.handler(Article)
         self.assertRaises(NotImplementedError,
@@ -281,6 +281,15 @@ class PermissionLogicalPermissionHandlerTestCase(TestCase):
         ])
         self.assertFalse(self.mock_logic1.has_perm.called)
         self.assertFalse(self.mock_logic2.has_perm.called)
-        self.assertFalse(instance.has_perm(self.user, 'permission.add_article'))
+        self.assertFalse(instance.has_perm(self.user,
+                                           'permission.add_article'))
         self.assertTrue(self.mock_logic1.has_perm.called)
         self.assertTrue(self.mock_logic2.has_perm.called)
+        self.assertEqual(self.mock_logic1.has_perm.call_count, 1)
+        self.assertEqual(self.mock_logic2.has_perm.call_count, 1)
+        # permission check should be cached thus `has_perm` should not be
+        # called twice for same user instance
+        self.assertFalse(instance.has_perm(self.user,
+                                           'permission.add_article'))
+        self.assertEqual(self.mock_logic1.has_perm.call_count, 1)
+        self.assertEqual(self.mock_logic2.has_perm.call_count, 1)

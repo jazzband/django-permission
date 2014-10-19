@@ -2,7 +2,6 @@
 """
 """
 __author__ = 'Alisue <lambdalisue@hashnote.net>'
-from permission.conf import settings
 from permission.utils.permissions import get_app_perms
 from permission.utils.permissions import get_model_perms
 import collections
@@ -18,6 +17,7 @@ class PermissionHandler(object):
     @property
     def includes(self):
         return self._includes
+
     @includes.setter
     def includes(self, value):
         # clear cache
@@ -28,13 +28,13 @@ class PermissionHandler(object):
     @property
     def excludes(self):
         return self._excludes
+
     @excludes.setter
     def excludes(self, value):
         # clear cache
         if hasattr(self, '_perms_cache'):
             del self._perms_cache
         self._excludes = value
-
 
     def __init__(self, model_or_app_label):
         """
@@ -99,11 +99,13 @@ class PermissionHandler(object):
             A set instance of `app_label.codename` formatted permission strings
         """
         if not hasattr(self, '_perms_cache'):
-            if self.includes and isinstance(self.includes, collections.Callable):
+            if (self.includes and
+                    isinstance(self.includes, collections.Callable)):
                 includes = self.includes(self)
             else:
                 includes = self.includes or []
-            if self.excludes and isinstance(self.excludes, collections.Callable):
+            if (self.excludes and
+                    isinstance(self.excludes, collections.Callable)):
                 excludes = self.excludes(self)
             else:
                 excludes = self.excludes or []
@@ -151,9 +153,10 @@ class PermissionHandler(object):
         .. note::
             Sub class must override this method.
         """
-        raise NotImplementedError(
-                "'%s' does not override `has_perm(user_obj, perm, obj=None)` "
-                "method. Sub class must override this method." % self.__class__)
+        raise NotImplementedError((
+            "'%s' does not override `has_perm(user_obj, perm, obj=None)` "
+            "method. Sub class must override this method."
+        ) % self.__class__)
 
     def has_module_perms(self, user_obj, app_label):
         """
@@ -206,15 +209,17 @@ class LogicalPermissionHandler(PermissionHandler):
         """
         # logical permission handler cannot treat application level permission
         if isinstance(model, str):
-            raise AttributeError(
-                    "'%s' cannot treat application level permission." %
-                    self.__class__)
+            raise AttributeError((
+                "'%s' cannot treat application level permission."
+            ) % self.__class__)
         super(LogicalPermissionHandler, self).__init__(model)
 
     def has_perm(self, user_obj, perm, obj=None):
         """
         Check if user have permission (of object) based on
         specified models's ``_permission_logics`` attribute.
+
+        The result will be stored in user_obj as a cache to reduce method call.
 
         Parameters
         ----------
@@ -233,7 +238,21 @@ class LogicalPermissionHandler(PermissionHandler):
         """
         if perm not in self.get_supported_permissions():
             return False
-        for permission_logic in getattr(self.model, '_permission_logics', []):
+        # use cache to reduce method call
+        CACHE_NAME = '_logical_perms_cache'
+        if not hasattr(user_obj, CACHE_NAME):
+            setattr(user_obj, CACHE_NAME, {})
+        cache = getattr(user_obj, CACHE_NAME)
+        cachekey = "%s %s" % (perm, hash(obj))
+        if cachekey not in cache:
+            cache[cachekey] = self._has_perm(user_obj, perm, obj)
+        return cache[cachekey]
+
+    def _has_perm(self, user_obj, perm, obj=None):
+        if perm not in self.get_supported_permissions():
+            return False
+        for permission_logic in getattr(self.model,
+                                        '_permission_logics', []):
             if permission_logic.has_perm(user_obj, perm, obj):
                 return True
         return False
