@@ -95,6 +95,10 @@ INSTALLED_APPS = (
     'permission.tests',
 )
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'permission.backends.PermissionBackend',
+)
 
 import django
 

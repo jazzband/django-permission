@@ -5,8 +5,10 @@ django-permission application configure
 __author__ = 'Alisue <lambdalisue@hashnote.net>'
 __all__ = ('settings',)
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from appconf import AppConf
 from permission.handlers import LogicalPermissionHandler
+
 
 class PermissionConf(AppConf):
     DEFAULT_PERMISSION_HANDLER = LogicalPermissionHandler
@@ -44,3 +46,17 @@ class PermissionConf(AppConf):
 
     AUTODISCOVER_MODULE_NAME = 'perms'
     AUTODISCOVER_VARIABLE_NAME = 'PERMISSION_LOGICS'
+
+    CHECK_AUTHENTICATION_BACKENDS = True
+    """Check if AUTHENTICATION_BACKENDS is correctly configured"""
+
+
+# Check AUTHENTICATION_BACKENDS
+if 'permission' in settings.INSTALLED_APPS:
+    if settings.PERMISSION_CHECK_AUTHENTICATION_BACKENDS:
+        if ('permission.backends.PermissionBackend' not in
+                settings.AUTHENTICATION_BACKENDS):
+            raise ImproperlyConfigured(
+                    '"permission.backends.PermissionBackend" is not found in '
+                    '`AUTHENTICATION_BACKENDS`.'
+                )
