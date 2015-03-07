@@ -14,3 +14,8 @@ except ImportError:
             return True
         except TypeError:
             return False
+
+try:
+    from django.template.base import add_to_builtins
+except ImportError:
+    from django.template.loader import add_to_builtins
