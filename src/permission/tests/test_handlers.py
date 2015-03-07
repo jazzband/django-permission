@@ -10,7 +10,7 @@ from permission.tests.compatibility import MagicMock
 from permission.tests.compatibility import override_settings
 from permission.handlers import PermissionHandler
 from permission.handlers import LogicalPermissionHandler
-from permission.utils.handlers import PermissionHandlerRegistry
+
 
 @override_settings(
     PERMISSION_DEFAULT_PERMISSION_HANDLER=PermissionHandler
@@ -81,9 +81,9 @@ class PermissionPermissionHandlersTestCase(TestCase):
     def test_get_supported_permissions_with_includes(self):
         instance = self.handler(Article)
         instance.includes = [
-                'permission.add_article',
-                'permission.change_article',
-            ]
+            'permission.add_article',
+            'permission.change_article',
+        ]
         perms = instance.get_supported_permissions()
         self.assertEquals(perms, set([
             'permission.add_article',
@@ -93,24 +93,23 @@ class PermissionPermissionHandlersTestCase(TestCase):
     def test_get_supported_permissions_with_includes_change(self):
         instance = self.handler(Article)
         instance.includes = [
-                'permission.add_article',
-                'permission.change_article',
-            ]
+            'permission.add_article',
+            'permission.change_article',
+        ]
         instance.get_supported_permissions()
         instance.includes = [
-                'permission.change_article',
-            ]
+            'permission.change_article',
+        ]
         perms = instance.get_supported_permissions()
         self.assertEquals(perms, set([
             'permission.change_article',
         ]))
 
-
     def test_get_supported_permissions_with_excludes(self):
         instance = self.handler(Article)
         instance.excludes = [
-                'permission.add_article',
-            ]
+            'permission.add_article',
+        ]
         perms = instance.get_supported_permissions()
         self.assertEquals(perms, set([
             'permission.change_article',
@@ -120,8 +119,8 @@ class PermissionPermissionHandlersTestCase(TestCase):
     def test_get_supported_permissions_with_excludes_change(self):
         instance = self.handler(Article)
         instance.excludes = [
-                'permission.add_article',
-            ]
+            'permission.add_article',
+        ]
         instance.get_supported_permissions()
         instance.excludes = []
         perms = instance.get_supported_permissions()
@@ -141,9 +140,9 @@ class PermissionPermissionHandlersTestCase(TestCase):
     def test_get_supported_app_labels_with_includes(self):
         instance = self.handler(Article)
         instance.includes = [
-                'permission.add_article',
-                'permission.change_article',
-            ]
+            'permission.add_article',
+            'permission.change_article',
+        ]
         app_labels = instance.get_supported_app_labels()
         self.assertEquals(app_labels, set([
             'permission',
@@ -152,24 +151,23 @@ class PermissionPermissionHandlersTestCase(TestCase):
     def test_get_supported_app_labels_with_includes_change(self):
         instance = self.handler(Article)
         instance.includes = [
-                'permission.add_article',
-                'permission.change_article',
-            ]
+            'permission.add_article',
+            'permission.change_article',
+        ]
         instance.get_supported_app_labels()
         instance.includes = [
-                'permission.change_article',
-            ]
+            'permission.change_article',
+        ]
         app_labels = instance.get_supported_app_labels()
         self.assertEquals(app_labels, set([
             'permission',
         ]))
 
-
     def test_get_supported_app_labels_with_excludes(self):
         instance = self.handler(Article)
         instance.excludes = [
-                'permission.add_article',
-            ]
+            'permission.add_article',
+        ]
         app_labels = instance.get_supported_app_labels()
         self.assertEquals(app_labels, set([
             'permission',
@@ -178,8 +176,8 @@ class PermissionPermissionHandlersTestCase(TestCase):
     def test_get_supported_app_labels_with_excludes_change(self):
         instance = self.handler(Article)
         instance.excludes = [
-                'permission.add_article',
-            ]
+            'permission.add_article',
+        ]
         instance.get_supported_app_labels()
         instance.excludes = []
         app_labels = instance.get_supported_app_labels()
@@ -189,39 +187,45 @@ class PermissionPermissionHandlersTestCase(TestCase):
 
     def test_has_perm_add_wihtout_obj(self):
         instance = self.handler(Article)
-        self.assertRaises(NotImplementedError,
-                instance.has_perm,
-                self.user, self.perm1)
-        
+        self.assertRaises(
+            NotImplementedError,
+            instance.has_perm,
+            self.user, self.perm1)
+
     def test_has_perm_change_wihtout_obj(self):
         instance = self.handler(Article)
-        self.assertRaises(NotImplementedError,
-                instance.has_perm,
-                self.user, self.perm2)
+        self.assertRaises(
+            NotImplementedError,
+            instance.has_perm,
+            self.user, self.perm2)
 
     def test_has_perm_delete_wihtout_obj(self):
         instance = self.handler(Article)
-        self.assertRaises(NotImplementedError,
-                instance.has_perm,
-                self.user, self.perm3)
+        self.assertRaises(
+            NotImplementedError,
+            instance.has_perm,
+            self.user, self.perm3)
 
     def test_has_perm_add_wiht_obj(self):
         instance = self.handler(Article)
-        self.assertRaises(NotImplementedError,
-                instance.has_perm,
-                self.user, self.perm1, self.article)
+        self.assertRaises(
+            NotImplementedError,
+            instance.has_perm,
+            self.user, self.perm1, self.article)
 
     def test_has_perm_change_wiht_obj(self):
         instance = self.handler(Article)
-        self.assertRaises(NotImplementedError,
-                instance.has_perm,
-                self.user, self.perm2, self.article)
+        self.assertRaises(
+            NotImplementedError,
+            instance.has_perm,
+            self.user, self.perm2, self.article)
 
     def test_has_perm_delete_wiht_obj(self):
         instance = self.handler(Article)
-        self.assertRaises(NotImplementedError,
-                instance.has_perm,
-                self.user, self.perm3, self.article)
+        self.assertRaises(
+            NotImplementedError,
+            instance.has_perm,
+            self.user, self.perm3, self.article)
 
     def test_has_module_perms_success(self):
         instance = self.handler(Article)
@@ -237,8 +241,9 @@ class PermissionPermissionHandlersTestCase(TestCase):
         self.assertFalse(instance.has_module_perms(user, 'unknown'))
         self.assertFalse(user.has_perm.called)
 
+
 @override_settings(
-    PERMISSION_DEFAULT_PERMISSION_HANDLER=LogicalPermissionHandler
+    PERMISSION_DEFAULT_PERMISSION_HANDLER=LogicalPermissionHandler,
 )
 class PermissionLogicalPermissionHandlerTestCase(TestCase):
     def setUp(self):
@@ -273,6 +278,9 @@ class PermissionLogicalPermissionHandlerTestCase(TestCase):
         self.assertFalse(instance.has_perm(self.user, 'unknown', self.article))
 
     def test_has_perm_permission_logics_called(self):
+        # make sure that no cahce are saved in the user instance
+        if hasattr(self.user, '_logical_perms_cache'):
+            del self.user._logical_perms_cache
         instance = self.handler(Article)
         instance.get_supported_permissions = MagicMock(return_value=[
             'permission.add_article',
