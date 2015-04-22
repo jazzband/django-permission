@@ -11,7 +11,10 @@ def autodiscover(module_name=None):
     present. This forces an import on them to register any permissions bits
     they may want.
     """
-    from django.utils.importlib import import_module
+    if django.VERSION < (1, 8):
+        from django.utils.importlib import import_module
+    else
+        from importlib import import_module
     from django.utils.module_loading import module_has_submodule
     from permission.conf import settings
 
@@ -51,7 +54,10 @@ def discover(app, module_name=None):
         >>> discover('your_app')
     """
     from django.db.models.loading import get_model
-    from django.utils.importlib import import_module
+    if django.VERSION < (1, 8):
+        from django.utils.importlib import import_module
+    else
+        from importlib import import_module
     from permission.conf import settings
     from permission.utils.logics import add_permission_logic
 
