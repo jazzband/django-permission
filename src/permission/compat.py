@@ -21,6 +21,6 @@ except ImportError:
     from django.template.loader import add_to_builtins
 
 try:
-    from django.utils.importlib import import_module
+    from django.utils.importlib import import_module  # noqa
 except ImportError:
-    from importlib import import_module
+    from importlib import import_module  # noqa
