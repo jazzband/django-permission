@@ -19,3 +19,8 @@ try:
     from django.template.base import add_to_builtins
 except ImportError:
     from django.template.loader import add_to_builtins
+
+try:
+    from django.utils.importlib import import_module
+except ImportError:
+    from importlib import import_module
