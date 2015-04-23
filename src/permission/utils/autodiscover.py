@@ -50,8 +50,8 @@ def discover(app, module_name=None):
 
         >>> discover('your_app')
     """
-    from django.db.models.loading import get_model
     from permission.compat import import_module
+    from permission.compat import get_model
     from permission.conf import settings
     from permission.utils.logics import add_permission_logic
 
