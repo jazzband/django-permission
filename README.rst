@@ -48,7 +48,7 @@ Author
 Supported python versions
     Python 2.6, 2.7, 3.2, 3.3, 3.4
 Supported django versions
-    Django 1.2 - 1.6 and 1.7
+    Django 1.2 - 1.8
 
 An enhanced permission library which enables a *logic-based permission system*
 to handle complex permissions in Django.
@@ -120,7 +120,7 @@ Additionally, if the ``perms.py`` module has a ``PERMISSION_LOGICS`` variable, d
 
         from django.conf.urls import patterns, include, url
         from django.contrib import admin
-        
+
         admin.autodiscover()
         # add this line
         import permission; permission.autodiscover()
