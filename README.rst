@@ -42,7 +42,10 @@ django-permission
 .. image:: https://landscape.io/github/lambdalisue/django-permission/master/landscape.png
     :target: https://landscape.io/github/lambdalisue/django-permission/master
     :alt: Code Health
-   
+.. image:: https://scrutinizer-ci.com/g/lambdalisue/django-permission/badges/quality-score.png?b=master
+    :target: https://scrutinizer-ci.com/g/lambdalisue/django-permission/inspections
+    :alt: Inspection
+    
 Author
     Alisue <lambdalisue@hashnote.net>
 Supported python versions
