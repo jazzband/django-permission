@@ -28,7 +28,7 @@ class Permission(models.Model):
     """
     name = models.CharField(_(u"Name"), max_length=100, unique=True)
     codename = models.CharField(_(u"Codename"), max_length=100, unique=True)
-    content_types = models.ManyToManyField(ContentType, verbose_name=_(u"Content Types"), blank=True, null=True, related_name="content_types")
+    content_types = models.ManyToManyField(ContentType, verbose_name=_(u"Content Types"), blank=True, related_name="content_types")
 
     def __unicode__(self):
         return "%s (%s)" % (self.name, self.codename)
@@ -58,6 +58,7 @@ class ObjectPermission(models.Model):
     def __unicode__(self):
         return "%s / %s / %s - %s" % (self.permission.name, self.role, self.content_type, self.content_id)
 
+
 class ObjectPermissionInheritanceBlock(models.Model):
     """Blocks the inheritance for specific permission and object.
 
@@ -77,6 +78,7 @@ class ObjectPermissionInheritanceBlock(models.Model):
 
     def __unicode__(self):
         return "%s / %s - %s" % (self.permission, self.content_type, self.content_id)
+
 
 class Role(models.Model):
     """A role gets permissions to do something. Principals (users and groups)
@@ -107,8 +109,8 @@ class Role(models.Model):
         if content:
             ctype = ContentType.objects.get_for_model(content)
             prrs = PrincipalRoleRelation.objects.filter(role=self,
-                content_id__in = (None, content.id),
-                content_type__in = (None, ctype)).exclude(group=None)
+                content_id__in=(None, content.id),
+                content_type__in=(None, ctype)).exclude(group=None)
         else:
             prrs = PrincipalRoleRelation.objects.filter(role=self,
             content_id=None, content_type=None).exclude(group=None)
@@ -122,13 +124,14 @@ class Role(models.Model):
         if content:
             ctype = ContentType.objects.get_for_model(content)
             prrs = PrincipalRoleRelation.objects.filter(role=self,
-                content_id__in = (None, content.id),
-                content_type__in = (None, ctype)).exclude(user=None)
+                content_id__in=(None, content.id),
+                content_type__in=(None, ctype)).exclude(user=None)
         else:
             prrs = PrincipalRoleRelation.objects.filter(role=self,
                 content_id=None, content_type=None).exclude(user=None)
 
         return [prr.user for prr in prrs]
+
 
 class PrincipalRoleRelation(models.Model):
     """A role given to a principal (user or group). If a content object is
@@ -155,15 +158,15 @@ class PrincipalRoleRelation(models.Model):
     content_type = models.ForeignKey(ContentType, verbose_name=_(u"Content type"), blank=True, null=True)
     content_id = models.PositiveIntegerField(verbose_name=_(u"Content id"), blank=True, null=True)
     content = generic.GenericForeignKey(ct_field="content_type", fk_field="content_id")
-    
+
     def __unicode__(self):
         if self.user:
             principal = self.user.username
         else:
             principal = self.group
-        
+
         return "%s - %s" % (principal, self.role)
-        
+
     def get_principal(self):
         """Returns the principal.
         """
