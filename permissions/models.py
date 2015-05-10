@@ -2,7 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext_lazy as _
 
@@ -55,7 +55,7 @@ class ObjectPermission(models.Model):
     permission = models.ForeignKey(Permission, verbose_name=_(u"Permission"))
     content_type = models.ForeignKey(ContentType, verbose_name=_(u"Content type"))
     content_id = models.PositiveIntegerField(verbose_name=_(u"Content id"))
-    content = generic.GenericForeignKey(ct_field="content_type", fk_field="content_id")
+    content = GenericForeignKey(ct_field="content_type", fk_field="content_id")
 
     class Meta:
         app_label = "permissions"
@@ -78,7 +78,7 @@ class ObjectPermissionInheritanceBlock(models.Model):
     permission = models.ForeignKey(Permission, verbose_name=_(u"Permission"))
     content_type = models.ForeignKey(ContentType, verbose_name=_(u"Content type"))
     content_id = models.PositiveIntegerField(verbose_name=_(u"Content id"))
-    content = generic.GenericForeignKey(ct_field="content_type", fk_field="content_id")
+    content = GenericForeignKey(ct_field="content_type", fk_field="content_id")
 
     class Meta:
         app_label = "permissions"
@@ -164,7 +164,7 @@ class PrincipalRoleRelation(models.Model):
     role = models.ForeignKey(Role, verbose_name=_(u"Role"))
     content_type = models.ForeignKey(ContentType, verbose_name=_(u"Content type"), blank=True, null=True)
     content_id = models.PositiveIntegerField(verbose_name=_(u"Content id"), blank=True, null=True)
-    content = generic.GenericForeignKey(ct_field="content_type", fk_field="content_id")
+    content = GenericForeignKey(ct_field="content_type", fk_field="content_id")
 
     class Meta:
         app_label = "permissions"
