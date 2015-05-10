@@ -30,6 +30,9 @@ class Permission(models.Model):
     codename = models.CharField(_(u"Codename"), max_length=100, unique=True)
     content_types = models.ManyToManyField(ContentType, verbose_name=_(u"Content Types"), blank=True, related_name="content_types")
 
+    class Meta:
+        app_label = "permissions"
+
     def __unicode__(self):
         return "%s (%s)" % (self.name, self.codename)
 
@@ -50,10 +53,12 @@ class ObjectPermission(models.Model):
     """
     role = models.ForeignKey("Role", verbose_name=_(u"Role"), blank=True, null=True)
     permission = models.ForeignKey(Permission, verbose_name=_(u"Permission"))
-
     content_type = models.ForeignKey(ContentType, verbose_name=_(u"Content type"))
     content_id = models.PositiveIntegerField(verbose_name=_(u"Content id"))
     content = generic.GenericForeignKey(ct_field="content_type", fk_field="content_id")
+
+    class Meta:
+        app_label = "permissions"
 
     def __unicode__(self):
         return "%s / %s / %s - %s" % (self.permission.name, self.role, self.content_type, self.content_id)
@@ -71,10 +76,12 @@ class ObjectPermissionInheritanceBlock(models.Model):
         The object for which the inheritance is blocked.
     """
     permission = models.ForeignKey(Permission, verbose_name=_(u"Permission"))
-
     content_type = models.ForeignKey(ContentType, verbose_name=_(u"Content type"))
     content_id = models.PositiveIntegerField(verbose_name=_(u"Content id"))
     content = generic.GenericForeignKey(ct_field="content_type", fk_field="content_id")
+
+    class Meta:
+        app_label = "permissions"
 
     def __unicode__(self):
         return "%s / %s - %s" % (self.permission, self.content_type, self.content_id)
@@ -92,6 +99,7 @@ class Role(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
     class Meta:
+        app_label = "permissions"
         ordering = ("name", )
 
     def __unicode__(self):
@@ -154,10 +162,12 @@ class PrincipalRoleRelation(models.Model):
     user = models.ForeignKey(User, verbose_name=_(u"User"), blank=True, null=True)
     group = models.ForeignKey(Group, verbose_name=_(u"Group"), blank=True, null=True)
     role = models.ForeignKey(Role, verbose_name=_(u"Role"))
-
     content_type = models.ForeignKey(ContentType, verbose_name=_(u"Content type"), blank=True, null=True)
     content_id = models.PositiveIntegerField(verbose_name=_(u"Content id"), blank=True, null=True)
     content = generic.GenericForeignKey(ct_field="content_type", fk_field="content_id")
+
+    class Meta:
+        app_label = "permissions"
 
     def __unicode__(self):
         if self.user:
