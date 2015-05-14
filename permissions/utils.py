@@ -203,7 +203,8 @@ def get_roles(user, obj=None):
 
     """
     # Cached roles
-    obj_id = str(obj.id) if obj else "0"
+    ctype = ContentType.objects.get_for_model(obj)
+    obj_id = "{}|{}".format(obj.id, ctype.id) if obj else "0"
     try:
         return user.roles[obj_id]
     except (AttributeError, KeyError):
