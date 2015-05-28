@@ -252,7 +252,7 @@ class LogicalPermissionHandler(PermissionHandler):
         if perm not in self.get_supported_permissions():
             return False
         for permission_logic in getattr(self.model,
-                                        '_permission_logics', []):
+                                        '_permission_logics', set()):
             if permission_logic.has_perm(user_obj, perm, obj):
                 return True
         return False

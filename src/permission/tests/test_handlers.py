@@ -247,6 +247,8 @@ class PermissionPermissionHandlersTestCase(TestCase):
 )
 class PermissionLogicalPermissionHandlerTestCase(TestCase):
     def setUp(self):
+        # make sure all caches are removed
+        Article._permission_logics = set()
         self.handler = LogicalPermissionHandler
         self.user = create_user('john')
         self.perm1 = 'permission.add_article'
@@ -278,9 +280,6 @@ class PermissionLogicalPermissionHandlerTestCase(TestCase):
         self.assertFalse(instance.has_perm(self.user, 'unknown', self.article))
 
     def test_has_perm_permission_logics_called(self):
-        # make sure that no cahce are saved in the user instance
-        if hasattr(self.user, '_logical_perms_cache'):
-            del self.user._logical_perms_cache
         instance = self.handler(Article)
         instance.get_supported_permissions = MagicMock(return_value=[
             'permission.add_article',
@@ -289,13 +288,15 @@ class PermissionLogicalPermissionHandlerTestCase(TestCase):
         ])
         self.assertFalse(self.mock_logic1.has_perm.called)
         self.assertFalse(self.mock_logic2.has_perm.called)
-        instance.has_perm(self.user, 'permission.add_article')
+        self.assertFalse(instance.has_perm(self.user,
+                                           'permission.add_article'))
         self.assertTrue(self.mock_logic1.has_perm.called)
         self.assertTrue(self.mock_logic2.has_perm.called)
         self.assertEqual(self.mock_logic1.has_perm.call_count, 1)
         self.assertEqual(self.mock_logic2.has_perm.call_count, 1)
         # permission check should be cached thus `has_perm` should not be
         # called twice for same user instance
-        instance.has_perm(self.user, 'permission.add_article')
+        self.assertFalse(instance.has_perm(self.user,
+                                           'permission.add_article'))
         self.assertEqual(self.mock_logic1.has_perm.call_count, 1)
         self.assertEqual(self.mock_logic2.has_perm.call_count, 1)
