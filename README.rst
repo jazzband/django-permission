@@ -8,56 +8,27 @@ django-permission
     :target: https://coveralls.io/r/lambdalisue/django-permission/
     :alt: Coverage
 
-.. image:: https://pypip.in/py_versions/django-permission/badge.svg
-    :target: https://pypi.python.org/pypi/django-permission/
-    :alt: Supported Python versions
-    
-.. image:: https://pypip.in/status/django-permission/badge.svg
-    :target: https://pypi.python.org/pypi/django-permission/
-    :alt: Development Status
-    
-.. image:: https://pypip.in/d/django-permission/badge.svg
-    :target: https://pypi.python.org/pypi/django-permission/
-    :alt: Downloads
-
-.. image:: https://pypip.in/v/django-permission/badge.svg
-    :target: https://pypi.python.org/pypi/django-permission/
-    :alt: Latest version
-
-.. image:: https://pypip.in/wheel/django-permission/badge.svg
-    :target: https://pypi.python.org/pypi/django-permission/
-    :alt: Wheel Status
-
-.. image:: https://pypip.in/egg/django-permission/badge.svg
-    :target: https://pypi.python.org/pypi/django-permission/
-    :alt: Egg Status
-
-.. image:: https://pypip.in/license/django-permission/badge.svg
-    :target: https://pypi.python.org/pypi/django-permission/
-    :alt: License
-    
 .. image:: https://requires.io/github/lambdalisue/django-permission/requirements.svg?branch=master
     :target: https://requires.io/github/lambdalisue/django-permission/requirements/?branch=master
     :alt: Requirements Status
+
 .. image:: https://landscape.io/github/lambdalisue/django-permission/master/landscape.png
     :target: https://landscape.io/github/lambdalisue/django-permission/master
     :alt: Code Health
+
 .. image:: https://scrutinizer-ci.com/g/lambdalisue/django-permission/badges/quality-score.png?b=master
     :target: https://scrutinizer-ci.com/g/lambdalisue/django-permission/inspections
     :alt: Inspection
-    
+
 Author
     Alisue <lambdalisue@hashnote.net>
 Supported python versions
     Python 2.6, 2.7, 3.2, 3.3, 3.4
 Supported django versions
-    Django 1.2 - 1.8
+    Django 1.5 - 1.8
 
 An enhanced permission library which enables a *logic-based permission system*
 to handle complex permissions in Django.
-
-It is developed based on the authentication backend system introduced in Django
-1.2. This library does support Django 1.2 and higher.
 
 Documentation
 -------------
