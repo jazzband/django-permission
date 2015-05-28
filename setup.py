@@ -3,7 +3,7 @@ import sys
 from setuptools import setup, find_packages
 
 NAME = 'django-permission'
-VERSION = '0.8.7'
+VERSION = '0.8.8'
 
 
 def read(filename):
