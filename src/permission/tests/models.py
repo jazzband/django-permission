@@ -3,7 +3,10 @@
 """
 __author__ = 'Alisue <lambdalisue@hashnote.net>'
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
+
+
+AUTH_USER = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 
 class Article(models.Model):
@@ -11,15 +14,15 @@ class Article(models.Model):
     content = models.TextField('content')
 
     author = models.ForeignKey(
-        User, null=True,
+        AUTH_USER, null=True,
         related_name='permission_test_articles_author')
     editor = models.ForeignKey(
-        User, null=True,
+        AUTH_USER, null=True,
         related_name='permission_test_articles_editor')
     authors = models.ManyToManyField(
-        User, related_name='permission_test_articles_authors')
+        AUTH_USER, related_name='permission_test_articles_authors')
     editors = models.ManyToManyField(
-        User, related_name='permission_test_articles_editors')
+        AUTH_USER, related_name='permission_test_articles_editors')
 
     single_bridge = models.ForeignKey(
         'permission.Bridge', null=True,
@@ -39,9 +42,9 @@ class Article(models.Model):
 
 class Bridge(models.Model):
     author = models.ForeignKey(
-        User, null=True, related_name='permission_test_bridge_author')
+        AUTH_USER, null=True, related_name='permission_test_bridge_author')
     editors = models.ManyToManyField(
-        User, related_name='permission_test_bridge_editors')
+        AUTH_USER, related_name='permission_test_bridge_editors')
 
     class Meta:
         app_label = 'permission'
