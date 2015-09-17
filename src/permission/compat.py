@@ -29,7 +29,7 @@ else:
     from importlib import import_module
 
 try:
-    # Django 1.7 or over ues the new application loading system
+    # Django 1.7 or over use the new application loading system
     from django.apps import apps
     get_model = apps.get_model
 except ImportError:
