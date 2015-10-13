@@ -1,0 +1,2 @@
+app_version
+django-appconf

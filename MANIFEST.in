@@ -1,6 +1,4 @@
-include CREDITS.txt
-include LICENSE.txt
-include MANIFEST.txt
-include README.txt
-recursive-include permissions/locale *
-recursive-include permissions/fixtures *
+include README.rst
+include requirements.txt
+include requirements-test.txt
+include requirements-docs.txt
