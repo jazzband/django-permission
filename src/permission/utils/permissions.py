@@ -6,7 +6,6 @@ In this module, term *perm* indicate the identifier string permission written
 in 'app_label.codename' format.
 """
 __author__ = 'Alisue <lambdalisue@hashnote.net>'
-from django.contrib.auth.models import Permission
 
 
 def get_perm_codename(perm, fail_silently=True):
@@ -64,6 +63,7 @@ def perm_to_permission(perm):
     >>> permission.codename == 'add_user'
     True
     """
+    from django.contrib.auth.models import Permission
     try:
         app_label, codename = perm.split('.', 1)
     except IndexError:
@@ -101,6 +101,7 @@ def get_app_perms(model_or_app_label):
     >>> perms1 == perms2
     True
     """
+    from django.contrib.auth.models import Permission
     if not isinstance(model_or_app_label, str):
         # assume model_or_app_label is model class
         app_label = model_or_app_label._meta.app_label
@@ -130,6 +131,7 @@ def get_model_perms(model):
     >>> sorted(get_model_perms(Permission)) == ['auth.add_permission', 'auth.change_permission', 'auth.delete_permission']
     True
     """
+    from django.contrib.auth.models import Permission
     app_label = model._meta.app_label
     model_name = model._meta.object_name.lower()
     qs = Permission.objects.filter(content_type__app_label=app_label,
