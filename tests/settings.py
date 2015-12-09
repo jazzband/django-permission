@@ -96,17 +96,21 @@ if django.VERSION <= (1, 3):
     ADMIN_MEDIA_PREFIX = '/media/'
 
 if django.VERSION >= (1, 8):
-    # add_to_builtins has removed from Django 1.9
     # TEMPLATE_* were deprecated from Django 1.8
     TEMPLATES = [
         {
             'BACKEND': 'django.template.backends.django.DjangoTemplates',
             'OPTIONS': {
                 'debug': DEBUG,
-                'builtins': ['permission.templatetags.permissionif'],
             },
         },
     ]
+
+    # add_to_builtins has removed from Django 1.9
+    if django.VERSION >= (1, 9):
+        TEMPLATES[0]['OPTIONS']['builtins'] = [
+            'permission.templatetags.permissionif'
+        ]
 else:
     TEMPLATE_DEBUG = DEBUG
     TEMPLATE_DIRS = ()
