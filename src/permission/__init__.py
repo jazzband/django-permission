@@ -12,4 +12,6 @@ from permission.utils.autodiscover import autodiscover
 from permission.conf import settings
 if settings.PERMISSION_REPLACE_BUILTIN_IF:
     from permission.compat import add_to_builtins
-    add_to_builtins('permission.templatetags.permissionif')
+    if add_to_builtins:
+        # add_to_builtins was removed from Django 1.9
+        add_to_builtins('permission.templatetags.permissionif')

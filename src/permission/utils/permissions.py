@@ -5,11 +5,7 @@ Permission utility module.
 In this module, term *perm* indicate the identifier string permission written
 in 'app_label.codename' format.
 """
-<<<<<<< HEAD
 from permission.compat import isstr
-=======
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
->>>>>>> 577855a... Load Permission lazily to compatible with 1.9
 
 
 def get_perm_codename(perm, fail_silently=True):
@@ -106,11 +102,7 @@ def get_app_perms(model_or_app_label):
     True
     """
     from django.contrib.auth.models import Permission
-<<<<<<< HEAD
     if not isstr(model_or_app_label):
-=======
-    if not isinstance(model_or_app_label, str):
->>>>>>> 577855a... Load Permission lazily to compatible with 1.9
         # assume model_or_app_label is model class
         app_label = model_or_app_label._meta.app_label
     else:

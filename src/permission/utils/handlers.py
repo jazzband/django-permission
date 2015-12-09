@@ -3,8 +3,10 @@
 A utilities of permission handler
 """
 import inspect
-from permission.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from permission.conf import settings
+from permission.compat import isstr
+from permission.compat import import_string
 
 
 class PermissionHandlerRegistry(object):
@@ -22,8 +24,8 @@ class PermissionHandlerRegistry(object):
         ----------
         model : django model class
             A django model class
-        handler : permission handler class or None
-            A permission handler class
+        handler : permission handler class, string, or None
+            A permission handler class or a dotted path
 
         Raises
         ------
@@ -43,6 +45,8 @@ class PermissionHandlerRegistry(object):
                             "registered for '%s'" % model)
         if handler is None:
             handler = settings.PERMISSION_DEFAULT_PERMISSION_HANDLER
+        if isstr(handler):
+            handler = import_string(handler)
         if not inspect.isclass(handler):
             raise AttributeError(
                     "`handler` attribute must be a class. "
@@ -74,7 +78,7 @@ class PermissionHandlerRegistry(object):
         """
         if model not in self._registry:
             raise KeyError("A permission handler class have not been "
-                            "registered for '%s' yet" % model)
+                           "registered for '%s' yet" % model)
         # remove from registry
         del self._registry[model]
 
@@ -89,5 +93,5 @@ class PermissionHandlerRegistry(object):
         """
         return tuple(self._registry.values())
 
-"""Permission handler registry instance"""
 registry = PermissionHandlerRegistry()
+"""Permission handler registry instance"""

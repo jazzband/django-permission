@@ -108,4 +108,15 @@ if django.VERSION <= (1, 3):
     # Examples: "http://foo.com/media/", "/media/".
     ADMIN_MEDIA_PREFIX = '/media/'
 
+if django.VERSION >= (1, 9):
+    # add_to_builtins has removed from Django 1.9 so use OPTIONS instead
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'OPTIONS': {
+                'builtins': ['permission.templatetags.permissionif'],
+            },
+        },
+    ]
+
 TEST_RUNNER = 'permission.tests.compat.TestRunner'
