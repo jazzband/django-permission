@@ -2,12 +2,10 @@
 """
 permission_required decorator for generic classbased/functionbased view
 """
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
 from functools import wraps
 from django.http import HttpRequest
 from django.utils.decorators import available_attrs
 from django.core.exceptions import PermissionDenied
-
 from permission.decorators.utils import redirect_to_login
 
 
@@ -68,7 +66,7 @@ def permission_required(perm, queryset=None,
                 obj = get_object_from_classbased_instance(
                         self, queryset, request, *args, **kwargs
                     )
-                
+
                 if not request.user.has_perm(perm, obj=obj):
                     if raise_exception:
                         raise PermissionDenied

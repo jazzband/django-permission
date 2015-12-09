@@ -2,6 +2,7 @@
 """
 permissionif templatetag
 """
+import django
 from django import template
 from django.template import TemplateSyntaxError
 from django.template import VariableDoesNotExist
@@ -11,12 +12,13 @@ from django.template.smartif import OPERATORS
 from django.template.defaulttags import Node
 from django.template.defaulttags import NodeList
 from django.template.defaulttags import TemplateLiteral
-
 from permission.conf import settings
 from permission.templatetags.patch import IfNode
 from permission.templatetags.patch import parser_patch
 
+
 register = template.Library()
+
 
 def of_operator(context, x, y):
     """
@@ -29,7 +31,7 @@ def of_operator(context, x, y):
 def has_operator(context, x, y):
     """
     'has' operator of permission if
-    
+
     This operator is used to specify the user object of permission
     """
     user = x.eval(context)
@@ -46,8 +48,9 @@ EXTRA_OPERATORS = {
     'has': infix(10, has_operator),
 }
 EXTRA_OPERATORS.update(OPERATORS)
-for key, op in list(EXTRA_OPERATORS.items()):
+for key, op in EXTRA_OPERATORS.items():
     op.id = key
+
 
 class PermissionIfParser(IfParser):
     """Permission if parser"""
@@ -132,5 +135,26 @@ def do_permissionif(parser, token):
     return IfNode(conditions_nodelists)
 do_permissionif.Parser = TemplatePermissionIfParser
 
-if settings.PERMISSION_REPLACE_BUILTIN_IF:
-    register.tag('if', do_permissionif)
+# To replace builtin if
+if django.VERSION >= (1, 4):
+    def replace_builtin_if(replace=False):
+        if replace:
+            OPERATORS.update({
+                'has': EXTRA_OPERATORS['has'],
+                'of': EXTRA_OPERATORS['of'],
+            })
+        else:
+            # remove of, has from OPERATORS
+            OPERATORS.pop('of', None)
+            OPERATORS.pop('has', None)
+else:
+    # Django 1.3 and earlier use a different if model
+    # So re-register if
+    def replace_builtin_if(replace):
+        if replace:
+            register.tag('if', do_permissionif)
+        else:
+            from django.template.defaulttags import do_if
+            register.tag('if', do_if)
+
+replace_builtin_if(settings.PERMISSION_REPLACE_BUILTIN_IF)

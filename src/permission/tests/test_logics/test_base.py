@@ -1,11 +1,8 @@
 # coding=utf-8
-"""
-"""
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
 from django.test import TestCase
+from permission.logics import PermissionLogic
 from permission.tests.utils import create_user
 from permission.tests.utils import create_article
-from permission.logics import PermissionLogic
 
 
 class PermissionLogicsPermissionLogicTestCase(TestCase):

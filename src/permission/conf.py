@@ -2,16 +2,17 @@
 """
 django-permission application configure
 """
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
-__all__ = ('settings',)
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from appconf import AppConf
 from permission.handlers import LogicalPermissionHandler
 
 
+__all__ = ('settings',)
+
+
 class PermissionConf(AppConf):
-    DEFAULT_PERMISSION_HANDLER = LogicalPermissionHandler
+    DEFAULT_PERMISSION_HANDLER = 'permission.handlers.LogicalPermissionHandler'
     """Default permission handler class"""
 
     CHECK_PERMISSION_PRESENCE = settings.DEBUG
@@ -50,13 +51,5 @@ class PermissionConf(AppConf):
     CHECK_AUTHENTICATION_BACKENDS = True
     """Check if AUTHENTICATION_BACKENDS is correctly configured"""
 
-
-# Check AUTHENTICATION_BACKENDS
-if 'permission' in settings.INSTALLED_APPS:
-    if settings.PERMISSION_CHECK_AUTHENTICATION_BACKENDS:
-        if ('permission.backends.PermissionBackend' not in
-                settings.AUTHENTICATION_BACKENDS):
-            raise ImproperlyConfigured(
-                    '"permission.backends.PermissionBackend" is not found in '
-                    '`AUTHENTICATION_BACKENDS`.'
-                )
+    CHECK_TEMPLATES_OPTIONS_BUILTINS = True
+    """Check if TEMPLATES[?]['OPTIONS']['builtins'] is correctly configured"""

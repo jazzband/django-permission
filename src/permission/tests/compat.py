@@ -1,7 +1,4 @@
 # coding=utf-8
-"""
-"""
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
 try:
     # Python 3 have mock in unittest
     from unittest.mock import MagicMock
@@ -26,8 +23,8 @@ try:
     from django.test.runner import DiscoverRunner as TestRunnerBase
 except ImportError:
     from django.test.simple import DjangoTestSuiteRunner as TestRunnerBase
-settings.TESTING = False
 
+settings.TESTING = False
 class TestRunner(TestRunnerBase):
     def setup_test_environment(self, **kwargs):
         super(TestRunner, self).setup_test_environment(**kwargs)
@@ -37,3 +34,13 @@ class TestRunner(TestRunnerBase):
         super(TestRunner, self).teardown_test_environment(**kwargs)
         settings.TESTING = False
 
+try:
+    from django.utils.encoding import python_2_unicode_compatible
+except ImportError:
+    # python_2_unicode_compatible is ported from Django 1.5
+    def python_2_unicode_compatible(cls):
+        # Note:
+        #   This project does not use any unicode literal so use __str__
+        #   as __unicode__ works fine.
+        cls.__unicode__ = cls.__str__
+        return cls

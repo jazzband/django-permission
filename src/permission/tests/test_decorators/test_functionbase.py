@@ -1,16 +1,13 @@
 # coding=utf-8
-"""
-"""
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
 from django.test import TestCase
 from django.core.exceptions import PermissionDenied
 from permission.utils.handlers import registry
+from permission.decorators.functionbase import permission_required
 from permission.tests.test_decorators.utils import create_mock_handler
 from permission.tests.test_decorators.utils import create_mock_request
 from permission.tests.test_decorators.utils import create_mock_view_func
 from permission.tests.test_decorators.utils import create_mock_queryset
 from permission.tests.test_decorators.utils import create_mock_model
-from permission.decorators.functionbase import permission_required
 
 
 class PermissionFunctionDecoratorsTestCase(TestCase):

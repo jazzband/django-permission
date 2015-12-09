@@ -2,11 +2,12 @@
 """
 Logical permission backends module
 """
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
-__all__ = ('PermissionBackend',)
 from permission.conf import settings
 from permission.utils.handlers import registry
 from permission.utils.permissions import perm_to_permission
+
+
+__all__    = ('PermissionBackend',)
 
 
 class PermissionBackend(object):
@@ -17,6 +18,7 @@ class PermissionBackend(object):
     supports_anonymous_user = True
     supports_inactive_user = True
 
+    # pylint:disable=unused-argument
     def authenticate(self, username, password):
         """
         Always return ``None`` to prevent authentication within this backend.
@@ -57,7 +59,11 @@ class PermissionBackend(object):
         if settings.PERMISSION_CHECK_PERMISSION_PRESENCE:
             # get permission instance from string permission (perm)
             # it raise ObjectDoesNotExists when the permission is not exists
-            perm_to_permission(perm)
+            try:
+                perm_to_permission(perm)
+            except AttributeError:
+                # Django 1.2 internally use wrong permission string thus ignore
+                pass
 
         # get permission handlers fot this perm
         cache_name = '_%s_cache' % perm

@@ -47,14 +47,6 @@ permission.handlers module
     :undoc-members:
     :show-inheritance:
 
-permission.models module
-------------------------
-
-.. automodule:: permission.models
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
 Module contents
 ---------------

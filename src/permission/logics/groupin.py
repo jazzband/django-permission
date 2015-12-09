@@ -2,7 +2,6 @@
 """
 Permission logic module for group based permission system
 """
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
 from permission.conf import settings
 from permission.logics.base import PermissionLogic
 
@@ -16,7 +15,7 @@ class GroupInPermissionLogic(PermissionLogic):
                  any_permission=None,
                  add_permission=None,
                  change_permission=None,
-                 delete_permission=None):
+                 delete_permission=None):   # noqa
         """
         Constructor
 

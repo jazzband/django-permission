@@ -2,12 +2,11 @@
 """
 permission_required decorator for generic classbased view from django 1.3
 """
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
 from functools import wraps
 from django.utils.decorators import available_attrs
 from django.core.exceptions import PermissionDenied
-
 from permission.decorators.utils import redirect_to_login
+
 
 def permission_required(perm, queryset=None,
                         login_url=None, raise_exception=False):
@@ -63,7 +62,7 @@ def get_object_from_classbased_instance(
         instance, queryset, request, *args, **kwargs):
     """
     Get object from an instance of classbased generic view
-    
+
     Parameters
     ----------
     instance : instance
@@ -93,7 +92,7 @@ def get_object_from_classbased_instance(
         queryset = instance.queryset
     elif hasattr(instance, 'model') and not queryset:
         queryset = instance.model._default_manager.all()
-        
+
     # get object
     if hasattr(instance, 'get_object'):
         try:

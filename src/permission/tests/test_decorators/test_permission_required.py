@@ -1,25 +1,21 @@
 # coding=utf-8
-"""
-"""
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
 import django
 from django.test import TestCase
 from django.http import HttpRequest
 from django.core.exceptions import PermissionDenied
 from permission.utils.handlers import registry
-from permission.tests.compatibility import skipIf
-from permission.tests.compatibility import MagicMock
+from permission.decorators.functionbase import permission_required as f
+from permission.decorators.methodbase import permission_required as m
+from permission.decorators.classbase import permission_required as c
+from permission.decorators import permission_required as p
+from permission.tests.compat import skipIf
+from permission.tests.compat import MagicMock
 from permission.tests.test_decorators.utils import create_mock_handler
 from permission.tests.test_decorators.utils import create_mock_request
 from permission.tests.test_decorators.utils import create_mock_queryset
 from permission.tests.test_decorators.utils import create_mock_model
 from permission.tests.test_decorators.utils import create_mock_view_func
 from permission.tests.test_decorators.utils import create_mock_view_class
-
-from permission.decorators.functionbase import permission_required as f
-from permission.decorators.methodbase import permission_required as m
-from permission.decorators.classbase import permission_required as c
-from permission.decorators import permission_required as p
 
 p = p('permission.add_article')
 c = c('permission.add_article')
@@ -80,7 +76,7 @@ class PermissionDecoratorsTestCase(TestCase):
 
     @skipIf(
         django.VERSION < (1, 3),
-        'Classbase generic view is not supported int his version')
+        'Classbase generic view is not supported in this version')
     def test_method_views(self):
         view_method = View.dispatch
 
@@ -98,7 +94,7 @@ class PermissionDecoratorsTestCase(TestCase):
 
     @skipIf(
         django.VERSION < (1, 3),
-        'Classbase generic view is not supported int his version')
+        'Classbase generic view is not supported in this version')
     def test_class_views(self):
         # class decorator can handle
         class_view = c(View)
@@ -114,7 +110,7 @@ class PermissionDecoratorsTestCase(TestCase):
 
     @skipIf(
         django.VERSION < (1, 3),
-        'Classbase generic view is not supported int his version')
+        'Classbase generic view is not supported in this version')
     def test_permission_required(self):
         # function
         functional_view = p(view_func)

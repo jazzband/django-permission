@@ -3,13 +3,13 @@
 """
 __collaborators__ = 'Alisue <lambdalisue@hashnote.net>'
 from django.test import TestCase
+from permission import add_permission_logic
+from permission.logics import CollaboratorsPermissionLogic
 from permission.tests.utils import create_user
 from permission.tests.utils import create_anonymous
 from permission.tests.utils import create_article
-from permission.tests.compatibility import override_settings
-from permission.tests.compatibility import MagicMock
-from permission import add_permission_logic
-from permission.logics import CollaboratorsPermissionLogic
+from permission.tests.compat import override_settings
+from permission.tests.compat import MagicMock
 
 
 @override_settings(

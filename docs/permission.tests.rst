@@ -14,10 +14,10 @@ Subpackages
 Submodules
 ----------
 
-permission.tests.compatibility module
--------------------------------------
+permission.tests.compat module
+------------------------------
 
-.. automodule:: permission.tests.compatibility
+.. automodule:: permission.tests.compat
     :members:
     :undoc-members:
     :show-inheritance:

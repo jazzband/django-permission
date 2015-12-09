@@ -1,10 +1,7 @@
 # coding=utf-8
-"""
-"""
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
+import collections
 from permission.utils.permissions import get_app_perms
 from permission.utils.permissions import get_model_perms
-import collections
 
 
 class PermissionHandler(object):

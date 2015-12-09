@@ -19,15 +19,6 @@ def readlist(filename):
     rows = [x.strip() for x in rows if x.strip()]
     return list(rows)
 
-# if we are running on python 3, enable 2to3 and
-# let it use the custom fixers from the custom_fixers
-# package.
-extra = {}
-if sys.version_info >= (3, 0):
-    extra.update(
-        use_2to3=True,
-    )
-
 setup(
     name=NAME,
     version=VERSION,
@@ -72,5 +63,4 @@ setup(
     install_requires=readlist('requirements.txt'),
     test_suite='runtests.run_tests',
     tests_require=readlist('requirements-test.txt'),
-    **extra
 )

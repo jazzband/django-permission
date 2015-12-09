@@ -1,12 +1,9 @@
 # coding=utf-8
-"""
-"""
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
 from django.test import TestCase
+from permission.utils.field_lookup import field_lookup
 from permission.tests.utils import create_user
 from permission.tests.utils import create_bridge
 from permission.tests.utils import create_article
-from permission.utils.field_lookup import field_lookup
 
 
 class PermissionUtilsFieldLookupTestCase(TestCase):
@@ -37,7 +34,7 @@ class PermissionUtilsFieldLookupTestCase(TestCase):
     def test_field_lookup_editors(self):
         field_value = field_lookup(self.model, 'editors')
         field_value = (x for x in field_value.iterator())
-        expected_value = map(repr, (self.editor1, self.editor2))
+        expected_value = list(map(repr, (self.editor1, self.editor2)))
         self.assertQuerysetEqual(field_value, expected_value)
 
     def test_field_lookup_editors_username(self):

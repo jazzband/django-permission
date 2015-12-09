@@ -1,14 +1,12 @@
 # coding=utf-8
-"""
-"""
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
+from __future__ import unicode_literals
 from django.db import models
 from django.conf import settings
-
+from permission.tests.compat import python_2_unicode_compatible
 
 AUTH_USER = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
-
+@python_2_unicode_compatible
 class Article(models.Model):
     title = models.CharField('title', max_length=200)
     content = models.TextField('content')
@@ -36,7 +34,7 @@ class Article(models.Model):
     class Meta:
         app_label = 'permission'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 

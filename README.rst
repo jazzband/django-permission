@@ -25,13 +25,14 @@ Author
 Supported python versions
     Python 2.6, 2.7, 3.2, 3.3, 3.4
 Supported django versions
-    Django 1.2 - 1.8
+    Django 1.2 - 1.9
 
 An enhanced permission library which enables a *logic-based permission system*
 to handle complex permissions in Django.
 
 It is developed based on the authentication backend system introduced in Django
 1.2. This library does support Django 1.2 and higher.
+
 
 Documentation
 -------------
@@ -436,3 +437,20 @@ You can write a permission test by using ``has`` keyword, and a target object wi
         <p>This user have 'blogs.change_article' permission of {{object}}</p>
     {% endpermission %}
 
+.. note::
+    From Django 1.9, users require to add `'permission.templatetags.permissionif'` to `'builtins'` option manually.
+    See
+    - https://docs.djangoproject.com/en/1.9/releases/1.9/#django-template-base-add-to-builtins-is-removed
+    - https://docs.djangoproject.com/en/1.9/topics/templates/#module-django.template.backends.django
+    Or following example:
+
+    .. code:: python
+
+        TEMPLATES = [
+            {
+                'BACKEND': 'django.template.backends.django.DjangoTemplates',
+                'OPTIONS': {
+                    'builtins': ['permission.templatetags.permissionif'],
+                },
+            },
+        ]
