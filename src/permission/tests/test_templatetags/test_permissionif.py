@@ -242,7 +242,7 @@ class PermissionTemplateTagsWithBuiltinTestCase(TestCase):
         self._original_registry = registry._registry
         # clear registry and register mock handler
         registry._registry = {}
-        # Make sure builtin if is not replaced
+        # Make sure builtin if is replaced
         replace_builtin_if(True)
 
     def tearDown(self):
