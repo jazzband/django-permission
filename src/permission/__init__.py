@@ -28,7 +28,6 @@ if 'permission' in settings.INSTALLED_APPS:
         if add_to_builtins:
             add_to_builtins('permission.templatetags.permissionif')
         elif settings.PERMISSION_CHECK_TEMPLATES_OPTIONS_BUILTINS:
-            from django.core.exceptions import ImproperlyConfigured
             # Check if settings.TEMPLATES[?]['OPTIONS']['builtins'] has
             # 'permission.templatetags.permissionif'
             def has_permissionif_in_builtins():

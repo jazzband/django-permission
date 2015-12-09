@@ -18,6 +18,7 @@ class PermissionBackend(object):
     supports_anonymous_user = True
     supports_inactive_user = True
 
+    # pylint:disable=unused-argument
     def authenticate(self, username, password):
         """
         Always return ``None`` to prevent authentication within this backend.

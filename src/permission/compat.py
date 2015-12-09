@@ -1,7 +1,4 @@
 # coding=utf-8
-import sys
-import django
-
 try:
     import collections
     def isiterable(x):
@@ -14,6 +11,7 @@ except ImportError:
         except TypeError:
             return False
 
+import django
 if django.VERSION >= (1, 9):
     add_to_builtins = None
 else:

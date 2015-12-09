@@ -2,7 +2,6 @@
 """
 django if templatetag patch
 """
-from distutils.version import LooseVersion
 import django
 
 
