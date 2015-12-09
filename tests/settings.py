@@ -6,7 +6,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(BASE_DIR, 'src'))
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
@@ -60,12 +59,6 @@ MEDIA_URL = ''
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'rbs62_^fuahxz!4k1!&yj$h8a=&-h_%do+3jk&%#v=o2%ep=7@'
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
-)
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -76,12 +69,6 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'tests.urls'
-
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -108,13 +95,22 @@ if django.VERSION <= (1, 3):
     # Examples: "http://foo.com/media/", "/media/".
     ADMIN_MEDIA_PREFIX = '/media/'
 
-if django.VERSION >= (1, 9):
-    # add_to_builtins has removed from Django 1.9 so use OPTIONS instead
+if django.VERSION >= (1, 8):
+    # add_to_builtins has removed from Django 1.9
+    # TEMPLATE_* were deprecated from Django 1.8
     TEMPLATES = [
         {
             'BACKEND': 'django.template.backends.django.DjangoTemplates',
             'OPTIONS': {
+                'debug': DEBUG,
                 'builtins': ['permission.templatetags.permissionif'],
             },
         },
     ]
+else:
+    TEMPLATE_DEBUG = DEBUG
+    TEMPLATE_DIRS = ()
+    TEMPLATE_LOADERS = (
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader',
+    )
