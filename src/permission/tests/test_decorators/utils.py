@@ -1,12 +1,9 @@
 # coding=utf-8
-"""
-"""
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
 from django.db.models import Model
 from django.http import HttpRequest
 from django.http import HttpResponse
 from permission.handlers import PermissionHandler
-from permission.tests.compatibility import MagicMock
+from permission.tests.compat import MagicMock
 
 
 def create_mock_class(name, base, instance=None):

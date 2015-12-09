@@ -1,29 +1,22 @@
 # coding=utf-8
-"""
-"""
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
-# coding=utf-8
-"""
-"""
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
 import django
 from django.test import TestCase
 from django.core.exceptions import PermissionDenied
 from permission.utils.handlers import registry
-from permission.tests.compatibility import skipIf
-from permission.tests.compatibility import MagicMock
+from permission.decorators.methodbase import permission_required
+from permission.tests.compat import skipIf
+from permission.tests.compat import MagicMock
 from permission.tests.test_decorators.utils import create_mock_handler
 from permission.tests.test_decorators.utils import create_mock_request
 from permission.tests.test_decorators.utils import create_mock_queryset
 from permission.tests.test_decorators.utils import create_mock_model
 from permission.tests.test_decorators.utils import create_mock_view_func
 from permission.tests.test_decorators.utils import create_mock_view_class
-from permission.decorators.methodbase import permission_required
 
 
 @skipIf(
     django.VERSION < (1, 3),
-    'Classbase generic view is not supported int his version')
+    'Classbase generic view is not supported in this version')
 class PermissionClassDecoratorsTestCase(TestCase):
     def setUp(self):
         self.handler = create_mock_handler()

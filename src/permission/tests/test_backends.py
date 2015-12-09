@@ -1,16 +1,14 @@
 # coding=utf-8
-"""
-"""
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
 from django.test import TestCase
 from django.core.exceptions import ObjectDoesNotExist
+from permission.backends import PermissionBackend
+from permission.utils.handlers import registry
 from permission.tests.utils import create_user
 from permission.tests.utils import create_article
 from permission.tests.models import Article
-from permission.tests.compatibility import MagicMock
-from permission.tests.compatibility import override_settings
-from permission.backends import PermissionBackend
-from permission.utils.handlers import registry
+from permission.tests.compat import MagicMock
+from permission.tests.compat import override_settings
+
 
 @override_settings(
     AUTHENTICATION_BACKENDS=(

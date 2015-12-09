@@ -4,7 +4,8 @@ include =
     tests/*.py
 omit =
     src/permission/__init__.py
-    src/permission/tests/compatatibility.py
+    src/permission/compat.py
+    src/permission/tests/compat.py
 exclude_lines =
     pragma: no cover
     if __name__ == .__main__.:

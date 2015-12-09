@@ -11,12 +11,13 @@ from django.template.smartif import OPERATORS
 from django.template.defaulttags import Node
 from django.template.defaulttags import NodeList
 from django.template.defaulttags import TemplateLiteral
-
 from permission.conf import settings
 from permission.templatetags.patch import IfNode
 from permission.templatetags.patch import parser_patch
 
+
 register = template.Library()
+
 
 def of_operator(context, x, y):
     """
@@ -29,7 +30,7 @@ def of_operator(context, x, y):
 def has_operator(context, x, y):
     """
     'has' operator of permission if
-    
+
     This operator is used to specify the user object of permission
     """
     user = x.eval(context)
@@ -48,6 +49,7 @@ EXTRA_OPERATORS = {
 EXTRA_OPERATORS.update(OPERATORS)
 for key, op in list(EXTRA_OPERATORS.items()):
     op.id = key
+
 
 class PermissionIfParser(IfParser):
     """Permission if parser"""

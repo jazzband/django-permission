@@ -1,16 +1,12 @@
 # coding=utf-8
-"""
-"""
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
 from django.test import TestCase
 from django.template import Context
 from django.template import Template
-
+from permission.utils.handlers import registry
 from permission.tests.utils import create_user
 from permission.tests.utils import create_article
 from permission.tests.utils import create_permission
-from permission.tests.compatibility import override_settings
-from permission.utils.handlers import registry
+from permission.tests.compat import override_settings
 
 
 @override_settings(

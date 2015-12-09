@@ -3,9 +3,10 @@
 django if templatetag patch
 """
 from distutils.version import LooseVersion
-from django import get_version
+import django
 
-if LooseVersion(get_version()) < '1.4':
+
+if django.VERSION < (1, 4):
     from django.template import Node
     from django.template import NodeList
     from django.template import VariableDoesNotExist

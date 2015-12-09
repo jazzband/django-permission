@@ -1,15 +1,12 @@
 # coding=utf-8
-"""
-"""
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
 from django.test import TestCase
-from permission.tests.models import Article
-from permission.tests.compatibility import MagicMock
 from permission.logics import PermissionLogic
 from permission.handlers import LogicalPermissionHandler
 from permission.utils.handlers import registry
 from permission.utils.logics import add_permission_logic
 from permission.utils.logics import remove_permission_logic
+from permission.tests.models import Article
+from permission.tests.compat import MagicMock
 
 
 class PermissionUtilsLogicsTestCase(TestCase):
@@ -38,7 +35,7 @@ class PermissionUtilsLogicsTestCase(TestCase):
         add_permission_logic(Article, m)
         self.assertTrue(hasattr(Article, '_permission_logics'))
         self.assertTrue(hasattr(Article, '_permission_handler'))
-    
+
     def test_add_permission_logic_registry(self):
         m = self.mock_logic
         # nothing have been registered in registry
@@ -59,7 +56,7 @@ class PermissionUtilsLogicsTestCase(TestCase):
         remove_permission_logic(Article, m)
         self.assertTrue(hasattr(Article, '_permission_logics'))
         self.assertTrue(hasattr(Article, '_permission_handler'))
-    
+
     def test_remove_permission_logic_registry(self):
         m = self.mock_logic
         add_permission_logic(Article, m)

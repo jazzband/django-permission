@@ -108,4 +108,4 @@ if django.VERSION <= (1, 3):
     # Examples: "http://foo.com/media/", "/media/".
     ADMIN_MEDIA_PREFIX = '/media/'
 
-TEST_RUNNER = 'permission.tests.compatibility.TestRunner'
+TEST_RUNNER = 'permission.tests.compat.TestRunner'

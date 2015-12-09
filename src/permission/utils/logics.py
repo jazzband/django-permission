@@ -2,7 +2,6 @@
 """
 Permission logic utilities
 """
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
 from permission.logics import PermissionLogic
 
 
@@ -40,6 +39,7 @@ def add_permission_logic(model, permission_logic):
     # store target model to the permission_logic instance
     permission_logic.model = model
 
+
 def remove_permission_logic(model, permission_logic, fail_silently=True):
     """
     Remove permission logic to the model
@@ -55,7 +55,7 @@ def remove_permission_logic(model, permission_logic, fail_silently=True):
     fail_silently : boolean
         If `True` then do not raise KeyError even the specified permission logic
         have not registered.
-    
+
     Examples
     --------
     >>> from django.db import models

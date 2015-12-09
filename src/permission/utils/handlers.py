@@ -2,7 +2,6 @@
 """
 A utilities of permission handler
 """
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
 import inspect
 from permission.conf import settings
 from django.core.exceptions import ImproperlyConfigured

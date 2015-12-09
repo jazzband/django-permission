@@ -2,12 +2,13 @@
 """
 django-permission application configure
 """
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
-__all__ = ('settings',)
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from appconf import AppConf
 from permission.handlers import LogicalPermissionHandler
+
+
+__all__ = ('settings',)
 
 
 class PermissionConf(AppConf):

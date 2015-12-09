@@ -1,7 +1,4 @@
 # coding=utf-8
-"""
-"""
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
 import copy
 
 
@@ -35,7 +32,7 @@ def discover(app, module_name=None):
     """
     Automatically apply the permission logics written in the specified
     module.
-    
+
     Examples
     --------
     Assume if you have a ``perms.py`` in ``your_app`` as::

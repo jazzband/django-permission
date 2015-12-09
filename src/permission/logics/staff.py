@@ -2,7 +2,6 @@
 """
 Permission logic module for author based permission system
 """
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
 from permission.conf import settings
 from permission.logics.base import PermissionLogic
 

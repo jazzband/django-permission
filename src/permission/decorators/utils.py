@@ -2,11 +2,13 @@
 """
 Decorator utility module
 """
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
-__all__ = ['redirect_to_login']
-import urlparse
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from permission.conf import settings
+from permission.compat import urlparse
+
+
+__all__ = ['redirect_to_login']
+
 
 def redirect_to_login(request, login_url=None,
                       redirect_field_name=REDIRECT_FIELD_NAME):
@@ -15,8 +17,8 @@ def redirect_to_login(request, login_url=None,
     # if the login url is the same scheme and net location then just
     # use the path as the "next" url.
     login_scheme, login_netloc = \
-            urlparse.urlparse(login_url or settings.LOGIN_URL)[:2]
-    current_scheme, current_netloc = urlparse.urlparse(path)[:2]
+            urlparse(login_url or settings.LOGIN_URL)[:2]
+    current_scheme, current_netloc = urlparse(path)[:2]
     if ((not login_scheme or login_scheme == current_scheme) and
         (not login_netloc or login_netloc == current_netloc)):
         path = request.get_full_path()

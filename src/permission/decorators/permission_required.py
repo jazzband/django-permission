@@ -1,15 +1,11 @@
-# coding=utf-8
-"""
-"""
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
-# coding=utf-8
 """
 Decorator module for permission
 """
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
-__all__ = ['permission_required']
 import inspect
 from django.db.models import Model
+
+
+__all__ = ['permission_required']
 
 
 def permission_required(perm, queryset_or_model=None,

@@ -2,11 +2,11 @@ sudo: false
 language: python
 
 install:
-  - pip install "tox>=1.8"
+  - pip install tox detox
   - pip install coverage coveralls
 
 script:
-  - tox -r
+  - detox -r
 
 after_success:
   - coverage report

@@ -1,16 +1,13 @@
 # coding=utf-8
-"""
-"""
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
 from django.test import TestCase
+from permission.logics import GroupInPermissionLogic
+from permission.utils.logics import add_permission_logic
 from permission.tests.utils import create_user
 from permission.tests.utils import create_anonymous
 from permission.tests.utils import create_group
 from permission.tests.utils import create_article
-from permission.tests.compatibility import MagicMock
-from permission.tests.compatibility import override_settings
-from permission.logics import GroupInPermissionLogic
-from permission.utils.logics import add_permission_logic
+from permission.tests.compat import MagicMock
+from permission.tests.compat import override_settings
 
 
 @override_settings(

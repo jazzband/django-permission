@@ -2,13 +2,11 @@
 """
 permission_required decorator for generic function view
 """
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
 import copy
 from functools import wraps
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import available_attrs
 from django.core.exceptions import PermissionDenied
-
 from permission.decorators.utils import redirect_to_login
 
 
@@ -137,7 +135,7 @@ def get_object_from_date_based_view(request, *args, **kwargs):
     object_id = kwargs.get('object_id', None)
     slug = kwargs.get('slug', None)
     slug_field = kwargs.get('slug_field', 'slug')
-    
+
     try:
         tt = time.strptime(
                 '%s-%s-%s' % (year, month, day),
