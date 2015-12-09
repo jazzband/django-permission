@@ -15,7 +15,7 @@ Submodules
 ----------
 
 permission.tests.compat module
--------------------------------------
+------------------------------
 
 .. automodule:: permission.tests.compat
     :members:
