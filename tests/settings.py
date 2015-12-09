@@ -118,5 +118,3 @@ if django.VERSION >= (1, 9):
             },
         },
     ]
-
-TEST_RUNNER = 'permission.tests.compat.TestRunner'
