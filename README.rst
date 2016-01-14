@@ -12,13 +12,17 @@ django-permission
     :target: https://requires.io/github/lambdalisue/django-permission/requirements/?branch=master
     :alt: Requirements Status
 
-.. image:: https://landscape.io/github/lambdalisue/django-permission/master/landscape.png
-    :target: https://landscape.io/github/lambdalisue/django-permission/master
-    :alt: Code Health
-
 .. image:: https://scrutinizer-ci.com/g/lambdalisue/django-permission/badges/quality-score.png?b=master
     :target: https://scrutinizer-ci.com/g/lambdalisue/django-permission/inspections
     :alt: Inspection
+
+.. image:: https://img.shields.io/badge/version-0.9.1-yellow.svg?style=flat-square
+    :target: setup.py
+    :alt: Version 0.9.2
+
+.. image:: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
+    :target: LICENSE.md
+    :alt: MIT License
 
 Author
     Alisue <lambdalisue@hashnote.net>
