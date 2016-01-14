@@ -18,7 +18,7 @@ django-permission
 
 .. image:: https://img.shields.io/badge/version-0.9.1-yellow.svg?style=flat-square
     :target: setup.py
-    :alt: Version 0.9.1
+    :alt: Version 0.9.2
 
 .. image:: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
     :target: LICENSE.md
