@@ -1,5 +1,6 @@
 # coding=utf-8
 import copy
+from permission.compat import six
 
 
 def autodiscover(module_name=None):
@@ -63,7 +64,7 @@ def discover(app, module_name=None):
         # apply permission logics automatically
         permission_logic_set = getattr(m, variable_name)
         for model, permission_logic in permission_logic_set:
-            if isinstance(model, basestring):
+            if isinstance(model, six.string_types):
                 # convert model string to model instance
                 model = get_model(*model.split('.', 1))
             add_permission_logic(model, permission_logic)
