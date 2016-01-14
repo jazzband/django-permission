@@ -16,7 +16,7 @@ django-permission
     :target: https://scrutinizer-ci.com/g/lambdalisue/django-permission/inspections
     :alt: Inspection
 
-.. image:: https://img.shields.io/badge/version-0.9.1-yellow.svg?style=flat-square
+.. image:: https://img.shields.io/badge/version-0.9.2-yellow.svg?style=flat-square
     :target: setup.py
     :alt: Version 0.9.2
 
