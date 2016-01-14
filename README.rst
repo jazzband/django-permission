@@ -20,6 +20,14 @@ django-permission
     :target: https://scrutinizer-ci.com/g/lambdalisue/django-permission/inspections
     :alt: Inspection
 
+.. image:: https://img.shields.io/badge/version-0.9.1-yellow.svg?style=flat-square
+    :target: setup.py
+    :alt: Version 0.9.1
+
+.. image:: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
+    :target: LICENSE.md
+    :alt: MIT License
+
 Author
     Alisue <lambdalisue@hashnote.net>
 Supported python versions
