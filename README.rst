@@ -4,8 +4,8 @@ django-permission
     :target: http://travis-ci.org/lambdalisue/django-permission
     :alt: Build status
 
-.. image:: https://coveralls.io/repos/lambdalisue/django-permission/badge.png?branch=master
-    :target: https://coveralls.io/r/lambdalisue/django-permission/
+.. image:: https://coveralls.io/repos/lambdalisue/django-permission/badge.svg?branch=master&service=github
+    :target: https://coveralls.io/github/lambdalisue/django-permission?branch=master 
     :alt: Coverage
 
 .. image:: https://requires.io/github/lambdalisue/django-permission/requirements.svg?branch=master
