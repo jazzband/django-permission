@@ -1,6 +1,6 @@
 # coding=utf-8
 import copy
-from django.utils import six
+from permission.compat import six
 
 
 def autodiscover(module_name=None):

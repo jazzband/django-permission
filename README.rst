@@ -46,6 +46,11 @@ Use pip_ like::
 
 .. _pip:  https://pypi.python.org/pypi/pip
 
+Note that in Django 1.2 and 1.3 requires [six](https://pythonhosted.org/six/) as well.
+Install it with::
+
+    $ pip install six
+
 Usage
 -----
 
