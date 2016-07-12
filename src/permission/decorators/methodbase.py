@@ -22,7 +22,7 @@ def permission_required(perm, queryset=None,
     ----------
     perm : string
         A permission string
-    queryset_or_model : queryset or model
+    queryset : queryset or model
         A queryset or model for finding object.
         With classbased generic view, ``None`` for using view default queryset.
         When the view does not define ``get_queryset``, ``queryset``,

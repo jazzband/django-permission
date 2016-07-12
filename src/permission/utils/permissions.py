@@ -53,7 +53,7 @@ def permission_to_perm(permission):
 def perm_to_permission(perm):
     """
     Convert a identifier string permission format in 'app_label.codename'
-    (teremd as *perm*) to a django permission instance.
+    (termed as *perm*) to a django permission instance.
 
     Examples
     --------

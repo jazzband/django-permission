@@ -144,7 +144,7 @@ class PermissionHandler(object):
         Returns
         -------
         boolean
-            Wheter the specified user have specified permission (of specified
+            Whether the specified user have specified permission (of specified
             object).
 
         .. note::
@@ -169,7 +169,7 @@ class PermissionHandler(object):
         Returns
         -------
         boolean
-            Wheter the specified user have any permissions of specified app
+            Whether the specified user have any permissions of specified app
 
         """
         cache_name = "_has_module_perms_%s_%s_cache" % (app_label, user_obj.pk)
@@ -230,7 +230,7 @@ class LogicalPermissionHandler(PermissionHandler):
         Returns
         -------
         boolean
-            Wheter the specified user have specified permission (of specified
+            Whether the specified user have specified permission (of specified
             object).
         """
         if perm not in self.get_supported_permissions():

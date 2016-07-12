@@ -28,7 +28,7 @@ class PermissionTemplateTagsTestCase(TestCase):
         replace_builtin_if(False)
 
     def tearDown(self):
-        # restore original reigstry
+        # restore original registry
         registry._registry = self._original_registry
 
     def test_permissionif_tag(self):
@@ -246,7 +246,7 @@ class PermissionTemplateTagsWithBuiltinTestCase(TestCase):
         replace_builtin_if(True)
 
     def tearDown(self):
-        # restore original reigstry
+        # restore original registry
         registry._registry = self._original_registry
 
     def test_permissionif_tag(self):
@@ -289,7 +289,7 @@ class PermissionTemplateTagsWithBuiltinTestCase(TestCase):
         out = Template(
             "{% permission user has 'permission.unknown_permission' %}"
             "Fail"
-            "{% elpermission user has 'permission.unknown_permisson2' %}"
+            "{% elpermission user has 'permission.unknown_permission2' %}"
             "Fail"
             "{% elpermission user has "
             "'permission.permission_templatetag_test_perm1' %}"

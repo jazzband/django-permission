@@ -91,7 +91,7 @@ class PermissionUtilsLogicsTestCase(TestCase):
         m = self.mock_logic
         add_permission_logic(Article, m)
         remove_permission_logic(Article, m)
-        # it shuld not raise exception
+        # it should not raise exception
         remove_permission_logic(Article, m)
         # it should raise exception if fail_silently is False
         self.assertRaises(KeyError,

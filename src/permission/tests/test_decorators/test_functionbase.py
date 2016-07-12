@@ -34,9 +34,8 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
             )
 
     def tearDown(self):
-        # restore original reigstry
+        # restore original registry
         registry._registry = self._original_registry
-
 
     def test_list_detail_object_id(self):
         # has_perm always return False

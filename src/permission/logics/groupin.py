@@ -86,7 +86,7 @@ class GroupInPermissionLogic(PermissionLogic):
         This permission logic is used mainly for group based role permission
         system.
         You can change this behavior to set ``any_permission``,
-        ``add_permission``, ``change_permissino``, or ``delete_permission``
+        ``add_permission``, ``change_permission``, or ``delete_permission``
         attributes of this instance.
 
         Parameters
@@ -101,7 +101,7 @@ class GroupInPermissionLogic(PermissionLogic):
         Returns
         -------
         boolean
-            Wheter the specified user have specified permission (of specified
+            Whether the specified user have specified permission (of specified
             object).
         """
         if not user_obj.is_authenticated():

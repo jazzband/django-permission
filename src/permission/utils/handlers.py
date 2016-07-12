@@ -68,8 +68,6 @@ class PermissionHandlerRegistry(object):
         ----------
         model : django model class
             A django model class
-        handler : permission handler class or None
-            A permission handler class
 
         Raises
         ------

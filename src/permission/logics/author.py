@@ -97,7 +97,7 @@ class AuthorPermissionLogic(PermissionLogic):
         Returns
         -------
         boolean
-            Wheter the specified user have specified permission (of specified
+            Whether the specified user have specified permission (of specified
             object).
         """
         if not user_obj.is_authenticated():
