@@ -24,7 +24,7 @@ class Article(models.Model):
 
     single_bridge = models.ForeignKey(
         'permission.Bridge', null=True,
-        related_name='permission_test_signgle_bridge')
+        related_name='permission_test_single_bridge')
     multiple_bridge = models.ManyToManyField(
         'permission.Bridge',
         related_name='permission_test_multiple_bridge')

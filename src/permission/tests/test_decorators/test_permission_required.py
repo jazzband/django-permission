@@ -30,7 +30,7 @@ def view_func(request, *args, **kwargs):
 try:
     from django.views.generic import View as BaseView
 except ImportError:
-    # classbase generic view related test will not be run so never mind.
+    # Classbased generic view related test will not be run so never mind.
     BaseView = object
 
 class View(BaseView):
@@ -58,7 +58,7 @@ class PermissionDecoratorsTestCase(TestCase):
             )
 
     def tearDown(self):
-        # restore original reigstry
+        # restore original registry
         registry._registry = self._original_registry
 
     def test_function_views(self):
@@ -76,7 +76,7 @@ class PermissionDecoratorsTestCase(TestCase):
 
     @skipIf(
         django.VERSION < (1, 3),
-        'Classbase generic view is not supported in this version')
+        'Classbased generic view is not supported in this version')
     def test_method_views(self):
         view_method = View.dispatch
 
@@ -94,7 +94,7 @@ class PermissionDecoratorsTestCase(TestCase):
 
     @skipIf(
         django.VERSION < (1, 3),
-        'Classbase generic view is not supported in this version')
+        'Classbased generic view is not supported in this version')
     def test_class_views(self):
         # class decorator can handle
         class_view = c(View)
@@ -110,7 +110,7 @@ class PermissionDecoratorsTestCase(TestCase):
 
     @skipIf(
         django.VERSION < (1, 3),
-        'Classbase generic view is not supported in this version')
+        'Classbased generic view is not supported in this version')
     def test_permission_required(self):
         # function
         functional_view = p(view_func)

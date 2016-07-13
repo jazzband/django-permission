@@ -22,7 +22,7 @@ def field_lookup(obj, field_path):
         >>> user = User.objects.create_user('test_user', 'password')
         >>> article = Article.objects.create(title='test_article',
         ...                                  author=user)
-        >>> aritcle.editors.add(user)
+        >>> article.editors.add(user)
         >>> assert 'test_article' == field_lookup(article, 'title')
         >>> assert 'test_user' == field_lookup(article, 'user__username')
         >>> assert ['test_user'] == list(field_lookup(article,

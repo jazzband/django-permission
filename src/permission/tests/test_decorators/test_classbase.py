@@ -19,7 +19,7 @@ from permission.tests.test_decorators.utils import create_mock_view_class
 
 @skipIf(
     django.VERSION < (1, 3),
-    'Classbase generic view is not supported in this version')
+    'Classbased generic view is not supported in this version')
 class PermissionClassDecoratorsTestCase(TestCase):
     def setUp(self):
         self.handler = create_mock_handler()
@@ -53,9 +53,8 @@ class PermissionClassDecoratorsTestCase(TestCase):
         self.handler.has_perm.return_value = False
 
     def tearDown(self):
-        # restore original reigstry
+        # restore original registry
         registry._registry = self._original_registry
-
 
     def test_with_object(self):
         # set object

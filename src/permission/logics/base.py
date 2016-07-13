@@ -33,7 +33,7 @@ class PermissionLogic(object):
         Returns
         -------
         boolean
-            Wheter the specified user have specified permission (of specified
+            Whether the specified user have specified permission (of specified
             object).
 
         .. note::

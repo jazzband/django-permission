@@ -46,7 +46,7 @@ class PermissionBackend(object):
         Returns
         -------
         boolean
-            Wheter the specified user have specified permission (of specified
+            Whether the specified user have specified permission (of specified
             object).
 
         Raises
@@ -91,17 +91,14 @@ class PermissionBackend(object):
         Parameters
         ----------
         user_obj : django user model instance
-            A django user model instance which be checked
-        perm : string
+            A django user model instance which is checked
+        app_label : string
             `app_label.codename` formatted permission string
-        obj : None or django model instance
-            None or django model instance for object permission
 
         Returns
         -------
         boolean
-            Wheter the specified user have specified permission (of specified
-            object).
+            Whether the specified user have specified permission.
 
         Raises
         ------
