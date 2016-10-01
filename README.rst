@@ -163,7 +163,7 @@ to the ``Article`` model like
 .. note::
     From django-permission version 0.8.0, you can specify related object with
     `field__name` attribute like
-    `django queryset lookup <https://docs.djangoproject.com/en/1.6/topics/db/queries/#lookups-that-span-relationships>`_.
+    `django queryset lookup <https://docs.djangoproject.com/en/1.10/topics/db/queries/#field-lookups>`_.
     See the working example below:
 
 .. code:: python
@@ -314,7 +314,7 @@ to the ``Article`` model as follows
 .. note::
     From django-permission version 0.8.0, you can specify related object with
     `field_name` attribute like
-    `django queryset lookup <https://docs.djangoproject.com/en/1.6/topics/db/queries/#lookups-that-span-relationships>`_.
+    `django queryset lookup <https://docs.djangoproject.com/en/1.10/topics/db/queries/#field-lookups>`_.
     See the working example below:
 
 
