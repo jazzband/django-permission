@@ -99,6 +99,11 @@ Additionally, if the ``perms.py`` module has a ``PERMISSION_LOGICS`` variable, d
             model = get_model(*model.split(".", 1))
         add_permission_logic(model, permission_logic_instance)
 
+.. note::
+
+    Autodiscover feature is automatically called if you are using django higher than 1.7 so no need to follow the tutorial below.
+    To disable, use `PERMISSION_AUTODISCOVER_ENABLE` setting.
+
 **Quick tutorial**
 
 1.  Add ``import permission; permission.autodiscover()`` to your ``urls.py`` like:
