@@ -47,6 +47,7 @@ class PermissionConf(AppConf):
 
     AUTODISCOVER_MODULE_NAME = 'perms'
     AUTODISCOVER_VARIABLE_NAME = 'PERMISSION_LOGICS'
+    AUTODISCOVER_ENABLE = True
 
     CHECK_AUTHENTICATION_BACKENDS = True
     """Check if AUTHENTICATION_BACKENDS is correctly configured"""

@@ -11,6 +11,7 @@ from permission.utils.autodiscover import autodiscover
 from permission.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 
+
 if 'permission' in settings.INSTALLED_APPS:
     if settings.PERMISSION_CHECK_AUTHENTICATION_BACKENDS:
         if ('permission.backends.PermissionBackend' not in
@@ -48,3 +49,6 @@ if 'permission' in settings.INSTALLED_APPS:
                     'Users can ignore this exception via setting `False` to '
                     '`PERMISSION_CHECK_TEMPLATES_OPTIONS_BUILTINS`.'
                 )
+
+# Django Application
+default_app_config = 'permission.apps.PermissionConfig'
