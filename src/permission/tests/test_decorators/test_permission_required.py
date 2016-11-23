@@ -1,21 +1,20 @@
-# coding=utf-8
-import django
 from django.test import TestCase
 from django.http import HttpRequest
 from django.core.exceptions import PermissionDenied
-from permission.utils.handlers import registry
-from permission.decorators.functionbase import permission_required as f
-from permission.decorators.methodbase import permission_required as m
-from permission.decorators.classbase import permission_required as c
-from permission.decorators import permission_required as p
-from permission.tests.compat import skipIf
-from permission.tests.compat import MagicMock
-from permission.tests.test_decorators.utils import create_mock_handler
-from permission.tests.test_decorators.utils import create_mock_request
-from permission.tests.test_decorators.utils import create_mock_queryset
-from permission.tests.test_decorators.utils import create_mock_model
-from permission.tests.test_decorators.utils import create_mock_view_func
-from permission.tests.test_decorators.utils import create_mock_view_class
+from ...utils.handlers import registry
+from ...decorators.functionbase import permission_required as f
+from ...decorators.methodbase import permission_required as m
+from ...decorators.classbase import permission_required as c
+from ...decorators import permission_required as p
+from ..compat import MagicMock
+from .utils import (
+    create_mock_handler,
+    create_mock_request,
+    create_mock_queryset,
+    create_mock_model,
+    create_mock_view_func,
+    create_mock_view_class,
+)
 
 p = p('permission.add_article')
 c = c('permission.add_article')
@@ -25,6 +24,7 @@ f = f('permission.add_article')
 model = create_mock_model()
 instance = model()
 
+
 def view_func(request, *args, **kwargs):
     assert isinstance(request, HttpRequest)
 try:
@@ -33,12 +33,14 @@ except ImportError:
     # Classbased generic view related test will not be run so never mind.
     BaseView = object
 
+
 class View(BaseView):
     def dispatch(self, request, *args, **kwargs):
         assert isinstance(self, View)
         assert isinstance(request, HttpRequest)
     def get_object(self, queryset=None):
         return instance
+
 
 class PermissionDecoratorsTestCase(TestCase):
 
@@ -63,20 +65,16 @@ class PermissionDecoratorsTestCase(TestCase):
 
     def test_function_views(self):
 
-        if django.VERSION >= (1, 3):
-            # class decorator cannot handle
-            self.assertRaises(AttributeError, c, view_func)
-            # method decorator can handle
-            method_view = m(view_func)
-            method_view(self.request, self.queryset, object_id=1)
+        # class decorator cannot handle
+        self.assertRaises(AttributeError, c, view_func)
+        # method decorator can handle
+        method_view = m(view_func)
+        method_view(self.request, self.queryset, object_id=1)
 
         # function decorator can handle
         function_view = f(view_func)
         function_view(self.request, self.queryset, object_id=1)
 
-    @skipIf(
-        django.VERSION < (1, 3),
-        'Classbased generic view is not supported in this version')
     def test_method_views(self):
         view_method = View.dispatch
 
@@ -92,9 +90,6 @@ class PermissionDecoratorsTestCase(TestCase):
         self.assertRaises(AttributeError, function_view,
                           View(), self.request, pk=1)
 
-    @skipIf(
-        django.VERSION < (1, 3),
-        'Classbased generic view is not supported in this version')
     def test_class_views(self):
         # class decorator can handle
         class_view = c(View)
@@ -108,9 +103,6 @@ class PermissionDecoratorsTestCase(TestCase):
         function_view = f(View)
         self.assertFalse(hasattr(method_view, 'as_view'))
 
-    @skipIf(
-        django.VERSION < (1, 3),
-        'Classbased generic view is not supported in this version')
     def test_permission_required(self):
         # function
         functional_view = p(view_func)

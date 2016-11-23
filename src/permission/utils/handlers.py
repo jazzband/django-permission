@@ -2,6 +2,7 @@
 """
 A utilities of permission handler
 """
+from __future__ import unicode_literals
 import inspect
 from django.core.exceptions import ImproperlyConfigured
 from permission.conf import settings

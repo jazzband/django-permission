@@ -1,10 +1,11 @@
-# coding=utf-8
 from __future__ import unicode_literals
 from django.db import models
 from django.conf import settings
-from permission.tests.compat import python_2_unicode_compatible
+from django.utils.encoding import python_2_unicode_compatible
+
 
 AUTH_USER = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
+
 
 @python_2_unicode_compatible
 class Article(models.Model):

@@ -1,13 +1,15 @@
 # coding=utf-8
 from django.test import TestCase
 from django.core.exceptions import PermissionDenied
-from permission.utils.handlers import registry
-from permission.decorators.functionbase import permission_required
-from permission.tests.test_decorators.utils import create_mock_handler
-from permission.tests.test_decorators.utils import create_mock_request
-from permission.tests.test_decorators.utils import create_mock_view_func
-from permission.tests.test_decorators.utils import create_mock_queryset
-from permission.tests.test_decorators.utils import create_mock_model
+from ...utils.handlers import registry
+from ...decorators.functionbase import permission_required
+from .utils import (
+    create_mock_handler,
+    create_mock_request,
+    create_mock_view_func,
+    create_mock_queryset,
+    create_mock_model,
+)
 
 
 class PermissionFunctionDecoratorsTestCase(TestCase):
@@ -41,7 +43,7 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
         # has_perm always return False
         self.view_func.called = False
         self.handler.has_perm.return_value = False
-        self.decorated(self.request, 
+        self.decorated(self.request,
                        queryset=self.queryset,
                        object_id=1)
         self.request.user.has_perm.assert_called_with(
@@ -62,7 +64,7 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
         # has_perm always return True
         self.handler.has_perm.return_value = True
         self.decorated(
-                self.request, 
+                self.request,
                 queryset=self.queryset,
                 object_id=1)
         self.request.user.has_perm.assert_called_with(
@@ -80,8 +82,8 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
         self.handler.has_perm.return_value = False
         # has_perm always return False
         self.decorated(
-                self.request, 
-                queryset=self.queryset, 
+                self.request,
+                queryset=self.queryset,
                 slug='permission_test_article1',
                 slug_field='title')
         self.request.user.has_perm.assert_called_with(
@@ -96,8 +98,8 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
         # has_perm always return True
         self.handler.has_perm.return_value = True
         self.decorated(
-                self.request, 
-                queryset=self.queryset, 
+                self.request,
+                queryset=self.queryset,
                 slug='permission_test_article1',
                 slug_field='title')
         self.request.user.has_perm.assert_called_with(
@@ -115,8 +117,8 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
         self.handler.has_perm.return_value = False
         # has_perm always return False
         self.decorated(
-                self.request, 
-                queryset=self.queryset, 
+                self.request,
+                queryset=self.queryset,
                 year='2000', month='1', day='1',
                 date_field='created_at',
                 month_format='%m',
@@ -133,7 +135,7 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
         # has_perm always return True
         self.handler.has_perm.return_value = True
         self.decorated(
-                self.request, 
+                self.request,
                 queryset=self.queryset,
                 year='2000', month='1', day='1',
                 date_field='created_at',
@@ -154,8 +156,8 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
         self.handler.has_perm.return_value = False
         # has_perm always return False
         self.decorated(
-                self.request, 
-                queryset=self.queryset, 
+                self.request,
+                queryset=self.queryset,
                 year='2000', month='1', day='1',
                 date_field='created_at',
                 month_format='%m',
@@ -173,8 +175,8 @@ class PermissionFunctionDecoratorsTestCase(TestCase):
         # has_perm always return True
         self.handler.has_perm.return_value = True
         self.decorated(
-                self.request, 
-                queryset=self.queryset, 
+                self.request,
+                queryset=self.queryset,
                 year='2000', month='1', day='1',
                 date_field='created_at',
                 month_format='%m',

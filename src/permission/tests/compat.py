@@ -1,14 +1,10 @@
 # coding=utf-8
 try:
-    # Python 3 have mock in unittest
     from unittest.mock import MagicMock
 except ImportError:
     from mock import MagicMock
 
-try:
-    from django.test.utils import override_settings
-except ImportError:
-    from override_settings import override_settings
+from django.test import override_settings
 
 try:
     from unittest import skipIf

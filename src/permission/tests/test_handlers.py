@@ -1,12 +1,10 @@
 # coding=utf-8
-from django.test import TestCase
-from permission.handlers import PermissionHandler
-from permission.handlers import LogicalPermissionHandler
-from permission.tests.utils import create_user
-from permission.tests.utils import create_article
-from permission.tests.models import Article
-from permission.tests.compat import MagicMock
-from permission.tests.compat import override_settings
+from django.test import TestCase, override_settings
+from ..handlers import PermissionHandler
+from ..handlers import LogicalPermissionHandler
+from .utils import create_user, create_article
+from .models import Article
+from .compat import MagicMock
 
 
 @override_settings(

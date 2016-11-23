@@ -1,9 +1,7 @@
 # coding=utf-8
 from django.test import TestCase
-from permission.utils.field_lookup import field_lookup
-from permission.tests.utils import create_user
-from permission.tests.utils import create_bridge
-from permission.tests.utils import create_article
+from ...utils.field_lookup import field_lookup
+from ..utils import create_user, create_bridge, create_article
 
 
 class PermissionUtilsFieldLookupTestCase(TestCase):

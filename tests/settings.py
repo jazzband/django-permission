@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'permission',
+    'permission.tests',
 ]
 
 MIDDLEWARE_CLASSES = [
