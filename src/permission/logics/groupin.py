@@ -4,6 +4,7 @@ Permission logic module for group based permission system
 """
 from permission.conf import settings
 from permission.logics.base import PermissionLogic
+from permission.compat import is_authenticated
 
 
 class GroupInPermissionLogic(PermissionLogic):
@@ -104,7 +105,7 @@ class GroupInPermissionLogic(PermissionLogic):
             Whether the specified user have specified permission (of specified
             object).
         """
-        if not user_obj.is_authenticated():
+        if not is_authenticated(user_obj):
             return False
         # construct the permission full name
         add_permission = self.get_full_permission_string('add')

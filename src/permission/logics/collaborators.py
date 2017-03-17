@@ -5,6 +5,7 @@ Permission logic module for collaborators based permission system
 from permission.conf import settings
 from permission.logics.base import PermissionLogic
 from permission.utils.field_lookup import field_lookup
+from permission.compat import is_authenticated
 
 
 class CollaboratorsPermissionLogic(PermissionLogic):
@@ -103,7 +104,7 @@ class CollaboratorsPermissionLogic(PermissionLogic):
             Whether the specified user have specified permission (of specified
             object).
         """
-        if not user_obj.is_authenticated():
+        if not is_authenticated(user_obj):
             return False
         # construct the permission full name
         change_permission = self.get_full_permission_string('change')
