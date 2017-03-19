@@ -26,19 +26,19 @@ try:
 except ImportError:
     from django.utils.importlib import import_module
 
-if django.VERSION >= (1, 11):
-    def is_authenticated(u):
-        return u.is_authenticated
+if django.VERSION < (1, 10):
+    def is_authenticated(user_obj):
+        return user_obj.is_authenticated()
 
-    def is_anonyomus(u):
-        return u.is_anonymous
+    def is_anonyomus(user_obj):
+        return user_obj.is_anonymous()
 else:
-    def is_authenticated(u):
-        return u.is_authenticated()
+    def is_authenticated(user_obj):
+        return user_obj.is_authenticated
 
-    def is_anonyomus(u):
-        return u.is_anonymous()
-
+    def is_anonyomus(user_obj):
+        return user_obj.is_anonymous
+ 
 try:
     # Django 1.7 or over use the new application loading system
     from django.apps import apps
