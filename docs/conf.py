@@ -20,7 +20,7 @@ import sys, os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(BASE_DIR, 'src'))
 sys.path.insert(0, os.path.join(BASE_DIR, 'tests'))
-os.environ['DJANGO_SETTINGS_MODULE'] = 'tests.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 
 
 # -- General configuration -----------------------------------------------------
@@ -32,7 +32,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'tests.settings'
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinc.ext.napoleon',
+    'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
 ]
 

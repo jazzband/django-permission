@@ -89,3 +89,9 @@ if VERSION >= (1, 9):
     TEMPLATES[0]['OPTIONS']['builtins'] = [
         'permission.templatetags.permissionif'
     ]
+
+# Add Django 1.11 requirements
+if VERSION >= (1, 11):
+    TEMPLATES[0]['OPTIONS']['context_processors'] = [
+        'django.contrib.auth.context_processors.auth',
+    ]
