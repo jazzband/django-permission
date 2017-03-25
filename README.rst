@@ -27,15 +27,12 @@ django-permission
 Author
     Alisue <lambdalisue@hashnote.net>
 Supported python versions
-    Python 2.6, 2.7, 3.3, 3.4, 3.5, 3.6
+    Python 2.7, 3.3, 3.4, 3.5, 3.6
 Supported django versions
-    Django 1.2 - 1.11b
+    Django 1.8 - 1.11b
 
 An enhanced permission library which enables a *logic-based permission system*
 to handle complex permissions in Django.
-
-It is developed based on the authentication backend system introduced in Django
-1.2. This library does support Django 1.2 and higher.
 
 
 Documentation
@@ -50,10 +47,6 @@ Use pip_ like::
 
 .. _pip:  https://pypi.python.org/pypi/pip
 
-Note that in Django 1.2 and 1.3 requires [six](https://pythonhosted.org/six/) as well.
-Install it with::
-
-    $ pip install six
 
 Usage
 -----
@@ -88,7 +81,6 @@ Configuration
 
 Autodiscovery
 ~~~~~~~~~~~~~
-This is a new feature, added in django-permission 0.6.0, and the behavior was changed in django-permission 0.6.3.
 Like django's admin package, django-permission automatically discovers the ``perms.py`` in your application directory **by running ``permission.autodiscover()``**.
 Additionally, if the ``perms.py`` module has a ``PERMISSION_LOGICS`` variable, django-permission automatically run the following functions to apply the permission logics.
 
