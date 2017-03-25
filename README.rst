@@ -13,10 +13,10 @@ django-permission
     :target: https://scrutinizer-ci.com/g/lambdalisue/django-permission/inspections
     :alt: Inspection
 .. image:: https://img.shields.io/pypi/v/django-permission.svg?style=flat-square
-    :target: setup.py
+    :target: https://github.com/lambdalisue/django-permission/setup.py
     :alt: Version
 .. image:: https://img.shields.io/pypi/l/django-permission.svg?style=flat-square
-    :target: LICENSE
+    :target: https://github.com/lambdalisue/django-permission/LICENSE
     :alt: License
 .. image:: https://img.shields.io/pypi/format/django-permission.svg?style=flat-square
     :target: https://pypi.python.org/pypi/django-permission/
