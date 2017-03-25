@@ -1,7 +1,4 @@
 [report]
-include =
-    src/*.py
-    tests/*.py
 omit =
     src/permission/__init__.py
     src/permission/compat.py
