@@ -19,10 +19,13 @@ django-permission
     :target: LICENSE
     :alt: License
 .. image:: https://img.shields.io/pypi/format/django-permission.svg?style=flat-square
+    :target: https://pypi.python.org/pypi/django-permission/
     :alt: Format
 .. image:: https://img.shields.io/pypi/pyversions/django-permission.svg?style=flat-square
+    :target: https://pypi.python.org/pypi/django-permission/
     :alt: Supported python versions
 .. image:: https://img.shields.io/pypi/status/django-permission.svg?style=flat-square
+    :target: https://pypi.python.org/pypi/django-permission/
     :alt: Status
 
 Author
