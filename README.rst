@@ -3,33 +3,25 @@ django-permission
 .. image:: https://img.shields.io/travis/lambdalisue/django-permission/master.svg?style=flat-square
     :target: http://travis-ci.org/lambdalisue/django-permission
     :alt: Build status
-
 .. image:: https://img.shields.io/coveralls/lambdalisue/django-permission/master.svg?style=flat-square
     :target: https://coveralls.io/github/lambdalisue/django-permission?branch=master 
     :alt: Coverage
-
 .. image:: https://img.shields.io/requires/github/lambdalisue/django-permission/master.svg?style=flat-square
     :target: https://requires.io/github/lambdalisue/django-permission/requirements/?branch=master
     :alt: Requirements Status
-
 .. image:: https://img.shields.io/scrutinizer/g/lambdalisue/django-permission/master.svg?style=flat-square
     :target: https://scrutinizer-ci.com/g/lambdalisue/django-permission/inspections
     :alt: Inspection
-
 .. image:: https://img.shields.io/pypi/v/django-permission.svg?style=flat-square
     :target: setup.py
     :alt: Version
-
 .. image:: https://img.shields.io/pypi/l/django-permission.svg?style=flat-square
     :target: LICENSE
     :alt: License
-
 .. image:: https://img.shields.io/pypi/format/django-permission.svg?style=flat-square
     :alt: Format
-
 .. image:: https://img.shields.io/pypi/pyversions/django-permission.svg?style=flat-square
     :alt: Supported python versions
-
 .. image:: https://img.shields.io/pypi/status/django-permission.svg?style=flat-square
     :alt: Status
 
