@@ -49,7 +49,7 @@ setup(
     author_email='lambdalisue@hashnote.net',
     url='https://github.com/lambdalisue/%s' % NAME,
     download_url='https://github.com/lambdalisue/%s/tarball/master' % NAME,
-    license='file:LICENSE',
+    license='MIT',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     include_package_data=True,

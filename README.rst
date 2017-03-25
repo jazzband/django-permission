@@ -1,28 +1,37 @@
 django-permission
 ==========================
-.. image:: https://secure.travis-ci.org/lambdalisue/django-permission.png?branch=master
+.. image:: https://img.shields.io/travis/lambdalisue/django-permission/master.svg?style=flat-square
     :target: http://travis-ci.org/lambdalisue/django-permission
     :alt: Build status
 
-.. image:: https://coveralls.io/repos/lambdalisue/django-permission/badge.svg?branch=master&service=github
+.. image:: https://img.shields.io/coveralls/lambdalisue/django-permission/master.svg?style=flat-square
     :target: https://coveralls.io/github/lambdalisue/django-permission?branch=master 
     :alt: Coverage
 
-.. image:: https://requires.io/github/lambdalisue/django-permission/requirements.svg?branch=master
+.. image:: https://img.shields.io/requires/github/lambdalisue/django-permission/master.svg?style=flat-square
     :target: https://requires.io/github/lambdalisue/django-permission/requirements/?branch=master
     :alt: Requirements Status
 
-.. image:: https://scrutinizer-ci.com/g/lambdalisue/django-permission/badges/quality-score.png?b=master
+.. image:: https://img.shields.io/scrutinizer/g/lambdalisue/django-permission/master.svg?style=flat-square
     :target: https://scrutinizer-ci.com/g/lambdalisue/django-permission/inspections
     :alt: Inspection
 
-.. image:: https://img.shields.io/badge/version-0.9.2-yellow.svg?style=flat-square
+.. image:: https://img.shields.io/pypi/v/django-permission.svg?style=flat-square
     :target: setup.py
-    :alt: Version 0.9.2
+    :alt: Version
 
-.. image:: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
+.. image:: https://img.shields.io/pypi/l/django-permission.svg?style=flat-square
     :target: LICENSE
-    :alt: MIT License
+    :alt: License
+
+.. image:: https://img.shields.io/pypi/format/django-permission.svg?style=flat-square
+    :alt: Format
+
+.. image:: https://img.shields.io/pypi/pyversions/django-permission.svg?style=flat-square
+    :alt: Supported python versions
+
+.. image:: https://img.shields.io/pypi/status/django-permission.svg?style=flat-square
+    :alt: Status
 
 Author
     Alisue <lambdalisue@hashnote.net>
