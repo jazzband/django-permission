@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 NAME = 'django-permission'
-VERSION = '1.0.2'
+VERSION = '1.0.3'
 
 
 def read(filename):
