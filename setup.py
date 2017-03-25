@@ -16,7 +16,7 @@ def read(filename):
 def readlist(filename):
     rows = read(filename).split("\n")
     rows = [x.strip() for x in rows if x.strip()]
-    return list(rows)
+    return rows
 
 
 setup(
@@ -25,7 +25,7 @@ setup(
     description=('A enhanced permission system which enable logical permission'
                  'systems to complex permissions'),
     long_description=read('README.rst'),
-    classifiers=(
+    classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
@@ -43,13 +43,13 @@ setup(
         'Topic :: Software Development :: Libraries',
         'Topic :: Software Development :: Libraries :: Application Frameworks',
         'Topic :: Software Development :: Libraries :: Python Modules',
-    ),
+    ],
     keywords='django object logical permission auth authentication',
     author='Alisue',
     author_email='lambdalisue@hashnote.net',
     url='https://github.com/lambdalisue/%s' % NAME,
     download_url='https://github.com/lambdalisue/%s/tarball/master' % NAME,
-    license='MIT',
+    license='file:LICENSE',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     include_package_data=True,

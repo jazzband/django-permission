@@ -21,7 +21,7 @@ django-permission
     :alt: Version 0.9.2
 
 .. image:: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
-    :target: LICENSE.md
+    :target: LICENSE
     :alt: MIT License
 
 Author
