@@ -1,9 +1,6 @@
 # coding=utf-8
 from __future__ import unicode_literals
 from django.apps import apps
-from django.utils.module_loading import import_string
-
-import copy
 from permission.compat import six
 
 
@@ -18,8 +15,9 @@ def autodiscover(module_name=None):
     from permission.conf import settings
 
     module_name = module_name or settings.PERMISSION_AUTODISCOVER_MODULE_NAME
+    app_names = (app.name for app in apps.app_configs.values())
 
-    for app in settings.INSTALLED_APPS:
+    for app in app_names:
         mod = import_module(app)
         # Attempt to import the app's perms module
         try:
@@ -72,4 +70,3 @@ def discover(app, module_name=None):
                 # convert model string to model instance
                 model = get_model(*model.split('.', 1))
             add_permission_logic(model, permission_logic)
-

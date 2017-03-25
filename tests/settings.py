@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'tests.appconfig.apps.AppConfigConfig',
     'permission',
     'permission.tests',
 ]
