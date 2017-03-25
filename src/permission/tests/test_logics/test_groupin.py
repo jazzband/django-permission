@@ -1,13 +1,9 @@
 # coding=utf-8
-from django.test import TestCase
-from permission.logics import GroupInPermissionLogic
-from permission.utils.logics import add_permission_logic
-from permission.tests.utils import create_user
-from permission.tests.utils import create_anonymous
-from permission.tests.utils import create_group
-from permission.tests.utils import create_article
-from permission.tests.compat import MagicMock
-from permission.tests.compat import override_settings
+from django.test import TestCase, override_settings
+from ...logics import GroupInPermissionLogic
+from ...utils.logics import add_permission_logic
+from ..utils import create_user, create_anonymous, create_group, create_article
+from ..compat import MagicMock
 
 
 @override_settings(

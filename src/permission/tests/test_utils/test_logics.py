@@ -1,12 +1,11 @@
 # coding=utf-8
 from django.test import TestCase
-from permission.logics import PermissionLogic
-from permission.handlers import LogicalPermissionHandler
-from permission.utils.handlers import registry
-from permission.utils.logics import add_permission_logic
-from permission.utils.logics import remove_permission_logic
-from permission.tests.models import Article
-from permission.tests.compat import MagicMock
+from ...logics import PermissionLogic
+from ...handlers import LogicalPermissionHandler
+from ...utils.handlers import registry
+from ...utils.logics import add_permission_logic, remove_permission_logic
+from ..models import Article
+from ..compat import MagicMock
 
 
 class PermissionUtilsLogicsTestCase(TestCase):

@@ -1,25 +1,18 @@
-# coding=utf-8
-"""
-"""
-__author__ = 'Alisue <lambdalisue@hashnote.net>'
-import django
 from django.test import TestCase
 from django.core.exceptions import PermissionDenied
-from permission.utils.handlers import registry
-from permission.decorators.classbase import permission_required
-from permission.tests.compat import skipIf
-from permission.tests.compat import MagicMock
-from permission.tests.test_decorators.utils import create_mock_handler
-from permission.tests.test_decorators.utils import create_mock_request
-from permission.tests.test_decorators.utils import create_mock_queryset
-from permission.tests.test_decorators.utils import create_mock_model
-from permission.tests.test_decorators.utils import create_mock_view_func
-from permission.tests.test_decorators.utils import create_mock_view_class
+from ...utils.handlers import registry
+from ...decorators.classbase import permission_required
+from ..compat import MagicMock
+from .utils import (
+    create_mock_handler,
+    create_mock_request,
+    create_mock_queryset,
+    create_mock_model,
+    create_mock_view_func,
+    create_mock_view_class,
+)
 
 
-@skipIf(
-    django.VERSION < (1, 3),
-    'Classbased generic view is not supported in this version')
 class PermissionClassDecoratorsTestCase(TestCase):
     def setUp(self):
         self.handler = create_mock_handler()
@@ -75,7 +68,7 @@ class PermissionClassDecoratorsTestCase(TestCase):
 
         self.assertRaises(PermissionDenied,
                           self.view_class_exc.as_view(),
-                          self.request, 
+                          self.request,
                           pk=1)
         self.assertFalse(self.view_func.called)
 
@@ -113,7 +106,7 @@ class PermissionClassDecoratorsTestCase(TestCase):
 
         self.assertRaises(PermissionDenied,
                           self.view_class_exc.as_view(),
-                          self.request, 
+                          self.request,
                           pk=1)
         self.assertFalse(self.view_func.called)
 
@@ -152,7 +145,7 @@ class PermissionClassDecoratorsTestCase(TestCase):
 
         self.assertRaises(PermissionDenied,
                           self.view_class_exc.as_view(),
-                          self.request, 
+                          self.request,
                           pk=1)
         self.assertFalse(self.view_func.called)
 
@@ -193,7 +186,7 @@ class PermissionClassDecoratorsTestCase(TestCase):
 
         self.assertRaises(PermissionDenied,
                           self.view_class_exc.as_view(),
-                          self.request, 
+                          self.request,
                           pk=1)
         self.assertFalse(self.view_func.called)
 

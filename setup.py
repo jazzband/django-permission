@@ -1,9 +1,8 @@
 # coding=utf-8
-import sys
 from setuptools import setup, find_packages
 
 NAME = 'django-permission'
-VERSION = '0.9.3'
+VERSION = '1.0.0'
 
 
 def read(filename):
@@ -19,13 +18,14 @@ def readlist(filename):
     rows = [x.strip() for x in rows if x.strip()]
     return list(rows)
 
+
 setup(
     name=NAME,
     version=VERSION,
     description=('A enhanced permission system which enable logical permission'
                  'systems to complex permissions'),
-    long_description = read('README.rst'),
-    classifiers = (
+    long_description=read('README.rst'),
+    classifiers=(
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
@@ -33,27 +33,27 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Software Development :: Libraries',
         'Topic :: Software Development :: Libraries :: Application Frameworks',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ),
-    keywords = 'django object logical permission auth authentication',
-    author = 'Alisue',
-    author_email = 'lambdalisue@hashnote.net',
-    url = 'https://github.com/lambdalisue/%s' % NAME,
-    download_url = 'https://github.com/lambdalisue/%s/tarball/master' % NAME,
-    license = 'MIT',
-    packages = find_packages('src'),
-    package_dir = {'': 'src'},
-    include_package_data = True,
-    package_data = {
+    keywords='django object logical permission auth authentication',
+    author='Alisue',
+    author_email='lambdalisue@hashnote.net',
+    url='https://github.com/lambdalisue/%s' % NAME,
+    download_url='https://github.com/lambdalisue/%s/tarball/master' % NAME,
+    license='MIT',
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
+    include_package_data=True,
+    package_data={
         '': ['README.rst',
              'requirements.txt',
              'requirements-test.txt',
@@ -61,6 +61,4 @@ setup(
     },
     zip_safe=True,
     install_requires=readlist('requirements.txt'),
-    test_suite='runtests.run_tests',
-    tests_require=readlist('requirements-test.txt'),
 )

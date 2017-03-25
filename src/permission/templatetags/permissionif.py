@@ -2,20 +2,14 @@
 """
 permissionif templatetag
 """
-import django
 from django import template
 from django.template import TemplateSyntaxError
-from django.template import VariableDoesNotExist
 from django.template.smartif import infix
 from django.template.smartif import IfParser
 from django.template.smartif import OPERATORS
-from django.template.defaulttags import Node
-from django.template.defaulttags import NodeList
+from django.template.defaulttags import IfNode
 from django.template.defaulttags import TemplateLiteral
 from permission.conf import settings
-from permission.templatetags.patch import IfNode
-from permission.templatetags.patch import parser_patch
-
 
 register = template.Library()
 
@@ -27,6 +21,7 @@ def of_operator(context, x, y):
     This operator is used to specify the target object of permission
     """
     return x.eval(context), y.eval(context)
+
 
 def has_operator(context, x, y):
     """
@@ -66,6 +61,7 @@ class PermissionIfParser(IfParser):
         else:
             return op()
 
+
 class TemplatePermissionIfParser(PermissionIfParser):
     error_class = TemplateSyntaxError
 
@@ -100,9 +96,6 @@ def do_permissionif(parser, token):
         {% endpermission %}
 
     """
-    # patch parser for django 1.3.1
-    parser = parser_patch(parser)
-
     bits = token.split_contents()
     ELIF = "el%s" % bits[0]
     ELSE = "else"
@@ -135,26 +128,17 @@ def do_permissionif(parser, token):
     return IfNode(conditions_nodelists)
 do_permissionif.Parser = TemplatePermissionIfParser
 
+
 # To replace builtin if
-if django.VERSION >= (1, 4):
-    def replace_builtin_if(replace=False):
-        if replace:
-            OPERATORS.update({
-                'has': EXTRA_OPERATORS['has'],
-                'of': EXTRA_OPERATORS['of'],
-            })
-        else:
-            # remove of, has from OPERATORS
-            OPERATORS.pop('of', None)
-            OPERATORS.pop('has', None)
-else:
-    # Django 1.3 and earlier use a different if model
-    # So re-register if
-    def replace_builtin_if(replace):
-        if replace:
-            register.tag('if', do_permissionif)
-        else:
-            from django.template.defaulttags import do_if
-            register.tag('if', do_if)
+def replace_builtin_if(replace=False):
+    if replace:
+        OPERATORS.update({
+            'has': EXTRA_OPERATORS['has'],
+            'of': EXTRA_OPERATORS['of'],
+        })
+    else:
+        # remove of, has from OPERATORS
+        OPERATORS.pop('of', None)
+        OPERATORS.pop('has', None)
 
 replace_builtin_if(settings.PERMISSION_REPLACE_BUILTIN_IF)

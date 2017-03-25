@@ -1,13 +1,9 @@
 # coding=utf-8
-from django.test import TestCase
-from django.template import Context
-from django.template import Template
-from permission.utils.handlers import registry
-from permission.templatetags.permissionif import replace_builtin_if
-from permission.tests.utils import create_user
-from permission.tests.utils import create_article
-from permission.tests.utils import create_permission
-from permission.tests.compat import override_settings
+from django.test import TestCase, override_settings
+from django.template import Context, Template
+from ...utils.handlers import registry
+from ...templatetags.permissionif import replace_builtin_if
+from ..utils import create_user, create_article, create_permission
 
 
 @override_settings(

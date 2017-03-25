@@ -1,3 +1,2 @@
 sphinx
-numpydoc
-sphinx_rtd_theme
+sphinx-rtd-theme

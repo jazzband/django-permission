@@ -1,4 +1,8 @@
 # coding=utf-8
+from __future__ import unicode_literals
+from django.apps import apps
+from django.utils.module_loading import import_string
+
 import copy
 from permission.compat import six
 

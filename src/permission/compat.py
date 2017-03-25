@@ -1,16 +1,4 @@
 # coding=utf-8
-try:
-    import collections
-    def isiterable(x):
-        return isinstance(x, collections.Iterable)
-except ImportError:
-    def isiterable(x):
-        try:
-            iter(x)
-            return True
-        except TypeError:
-            return False
-
 import django
 if django.VERSION >= (1, 9):
     add_to_builtins = None
