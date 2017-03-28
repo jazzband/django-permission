@@ -389,7 +389,7 @@ to learn how this logic works.
 
 There are `StaffPermissionLogic <http://django-permission.readthedocs.org/en/latest/_modules/permission/logics/staff.html#StaffPermissionLogic>`_
 and `GroupInPermissionLogic <http://django-permission.readthedocs.org/en/latest/_modules/permission/logics/groupin.html#GroupInPermissionLogic>`_ 
-for ``is_staff` or ``group`` based permission logic as well.
+for ``is_staff`` or ``group`` based permission logic as well.
 
 Customize permission logic
 ............................
