@@ -1,0 +1,9 @@
+=======
+CREDITS
+=======
+
+ifhasperm
+=========
+
+The template tag ifhasperm is ripped off and adapted from django-authority
+from Jannis Leidel.
