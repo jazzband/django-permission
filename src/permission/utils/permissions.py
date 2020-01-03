@@ -103,7 +103,7 @@ def get_app_perms(model_or_app_label):
     True
     """
     from django.contrib.auth.models import Permission
-    if isinstance(model_or_app_label, string_types):
+    if isinstance(model_or_app_label, six.string_types):
         app_label = model_or_app_label
     else:
         # assume model_or_app_label is model class
